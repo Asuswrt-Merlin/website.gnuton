@@ -837,6 +837,20 @@ main {
   color: var(--gm-muted);
 }
 
+.gm-stat-note {
+  max-width: 44rem;
+  margin: 2rem auto 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--gm-muted);
+
+  a {
+    color: var(--gm-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+}
+
 /* ------------------------------ Theme toggle ---------------------------- */
 
 .gm-theme-toggle {

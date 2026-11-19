@@ -19,6 +19,8 @@
   Manage it with `pnpm astro dev stop | status | logs`.
 - `pnpm check` — type-check (`astro check`). Run before and after changes.
 - `pnpm build` — static output in `dist/`, regenerate content types + sitemap.
+- `pnpm stats` — refresh `src/data/github-stats.json` from the GitHub API. CI runs it
+  before the build; local builds use the committed snapshot.
 - `pnpm assets` — regenerate OG image, `favicon.ico` and touch icon (needs Pillow).
 - Order: `pnpm check` → `pnpm build`.
 - To test the GitHub Pages sub-path locally:
@@ -41,6 +43,9 @@
 - **Router search**: `src/components/RouterSearch.astro` filters cards client-side using
   `data-router-*` attributes, updates branch counts and jump links, and uses
   document-level listeners so it survives `<ClientRouter />` navigation.
+- **GitHub stats**: `src/data/github-stats.json` is refreshed by
+  `scripts/fetch-github-stats.mjs` (`pnpm stats`) and read through `src/data/stats.ts`.
+  The committed snapshot is the offline fallback; the daily Pages run refreshes it.
 - **Guides**: Content Collections via `src/content.config.ts`, files in
   `src/content/guides/`. Import `z` from `astro/zod`, **not** `astro:content` (deprecated in
   Astro 7). Routes: `/guides` and `/guides/[slug]`.
@@ -96,11 +101,13 @@
 ## Deployment
 
 - `.github/workflows/pages.yml` is the single Pages pipeline:
-  - `🧪 Check & build` runs for every push except `gh-pages` and every pull request except
-    `closed`. It resolves the Pages origin/base path, runs `pnpm check` + `pnpm build`,
-    and uploads `dist` as a one-day artifact. The build job has read-only permissions.
-  - `🚀 Deploy to GitHub Pages` (`needs: build`) runs on `main` pushes and manual runs,
-    downloads `dist`, and pushes it to `gh-pages` with
+  - `🧪 Check & build` runs for every push except `gh-pages`, every pull request except
+    `closed`, and the daily `schedule`. It resolves the Pages origin/base path, refreshes
+    `src/data/github-stats.json` with `pnpm stats` (`GITHUB_TOKEN`), runs `pnpm check` +
+    `pnpm build`, and uploads `dist` as a one-day artifact. The build job has read-only
+    permissions.
+  - `🚀 Deploy to GitHub Pages` (`needs: build`) runs on `main` pushes, manual runs and the
+    daily schedule, downloads `dist`, and pushes it to `gh-pages` with
     `JamesIves/github-pages-deploy-action`. It uses `clean-exclude` for `pr-preview/` and
     `CNAME` plus `force: false` so production deploys never delete previews, a custom-domain
     file, or rewrite the whole branch.

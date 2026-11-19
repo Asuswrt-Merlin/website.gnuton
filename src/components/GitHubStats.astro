@@ -1,0 +1,47 @@
+---
+import { githubStats } from '../data/stats';
+import { site } from '../data/site';
+import { formatDate } from '../utils/date';
+import { compactNumber, formatNumber } from '../utils/format';
+
+const updated = formatDate(new Date(githubStats.generatedAt));
+const tiles = [
+  { value: githubStats.releaseDownloads, label: 'Release downloads' },
+  { value: githubStats.stars, label: 'GitHub stars' },
+  { value: githubStats.forks, label: 'Forks' },
+  { value: githubStats.releases, label: 'Releases' },
+];
+---
+
+<section class="section gm-section" aria-labelledby="github-stats-title">
+  <div class="container">
+    <div class="gm-section-head">
+      <p class="gm-eyebrow mb-2">On GitHub</p>
+      <h2 class="title is-2" id="github-stats-title">Built in public, downloaded by the community</h2>
+      <p class="subtitle is-6">
+        Every firmware image ships through GitHub Releases, alongside its checksums and build
+        logs. The source and issue tracker stay public.
+      </p>
+    </div>
+
+    <div class="gm-stats">
+      {
+        tiles.map((tile) => (
+          <div>
+            <span class="gm-stat-number" title={formatNumber(tile.value)}>
+              {compactNumber(tile.value)}
+            </span>
+            <span class="gm-stat-label">{tile.label}</span>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="gm-stat-note">
+      {formatNumber(githubStats.releaseDownloads)} release downloads across{' '}
+      {githubStats.releases} releases, including checksums and build logs. Source:{' '}
+      <a href={site.repo} target="_blank" rel="noopener">GitHub repository</a> and{' '}
+      <a href={site.releases} target="_blank" rel="noopener">releases</a>. Refreshed {updated}.
+    </p>
+  </div>
+</section>

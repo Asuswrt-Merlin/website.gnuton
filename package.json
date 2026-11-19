@@ -31,7 +31,8 @@
     "check": "astro check",
     "preview": "astro preview",
     "astro": "astro",
-    "assets": "python3 scripts/generate-brand-assets.py"
+    "assets": "python3 scripts/generate-brand-assets.py",
+    "stats": "node scripts/fetch-github-stats.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

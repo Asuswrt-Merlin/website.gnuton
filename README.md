@@ -18,6 +18,8 @@ Built with [Astro](https://astro.build) and [Bulma](https://bulma.io), based on 
   PNGs and links to ASUS product pages.
 - **Download-first home page** — branch cards for stable and pre-release releases, plus a
   three-step flashing checklist.
+- **GitHub stats** — release downloads, stars, forks and release counts, refreshed at build
+  time and redeployed daily; no third-party requests from visitors.
 - **Guides** — Markdown content collection with model-revision, branch, flashing and
   Repeater Mode articles, RSS feed and `TechArticle` structured data.
 - **SEO-ready** — canonical URLs, Open Graph image, sitemap, generated `robots.txt`,
@@ -46,6 +48,7 @@ pnpm install
 | `pnpm build` | Build the production site to `./dist/` |
 | `pnpm check` | Type-check Astro + TypeScript |
 | `pnpm preview` | Preview the production build |
+| `pnpm stats` | Refresh the GitHub stats snapshot used on the home page |
 | `pnpm assets` | Regenerate `og-image.png`, `favicon.ico` and the touch icon |
 
 Run the dev server in the background with `pnpm astro dev --background`, then manage it
@@ -55,7 +58,7 @@ with `pnpm astro dev stop | status | logs`.
 
 | Route | Description |
 | --- | --- |
-| `/` | Hero, stats, WiFi generations, featured routers, project values, flashing steps, latest guides |
+| `/` | Hero, stats, WiFi generations, GitHub stats, featured routers, project values, flashing steps, latest guides |
 | `/firmware` | Every supported model grouped by WiFi generation, with live search, release channels and downloads |
 | `/about` | Project aim, values, credits and ways to help |
 | `/guides` | Guide listing |
@@ -101,9 +104,11 @@ firmware page derive from it.
 The single workflow at `.github/workflows/pages.yml` builds the site and pushes it to the
 `gh-pages` branch, which GitHub Pages serves. It has four jobs:
 
-- **`🧪 Check & build`** — runs for every push (except `gh-pages`) and every pull request
-  except `closed`; runs `pnpm check` + `pnpm build` and uploads `dist`.
-- **`🚀 Deploy to GitHub Pages`** — runs for `main` pushes and manual runs.
+- **`🧪 Check & build`** — runs for every push (except `gh-pages`), every pull request
+  except `closed`, and the daily schedule; refreshes `src/data/github-stats.json`, runs
+  `pnpm check` + `pnpm build` and uploads `dist`.
+- **`🚀 Deploy to GitHub Pages`** — runs for `main` pushes, manual runs and the daily
+  scheduled refresh.
 - **`👀 Publish PR preview`** — runs for same-repository pull requests and posts a sticky
   preview link.
 - **`🧹 Remove PR preview`** — runs when a same-repository PR closes.

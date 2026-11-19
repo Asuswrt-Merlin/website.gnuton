@@ -9,8 +9,9 @@ flowchart TD
   PR -->|"closed, same-repo"| CLEANUP["🧹 Remove PR preview"]
   PUSH["Push to any branch except gh-pages"] --> CHECK
   MAIN["Push to main / manual"] --> CHECK
+  CRON["Daily schedule<br/>(10:17 UTC)"] --> CHECK
 
-  CHECK -->|"main / manual"| DEPLOY["🚀 Deploy to GitHub Pages"]
+  CHECK -->|"main / manual / schedule"| DEPLOY["🚀 Deploy to GitHub Pages"]
   CHECK -->|"same-repo PR"| PREVIEW["👀 Publish PR preview"]
 
   DEPLOY -->|"site + .nojekyll"| GHP[(gh-pages)]
@@ -26,11 +27,12 @@ flowchart TD
   CLEANUP -.-> LOCK
 ```
 
-- **`🧪 Check & build`** runs for every push (except `gh-pages`) and every pull request
-  except `closed`. It resolves the Pages origin/base path, runs `pnpm check` and
-  `pnpm build`, and uploads `dist` as an artifact.
-- **`🚀 Deploy to GitHub Pages`** runs for `main` pushes and manual runs. It downloads the
-  artifact and pushes it to `gh-pages`.
+- **`🧪 Check & build`** runs for every push (except `gh-pages`), every pull request
+  except `closed`, and the daily scheduled refresh. It resolves the Pages origin/base path,
+  refreshes `src/data/github-stats.json` with `pnpm stats` (authenticated by
+  `GITHUB_TOKEN`), runs `pnpm check` and `pnpm build`, and uploads `dist` as an artifact.
+- **`🚀 Deploy to GitHub Pages`** runs for `main` pushes, manual runs and the daily
+  scheduled refresh. It downloads the artifact and pushes it to `gh-pages`.
 - **`👀 Publish PR preview`** runs for same-repository pull requests. Fork PRs still get
   the read-only build job, but they do not get a preview because the deploy action needs a
   write token.
