@@ -16,6 +16,13 @@ export const site = {
   upstream: 'https://github.com/RMerl/asuswrt-merlin.ng',
   repo: 'https://github.com/gnuton/asuswrt-merlin.ng',
   repoLabel: 'gnuton/asuswrt-merlin.ng',
+  // The 3004 line; this repository will move to
+  // https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton
+  repo3004: 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-gnuton',
+  repo3006: 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton',
+  // 386 code lives in the 3004 repository; pin to the latest stable 386 tag.
+  repo386:
+    'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-gnuton/tree/386.12_0-gnuton1',
   releases: 'https://github.com/gnuton/asuswrt-merlin.ng/releases',
   docs: 'https://github.com/RMerl/asuswrt-merlin.ng/wiki/About-Asuswrt',
   devDocs: 'https://github.com/gnuton/asuswrt-merlin.ng/blob/master/www/DEV.md',
@@ -32,11 +39,16 @@ export const site = {
   template: 'https://github.com/Domenico-Tenace-Open-Labs/astro-wellness',
 } as const;
 
-export interface NavItem {
+export interface NavLink {
   label: string;
   href: string;
+}
+
+export interface NavItem extends NavLink {
   /** External project resources open in a new tab. */
   external?: boolean;
+  /** Optional submenu, e.g. the per-generation source repositories. */
+  children?: NavLink[];
 }
 
 export const navItems: NavItem[] = [
@@ -45,7 +57,16 @@ export const navItems: NavItem[] = [
   { label: 'About', href: '/about' },
   { label: 'Guides', href: '/guides' },
   { label: 'Help', href: '/support' },
-  { label: 'Code', href: site.repo, external: true },
+  {
+    label: 'Code',
+    href: site.repo3004,
+    external: true,
+    children: [
+      { label: '3006 · WiFi 7', href: site.repo3006 },
+      { label: '3004 · WiFi 6', href: site.repo3004 },
+      { label: '386 · DSL-AC68U', href: site.repo386 },
+    ],
+  },
 ];
 
 export const projectLinks = [

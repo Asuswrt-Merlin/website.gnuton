@@ -46,6 +46,10 @@
 - **GitHub stats**: `src/data/github-stats.json` is refreshed by
   `scripts/fetch-github-stats.mjs` (`pnpm stats`) and read through `src/data/stats.ts`.
   The committed snapshot is the offline fallback; the daily Pages run refreshes it.
+- **Source repositories**: the Code menu links to `site.repo3006`, `site.repo3004`
+  (the current 3004 repository, later `...-3004.gnuton`) and `site.repo386` (the 386
+  tree in the 3004 repository). Update the `site.ts` constants when the 3004 repo is
+  renamed.
 - **Guides**: Content Collections via `src/content.config.ts`, files in
   `src/content/guides/`. Import `z` from `astro/zod`, **not** `astro:content` (deprecated in
   Astro 7). Routes: `/guides` and `/guides/[slug]`.

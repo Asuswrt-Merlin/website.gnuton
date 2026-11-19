@@ -45,6 +45,24 @@ function isActive(href: string): boolean {
         <div class="navbar-end">
           {
             navItems.map((item) => {
+              if (item.children) {
+                return (
+                  <details class="gm-nav-code">
+                    <summary class="navbar-item">
+                      {item.label}
+                      <span class="gm-nav-caret" aria-hidden="true">▾</span>
+                    </summary>
+                    <div class="gm-nav-code-menu">
+                      {item.children.map((child) => (
+                        <a href={child.href} target="_blank" rel="noopener">
+                          {child.label}
+                        </a>
+                      ))}
+                    </div>
+                  </details>
+                );
+              }
+
               const active = !item.external && isActive(item.href);
               return (
                 <a
@@ -96,6 +114,13 @@ function isActive(href: string): boolean {
     }
   };
 
+  // Close the Code disclosure when clicking outside it.
+  const closeCodeMenus = (except?: Element) => {
+    document.querySelectorAll<HTMLDetailsElement>('.gm-nav-code[open]').forEach((details) => {
+      if (!except || !details.contains(except)) details.open = false;
+    });
+  };
+
   document.addEventListener('click', (event) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
@@ -111,12 +136,22 @@ function isActive(href: string): boolean {
       return;
     }
 
-    if (target.closest('#main-navbar a') || !target.closest('.navbar')) {
+    closeCodeMenus(target);
+
+    if (target.closest('#main-navbar a')) {
+      closeCodeMenus();
       closeMenu();
+      return;
     }
+
+    if (!target.closest('.navbar')) closeMenu();
   });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeMenu();
+    if (event.key !== 'Escape') return;
+    const openDetails = document.querySelector<HTMLDetailsElement>('.gm-nav-code[open]');
+    closeMenu();
+    closeCodeMenus();
+    openDetails?.querySelector('summary')?.focus();
   });
 </script>
