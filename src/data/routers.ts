@@ -43,7 +43,7 @@ export interface RouterModel {
   asusUrl: string;
   /** Short badge, e.g. "New". */
   badge?: string;
-  /** Optional firmware note shown on the card. */
+  /** Optional hardware or firmware note shown on the card. */
   note?: string;
   featured?: boolean;
 }
@@ -110,7 +110,7 @@ export const routers: RouterModel[] = [
     image: 'rt-be58u.png',
     asusUrl:
       'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be58u/',
-    note: 'V1 hardware only — V2 uses different hardware and is not supported.',
+    note: 'RT-BE58U V2 uses different hardware and is not supported. V1 hardware only.',
   },
   {
     id: 'rt-be82u',
