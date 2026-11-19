@@ -10,19 +10,19 @@ always win: if a specific release asks for a factory reset, a different upgrade 
 minimum source firmware, follow those instructions instead.
 
 > **Caution.** Flashing firmware is not risk-free. Never install an image for a
-> different model or branch, never flash over a flaky wireless connection, and never cut
-> power during the update. Keep the router's recovery method at hand.
+> different model or WiFi generation, never flash over a flaky wireless connection, and
+> never cut power during the update. Keep the router's recovery method at hand.
 
 ## Before you start
 
 1. **Confirm the model and revision.** Check the label or run `nvram get productid` over
    SSH. See [which router version do I have](../which-router-version-do-i-have/).
-2. **Confirm the branch.** 3006 for WiFi 7, 3004 for WiFi 6, 386 for the DSL-AC68U.
+2. **Confirm the WiFi generation.** WiFi 7, WiFi 6, or WiFi 5 for the DSL-AC68U.
    The [supported list](../../firmware/) shows where your model belongs.
 3. **Read the release notes** for the exact download. They list known issues and any
    special upgrade requirements.
 4. **Back up your settings** from the web interface (Administration → Restore/Save/Upload
-   Setting). Keep the file, but do not assume it can be restored across branches or
+   Setting). Keep the file, but do not assume it can be restored across Wi-Fi generations or
    after a major upgrade. A written list of WAN, LAN, Wi-Fi and port-forward settings is
    more reliable.
 5. **Download the correct `.w` file** from the release page. Do not rename or unpack it.
@@ -46,7 +46,7 @@ before trying anything else.
 - Confirm that the version string matches the release you downloaded.
 - Check WAN, Wi-Fi, DHCP and any custom port forwards.
 - If the router behaves strangely, a factory reset followed by manual configuration is
-  the cleanest path. Restoring settings from a different firmware branch can carry old
+  the cleanest path. Restoring settings from a different firmware generation can carry old
   problems forward.
 - If you moved from stock ASUS firmware to Merlin for the first time, expect to
   reconfigure the router. The two interfaces are similar, but they are not the same

@@ -14,7 +14,7 @@ export const values: Value[] = [
   {
     title: 'Transparent builds',
     description:
-      'Images are compiled in the cloud from public code, so you can trace a release back to its source, its changes and its CI run.',
+      'Images are compiled in the cloud through a public build pipeline. Some vendor components supplied by ASUS remain prebuilt, but releases stay traceable to their build run and source history.',
   },
   {
     title: 'Community tested',
@@ -52,7 +52,7 @@ export const credits: Credit[] = [
     name: 'GitHub',
     role: 'Cloud build infrastructure',
     description:
-      'GitHub Actions compiles and publishes the images, keeping every release reproducible from public source.',
+      'GitHub Actions compiles and publishes the images, keeping every release traceable to its build run and source history.',
     initials: 'GH',
     href: 'https://github.com',
   },
@@ -90,9 +90,9 @@ export const setupSteps: Step[] = [
     linkHref: '/guides/which-router-version-do-i-have/',
   },
   {
-    title: 'Pick the matching branch',
+    title: 'Pick the matching firmware',
     description:
-      'WiFi 7 uses 3006, WiFi 6 uses 3004, and the DSL-AC68U uses 386. Never flash a build from a different branch.',
+      'Choose the WiFi generation that matches your router: WiFi 7, WiFi 6 or WiFi 5 for the DSL-AC68U. Never flash a build made for different hardware.',
     linkLabel: 'Browse supported models',
     linkHref: '/firmware',
   },
@@ -117,7 +117,7 @@ export const releaseChannels: ReleaseChannel[] = [
   {
     name: 'Stable',
     description:
-      'Recommended for everyday use. Promoted from beta once the branch has had real-world testing.',
+      'Recommended for everyday use. Promoted from beta once the build has had real-world testing.',
     href: `${site.releases}?q=prerelease%3Afalse`,
     cta: 'Browse stable builds',
     highlighted: true,
@@ -132,7 +132,7 @@ export const releaseChannels: ReleaseChannel[] = [
   {
     name: 'Experimental',
     description:
-      'One-off branches that explore extra functionality, such as Repeater Mode on the 386 DSL build.',
+      'One-off builds that explore extra functionality, such as Repeater Mode on the WiFi 5 DSL model.',
     href: 'https://github.com/gnuton/asuswrt-merlin.ng/releases/tag/gnuton-snapshot-feature-repeater',
     cta: 'Browse experimental builds',
   },

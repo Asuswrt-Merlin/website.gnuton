@@ -35,7 +35,12 @@
   presentational with typed props; pages assemble.
 - **Router catalogue**: `src/data/routers.ts` is the single source of truth. Home counters,
   branch groups, firmware page cards and branch counts derive from `routers`,
-  `firmwareBranches`, `routersForBranch()` and `branchLabel()`. Do not hardcode counts.
+  `firmwareBranches`, `routersForBranch()` and `branchById()`. Do not hardcode counts.
+  The public UI groups routers by WiFi generation (WiFi 7 / 6 / 5); the numeric branch
+  IDs are internal and only used to build release download links.
+- **Router search**: `src/components/RouterSearch.astro` filters cards client-side using
+  `data-router-*` attributes, updates branch counts and jump links, and uses
+  document-level listeners so it survives `<ClientRouter />` navigation.
 - **Guides**: Content Collections via `src/content.config.ts`, files in
   `src/content/guides/`. Import `z` from `astro/zod`, **not** `astro:content` (deprecated in
   Astro 7). Routes: `/guides` and `/guides/[slug]`.
@@ -130,8 +135,10 @@ Before finishing:
    `SITE_URL=https://asuswrt-merlin.github.io BASE_PATH=/website.gnuton/pr-preview/pr-1 PUBLIC_IS_PREVIEW=true pnpm build`,
    then preview at `/website.gnuton/pr-preview/pr-1/`.
 3. Browser pass: both themes, mobile width, keyboard navigation, mobile menu.
-4. Router changes: check the PNG loads, card link resolves and the model appears under the
-   right `/firmware#...` anchor.
+4. Search changes: filter by model, alias and WiFi generation; test Clear, Escape and the
+   no-results state.
+5. Router changes: check the PNG loads, card link resolves and the model appears under the
+   right `/firmware#wifi-*` anchor.
 
 ## Documentation
 

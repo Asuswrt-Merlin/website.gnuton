@@ -13,10 +13,9 @@ export type BranchId = '3006' | '3004' | '386';
 
 export interface FirmwareBranch {
   /** Anchor used on /firmware and in navigation links. */
-  id: 'wifi-7' | 'wifi-6' | 'dsl';
+  id: 'wifi-7' | 'wifi-6' | 'wifi-5';
   version: BranchId;
   name: string;
-  eyebrow: string;
   description: string;
   stableUrl: string;
   prereleaseUrl: string;
@@ -49,7 +48,6 @@ export const firmwareBranches: FirmwareBranch[] = [
     id: 'wifi-7',
     version: '3006',
     name: 'WiFi 7',
-    eyebrow: 'Version 3006',
     description:
       'The newest Merlin line for ASUS WiFi 7 hardware. Same upstream feature set, built for the flagship ROG router.',
     stableUrl: releaseQuery('3006*', false),
@@ -59,25 +57,23 @@ export const firmwareBranches: FirmwareBranch[] = [
     id: 'wifi-6',
     version: '3004',
     name: 'WiFi 6',
-    eyebrow: 'Version 3004',
     description:
-      'The main GNUton branch: WiFi 6 routers, mesh systems and DSL gateways. Most supported models live here.',
+      'The main GNUton line: WiFi 6 routers, mesh systems and DSL gateways. Most supported models live here.',
     stableUrl: releaseQuery('3004*', false),
     prereleaseUrl: releaseQuery('3004*', true),
   },
   {
-    id: 'dsl',
+    id: 'wifi-5',
     version: '386',
-    name: 'DSL-AC68U',
-    eyebrow: 'Version 386',
+    name: 'WiFi 5',
     description:
-      'The long-lived DSL branch for the DSL-AC68U, including the optional experimental Repeater Mode builds.',
+      'The long-lived build for the DSL-AC68U, including the optional experimental Repeater Mode images.',
     stableUrl: releaseQuery('386', false),
     prereleaseUrl: releaseQuery('386', true),
     experimental: {
       label: 'Repeater Mode',
       description:
-        'Experimental 386 builds that expose Repeater alongside the standard operational modes. AiMesh on regular images remains faster where both ends are ASUS routers.',
+        'Experimental WiFi 5 builds that expose Repeater alongside the standard operational modes. AiMesh on regular images remains faster where both ends are ASUS routers.',
       url: 'https://github.com/gnuton/asuswrt-merlin.ng/releases/tag/gnuton-snapshot-feature-repeater',
     },
   },
@@ -207,6 +203,3 @@ export const branchById = (version: BranchId): FirmwareBranch => {
   if (!branch) throw new Error(`Unknown firmware branch: ${version}`);
   return branch;
 };
-
-export const branchLabel = (version: BranchId): string =>
-  `Version ${version} · ${branchById(version).name}`;

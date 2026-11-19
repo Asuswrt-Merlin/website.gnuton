@@ -3,21 +3,22 @@ import CtaBand from '../components/CtaBand.astro';
 import PageHero from '../components/PageHero.astro';
 import ReleaseCard from '../components/ReleaseCard.astro';
 import RouterCard from '../components/RouterCard.astro';
+import RouterSearch from '../components/RouterSearch.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { releaseChannels } from '../data/project';
-import { firmwareBranches, routersForBranch } from '../data/routers';
+import { firmwareBranches, routers, routersForBranch } from '../data/routers';
 import { site } from '../data/site';
 import { withBase } from '../utils/url';
 ---
 
 <BaseLayout
   title="Firmware"
-  description="Supported ASUS routers and download links for every GNUton Asuswrt-Merlin branch: WiFi 7 (3006), WiFi 6 (3004) and DSL-AC68U (386)."
+  description="Supported ASUS routers and download links by WiFi generation: WiFi 7, WiFi 6 and WiFi 5."
 >
   <PageHero
     eyebrow="Supported models & downloads"
     title="Find your build."
-    subtitle="Match your router to a branch, grab the release channel you want, and read the notes before flashing. Every supported model is listed below."
+    subtitle="Match your router to a WiFi generation, grab the release channel you want, and read the notes before flashing. Every supported model is listed below."
     compact
   >
     <div class="buttons is-centered mt-5">
@@ -38,12 +39,18 @@ import { withBase } from '../utils/url';
         revision decide which images are safe to flash.
       </div>
 
-      <nav class="gm-jump" aria-label="Jump to a firmware branch">
+      <nav class="gm-jump" aria-label="Jump to a WiFi generation" data-router-jump>
         <span class="gm-jump-label">Jump to</span>
-        <a href="#wifi-7">WiFi 7 · 3006</a>
-        <a href="#wifi-6">WiFi 6 · 3004</a>
-        <a href="#dsl">DSL · 386</a>
+        {
+          firmwareBranches.map((branch) => (
+            <a href={`#${branch.id}`} data-jump-branch={branch.id}>
+              {branch.name}
+            </a>
+          ))
+        }
       </nav>
+
+      <RouterSearch total={routers.length} />
     </div>
   </section>
 
@@ -54,11 +61,13 @@ import { withBase } from '../utils/url';
         <section
           id={branch.id}
           class:list={['section', 'gm-section', { 'gm-section-alt': index % 2 === 1 }]}
+          data-router-section
+          data-branch-section={branch.id}
         >
           <div class="container">
             <div class="gm-branch-head">
               <div>
-                <p class="gm-eyebrow mb-2">{branch.eyebrow}</p>
+                <p class="gm-eyebrow mb-2">Supported models</p>
                 <h2 class="title is-2 mb-2">{branch.name}</h2>
                 <p class="gm-branch-head-text">{branch.description}</p>
               </div>
@@ -69,7 +78,7 @@ import { withBase } from '../utils/url';
                 <a class="button gm-button-outline" href={branch.prereleaseUrl} target="_blank" rel="noopener">
                   Pre-release
                 </a>
-                <p class="gm-form-note mt-2">
+                <p class="gm-form-note mt-2" data-branch-count>
                   {branchRouters.length} supported {branchRouters.length === 1 ? 'build' : 'builds'}
                 </p>
               </div>
@@ -77,7 +86,7 @@ import { withBase } from '../utils/url';
 
             <div class="columns is-multiline">
               {branchRouters.map((router) => (
-                <div class="column is-4">
+                <div class="column is-4" data-router-item>
                   <RouterCard router={router} />
                 </div>
               ))}
@@ -121,7 +130,7 @@ import { withBase } from '../utils/url';
       <div class="gm-notice mt-6">
         <strong>AiMesh or Repeater?</strong> Standard images already support AiMesh, which is
         faster when both ends are ASUS routers. Repeater Mode is only available through the
-        experimental 386 build listed above.
+        experimental WiFi 5 build listed above.
       </div>
     </div>
   </section>
@@ -129,7 +138,7 @@ import { withBase } from '../utils/url';
   <CtaBand
     eyebrow="Need a hand?"
     title="Check the guides before you flash."
-    text="Model revisions, branch names and the flashing flow are covered step by step. If something still looks wrong, ask the community."
+    text="Model revisions, WiFi generations and the flashing flow are covered step by step. If something still looks wrong, ask the community."
     ctaLabel="Read the guides"
     ctaHref="/guides"
   />

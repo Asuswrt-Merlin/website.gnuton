@@ -5,9 +5,9 @@ pubDate: 2026-10-18
 tags: ['community']
 ---
 
-GNUton's builds are a community project. The firmware source is public, the build logs are
-public, and the support happens in public threads. There are several useful ways to help,
-even if you never compile a line of code.
+GNUton's builds are a community project. The project source and build logs are public, and
+the support happens in public threads. There are several useful ways to help, even if you
+never compile a line of code.
 
 ## Test a pre-release
 

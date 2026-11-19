@@ -1,13 +1,13 @@
 ---
-title: Understanding the 3006, 3004 and 386 branches
-description: GNUton's builds follow ASUS firmware generations. This is what the branch number means and why you cannot cross-flash between them.
+title: Understanding the WiFi 5, 6 and 7 builds
+description: GNUton's builds follow ASUS WiFi generations. Here is what the firmware numbers mean, which models use which generation, and why you cannot cross-flash.
 pubDate: 2026-11-06
 tags: ['firmware', 'models']
 ---
 
-Every release title starts with a number: **3006**, **3004** or **386**. That is the
-firmware branch, and it is tied to the router hardware and the ASUS software generation
-the build is based on. It is not a version you can choose freely.
+Every release title starts with a number: **3006**, **3004** or **386**. Behind that
+number is the ASUS firmware generation, and it is tied to the router hardware and the
+software generation the build is based on. It is not a version you can choose freely.
 
 ## The three branches
 

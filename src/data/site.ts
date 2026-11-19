@@ -8,7 +8,7 @@ export const site = {
   shortName: 'GNUton',
   tagline: 'Merlin firmware for more ASUS routers.',
   description:
-    "GNUton's builds extend Asuswrt-Merlin to more ASUS routers. WiFi 7, WiFi 6 and DSL firmware, supported by ASUS and RMerlin, built in the cloud and open source.",
+    "GNUton's builds extend Asuswrt-Merlin to more ASUS routers. WiFi 7, WiFi 6 and WiFi 5 firmware, supported by ASUS and RMerlin, built in the cloud with a public build pipeline.",
   // Fallback for local builds. The GitHub Pages workflow injects the real URL.
   url: 'https://asuswrt-merlin.github.io',
   author: 'GNUton',

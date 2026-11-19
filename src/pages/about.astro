@@ -39,8 +39,9 @@ import { withBase } from '../utils/url';
               upstream firmware is the foundation.
             </p>
             <p>
-              Images are compiled in the cloud so the process stays transparent, and the
-              source is publicly available in the
+              Images are compiled in the cloud so the process stays transparent. Some
+              ASUS-supplied vendor components remain prebuilt, while the project source and
+              build definitions are publicly available in the
               <a href={site.repo} target="_blank" rel="noopener">GitHub repository</a>. When a
               build is released, you can trace what went into it.
             </p>
@@ -52,9 +53,9 @@ import { withBase } from '../utils/url';
             <ul class="gm-check-list content">
               <li>Official Asuswrt-Merlin fork</li>
               <li>Supported by ASUS and RMerlin</li>
-              <li>{routers.length} builds across {firmwareBranches.length} branches</li>
-              <li>WiFi 7, WiFi 6 and DSL models</li>
-              <li>Cloud-built from public source</li>
+              <li>{routers.length} builds across {firmwareBranches.length} WiFi generations</li>
+              <li>WiFi 7, WiFi 6 and WiFi 5 models</li>
+              <li>Cloud-built release images</li>
             </ul>
             <a class="button is-primary is-fullwidth mt-4" href={site.releases} target="_blank" rel="noopener">
               Latest releases
@@ -155,7 +156,7 @@ import { withBase } from '../utils/url';
   <CtaBand
     eyebrow="Ready to update?"
     title="Find the right build for your router."
-    text="Every supported model is listed with its branch, downloads and ASUS product page."
+    text="Every supported model is listed with its WiFi generation, downloads and ASUS product page."
     ctaLabel="Browse supported models"
     ctaHref="/firmware"
   />

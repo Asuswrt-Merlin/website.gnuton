@@ -42,8 +42,8 @@ Every supported build belongs to one firmware branch:
 
 The branch name is part of the release title, so a quick search on the
 [releases page](https://github.com/gnuton/asuswrt-merlin.ng/releases) is usually enough.
-The [branch guide](../understanding-firmware-branches/) explains what changes between
-them.
+The [guide to WiFi generations](../understanding-wifi-generations/) explains what changes
+between them.
 
 ## When in doubt, stop
 

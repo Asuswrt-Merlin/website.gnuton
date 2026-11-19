@@ -27,11 +27,12 @@ const softwareSchema = {
 };
 
 const featuredRouters = routers.filter((router) => router.featured).slice(0, 6);
+const routerFamilies = new Set(routers.map((router) => router.image)).size;
 const stats = [
   { value: String(routers.length), label: 'Supported builds' },
-  { value: String(firmwareBranches.length), label: 'Firmware branches' },
+  { value: String(routerFamilies), label: 'Router families' },
+  { value: String(firmwareBranches.length), label: 'WiFi generations' },
   { value: '2', label: 'Stable + beta' },
-  { value: '100%', label: 'Open source' },
 ];
 ---
 
@@ -39,7 +40,7 @@ const stats = [
   <PageHero
     eyebrow="Official Asuswrt-Merlin fork"
     title="Merlin firmware for more ASUS routers."
-    subtitle="GNUton's builds extend Asuswrt-Merlin to WiFi 7, WiFi 6 and DSL models — supported by ASUS and RMerlin, compiled in the cloud, and published as open source."
+    subtitle="GNUton's builds extend Asuswrt-Merlin to WiFi 7, WiFi 6 and WiFi 5 routers — supported by ASUS and RMerlin, built in the cloud with a public build pipeline."
   >
     <div class="buttons mt-5">
       <a class="button is-primary is-medium" href={site.releases} target="_blank" rel="noopener">
@@ -52,7 +53,7 @@ const stats = [
 
     <Fragment slot="aside">
       <div class="gm-hero-media">
-        <span class="gm-hero-tag">WiFi 7 · 3006</span>
+        <span class="gm-hero-tag">WiFi 7</span>
         <img
           src={withBase('/images/routers/gt-be98.png')}
           alt="ASUS ROG Rapture GT-BE98 router"
@@ -60,7 +61,7 @@ const stats = [
           height="340"
           decoding="async"
         />
-        <p class="gm-hero-caption">ROG Rapture GT-BE98 · supported on the 3006 branch</p>
+        <p class="gm-hero-caption">ROG Rapture GT-BE98 · supported WiFi 7 model</p>
       </div>
     </Fragment>
   </PageHero>
@@ -84,9 +85,9 @@ const stats = [
     <div class="container">
       <div class="gm-section-head">
         <p class="gm-eyebrow mb-2">Downloads</p>
-        <h2 class="title is-2">Pick your branch</h2>
+        <h2 class="title is-2">Choose your firmware</h2>
         <p class="subtitle is-6">
-          The firmware branch follows your router, not the other way around. Match the model first, then choose stable or a pre-release.
+          Match the router generation first, then choose stable or a pre-release. The download links keep each generation separate.
         </p>
       </div>
 
@@ -188,8 +189,8 @@ const stats = [
 
       <div class="gm-notice mt-6">
         <strong>Firmware changes carry risk.</strong> Read the release notes, keep a recovery path,
-        and never flash a build from a different model or branch. The project cannot guarantee
-        every flash succeeds.
+        and never flash a build from a different model or WiFi generation. The project cannot
+        guarantee every flash succeeds.
       </div>
     </div>
   </section>

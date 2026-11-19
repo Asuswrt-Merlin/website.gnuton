@@ -16,7 +16,8 @@ supported before touching the site. The source of truth is the project README:
 
 1. **Confirm support and branch.** Read the upstream README and identify the exact model
    name, aliases and firmware branch (`3006`, `3004` or `386`). If the model is not listed,
-   stop and ask — do not add speculative hardware.
+   stop and ask — do not add speculative hardware. The website displays the friendly WiFi
+   generation (WiFi 7 / 6 / 5), not the numeric branch.
 
 2. **Collect the product page URL.** Use the ASUS product page linked from the README. If
    the README has no link, find the official ASUS page for that model. Avoid retailer
@@ -54,9 +55,10 @@ supported before touching the site. The source of truth is the project README:
    },
    ```
 
-5. **Check derived content.** The home-page counters, branch counts, firmware page and
-   navigation all derive from `src/data/routers.ts`; no manual count update is needed.
-   Only adjust copy if the new model changes a description or adds a new branch.
+5. **Check derived content.** The home-page counters, WiFi generation counts, firmware page,
+   jump links and the search index all derive from `src/data/routers.ts`; no manual count or
+   search update is needed. Only adjust copy if the new model changes a description or
+   introduces a new WiFi generation.
 
 6. **Write a guide if the model has a gotcha.** If the new model needs a special flashing
    step, a revision check or a known limitation, add a post under `src/content/guides/`

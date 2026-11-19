@@ -1,0 +1,162 @@
+---
+interface Props {
+  total: number;
+}
+
+const { total } = Astro.props;
+---
+
+<div class="gm-router-search" role="search">
+  <label class="gm-router-search-label" for="router-search">Search supported routers</label>
+  <div class="gm-router-search-field">
+    <svg
+      class="gm-router-search-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="7"></circle>
+      <path d="m20 20-3.5-3.5"></path>
+    </svg>
+    <input
+      id="router-search"
+      type="search"
+      placeholder="Try RT-AX82U, ZenWiFi or WiFi 6"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+      aria-describedby="router-search-status"
+    />
+    <button
+      type="button"
+      class="gm-router-search-clear"
+      data-router-search-clear
+      aria-label="Clear router search"
+      hidden
+    >
+      Clear
+    </button>
+  </div>
+  <p
+    id="router-search-status"
+    class="gm-router-search-status"
+    data-router-search-status
+    role="status"
+    aria-live="polite"
+  >
+    Showing all {total} supported routers.
+  </p>
+  <p class="gm-router-search-empty gm-is-hidden" data-router-search-empty>
+    No supported routers match that search. Try a model name such as
+    <strong>RT-AX82U</strong>, <strong>ZenWiFi XT8</strong>, or a generation like
+    <strong>WiFi 6</strong>.
+  </p>
+</div>
+
+<script>
+  const normalize = (value: string): string =>
+    value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+  const applyFilter = (input: HTMLInputElement): void => {
+    const query = normalize(input.value);
+    const rawQuery = input.value.trim();
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-router-card]'));
+
+    let shown = 0;
+    for (const card of cards) {
+      const matches =
+        query.length === 0 || normalize(card.dataset.search ?? '').includes(query);
+      const item = card.closest<HTMLElement>('[data-router-item]');
+      item?.classList.toggle('gm-is-hidden', !matches);
+      if (matches) shown += 1;
+    }
+
+    const visibleBranches = new Set<string>();
+    const sections = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-router-section]'),
+    );
+    for (const section of sections) {
+      const sectionCards = Array.from(
+        section.querySelectorAll<HTMLElement>('[data-router-card]'),
+      );
+      let visible = 0;
+      for (const card of sectionCards) {
+        const item = card.closest<HTMLElement>('[data-router-item]');
+        if (!item?.classList.contains('gm-is-hidden')) visible += 1;
+      }
+
+      section.classList.toggle('gm-is-hidden', visible === 0);
+      const count = section.querySelector<HTMLElement>('[data-branch-count]');
+      if (count) {
+        count.textContent = `${visible} supported ${visible === 1 ? 'build' : 'builds'}`;
+      }
+      const branch = section.dataset.branchSection;
+      if (visible > 0 && branch) visibleBranches.add(branch);
+    }
+
+    document.querySelectorAll<HTMLElement>('[data-jump-branch]').forEach((link) => {
+      const branch = link.dataset.jumpBranch ?? '';
+      link.classList.toggle('gm-is-hidden', !visibleBranches.has(branch));
+    });
+    const jump = document.querySelector<HTMLElement>('[data-router-jump]');
+    jump?.classList.toggle('gm-is-hidden', visibleBranches.size === 0);
+
+    const status = document.querySelector<HTMLElement>('[data-router-search-status]');
+    if (status) {
+      if (query.length === 0) {
+        status.textContent = `Showing all ${cards.length} supported routers.`;
+      } else if (shown === 0) {
+        status.textContent = `No routers match “${rawQuery}”.`;
+      } else {
+        status.textContent = `Showing ${shown} of ${cards.length} supported routers.`;
+      }
+    }
+
+    const empty = document.querySelector<HTMLElement>('[data-router-search-empty]');
+    empty?.classList.toggle('gm-is-hidden', !(query.length > 0 && shown === 0));
+
+    const clear = document.querySelector<HTMLButtonElement>('[data-router-search-clear]');
+    if (clear) clear.hidden = rawQuery.length === 0;
+  };
+
+  const clearSearch = (input: HTMLInputElement): void => {
+    input.value = '';
+    applyFilter(input);
+    input.focus();
+  };
+
+  document.addEventListener('input', (event) => {
+    const target = event.target;
+    if (target instanceof HTMLInputElement && target.id === 'router-search') {
+      applyFilter(target);
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest('[data-router-search-clear]')) {
+      const input = document.getElementById('router-search');
+      if (input instanceof HTMLInputElement) clearSearch(input);
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    const active = document.activeElement;
+    if (active instanceof HTMLInputElement && active.id === 'router-search') {
+      clearSearch(active);
+    }
+  });
+
+  const initSearch = (): void => {
+    const input = document.getElementById('router-search');
+    if (input instanceof HTMLInputElement) applyFilter(input);
+  };
+
+  initSearch();
+  document.addEventListener('astro:page-load', initSearch);
+</script>

@@ -449,15 +449,6 @@ main {
   }
 }
 
-.gm-router-branch {
-  margin-bottom: 0.35rem;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: var(--gm-accent);
-}
-
 .gm-router-alias {
   font-size: 0.85rem;
   color: var(--gm-muted);
@@ -544,7 +535,7 @@ main {
 }
 
 .gm-branch-version {
-  margin: 0;
+  margin: 0 0 0.25rem;
   font-size: clamp(2.5rem, 5vw, 3.25rem);
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -691,6 +682,104 @@ main {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gm-muted);
+}
+
+/* --------------------------- Router search ----------------------------- */
+
+.gm-router-search {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--gm-border);
+  border-radius: 0.75rem;
+  background-color: var(--gm-ink-soft);
+}
+
+.gm-router-search-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gm-accent);
+}
+
+.gm-router-search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.gm-router-search-icon {
+  position: absolute;
+  left: 1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--gm-muted);
+  pointer-events: none;
+}
+
+.gm-router-search-field input {
+  width: 100%;
+  padding: 0.8rem 5.5rem 0.8rem 2.75rem;
+  border: 1px solid var(--gm-border);
+  border-radius: 0.5rem;
+  background-color: var(--gm-ink);
+  color: var(--gm-text);
+  font: inherit;
+
+  &::placeholder {
+    color: var(--gm-muted);
+  }
+
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
+}
+
+.gm-router-search-clear {
+  position: absolute;
+  right: 0.55rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--gm-border);
+  border-radius: 0.35rem;
+  background-color: var(--gm-ink-raised);
+  color: var(--gm-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    border-color: var(--gm-accent);
+    color: var(--gm-accent);
+  }
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.gm-router-search-status {
+  margin: 0.75rem 0 0;
+  font-size: 0.875rem;
+  color: var(--gm-muted);
+}
+
+.gm-router-search-empty {
+  margin: 0.75rem 0 0;
+  padding: 0.85rem 1rem;
+  border: 1px dashed var(--gm-border);
+  border-radius: 0.5rem;
+  color: var(--gm-muted);
+
+  strong {
+    color: var(--gm-text);
+  }
+}
+
+.gm-is-hidden {
+  display: none;
 }
 
 /* ----------------------------- Branch header ---------------------------- */

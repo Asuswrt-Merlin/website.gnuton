@@ -15,8 +15,9 @@ Built with [Astro](https://astro.build) and [Bulma](https://bulma.io), based on 
 
 ## Features
 
-- **Supported-router catalogue** — one card per supported build, grouped by firmware
-  branch (3006 / 3004 / 386), with local transparent PNGs and links to ASUS product pages.
+- **Supported-router catalogue** — one card per supported build, grouped by WiFi
+  generation (WiFi 7 / WiFi 6 / WiFi 5), with a live search filter, local transparent
+  PNGs and links to ASUS product pages.
 - **Download-first home page** — branch cards for stable and pre-release releases, plus a
   three-step flashing checklist.
 - **Guides** — Markdown content collection with model-revision, branch, flashing and
@@ -56,8 +57,8 @@ with `pnpm astro dev stop | status | logs`.
 
 | Route | Description |
 | --- | --- |
-| `/` | Hero, stats, firmware branches, featured routers, project values, flashing steps, latest guides |
-| `/firmware` | Every supported model grouped by branch, release channels and downloads |
+| `/` | Hero, stats, WiFi generations, featured routers, project values, flashing steps, latest guides |
+| `/firmware` | Every supported model grouped by WiFi generation, with live search, release channels and downloads |
 | `/about` | Project aim, values, credits and ways to help |
 | `/guides` | Guide listing |
 | `/guides/[slug]` | Individual guide with reading time and tags |

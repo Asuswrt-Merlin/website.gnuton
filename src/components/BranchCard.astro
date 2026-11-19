@@ -13,8 +13,7 @@ const { branch, modelCount, highlighted = false } = Astro.props;
 
 <div class:list={['box', 'gm-card', 'gm-branch-card', { 'is-highlighted': highlighted }]}>
   {highlighted && <div class="gm-plan-badge">Most supported models</div>}
-  <p class="gm-branch-version">{branch.version}</p>
-  <h3 class="title is-4 mb-1">{branch.name}</h3>
+  <h3 class="gm-branch-version">{branch.name}</h3>
   <p class="gm-branch-count mb-3">
     {modelCount} supported {modelCount === 1 ? 'build' : 'builds'}
   </p>

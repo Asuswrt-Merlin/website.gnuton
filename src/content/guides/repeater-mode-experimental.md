@@ -1,12 +1,13 @@
 ---
-title: Repeater Mode on the experimental 386 build
+title: Repeater Mode on the experimental WiFi 5 build
 description: The DSL-AC68U has an experimental build that restores Repeater Mode. Here is what it is, who it helps, and why AiMesh is usually the better choice.
 pubDate: 2026-10-26
-tags: ['386', 'features', 'experimental']
+tags: ['wifi-5', 'features', 'experimental']
 ---
 
-The standard 386 build for the DSL-AC68U supports the usual operational modes and AiMesh.
-There is also an experimental snapshot that adds **Repeater Mode** for people who need it.
+The standard WiFi 5 build for the DSL-AC68U supports the usual operational modes and
+AiMesh. There is also an experimental snapshot that adds **Repeater Mode** for people who
+need it.
 
 ## What the experimental build adds
 
@@ -20,13 +21,13 @@ when you specifically need repeater functionality.
 ## What “experimental” means
 
 - It is a snapshot, not a stable release.
-- It may lag behind the current stable branch.
+- It may lag behind the current stable release.
 - It can have bugs that never reach a stable build.
 - It is the right place to test the feature and report what breaks.
 
 ## Try it carefully
 
-1. Confirm you have a DSL-AC68U and are on the 386 branch.
+1. Confirm you have a DSL-AC68U and are on the WiFi 5 build.
 2. Read the release notes for the snapshot build.
 3. Back up your settings and note your current firmware version so you can return to it.
 4. Flash using the normal web interface flow — see the [flashing guide](../how-to-flash-gnuton-firmware/).
@@ -36,4 +37,4 @@ Download it from the
 [Repeater Mode release tag](https://github.com/gnuton/asuswrt-merlin.ng/releases/tag/gnuton-snapshot-feature-repeater).
 
 If you only need a mesh with other ASUS routers, stay on the standard stable build and use
-AiMesh. The [firmware page](../../firmware/#dsl) links the regular 386 downloads.
+AiMesh. The [firmware page](../../firmware/#wifi-5) links the regular downloads.
