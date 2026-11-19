@@ -1587,6 +1587,24 @@ html {
 
 /* ----------------------------- Responsive ------------------------------ */
 
+// The full menu needs a little more room after adding Features and Changelog.
+// Keep the burger below Bulma's desktop breakpoint and tighten the desktop
+// links just above it.
+@media screen and (min-width: 1024px) and (max-width: 1160px) {
+  .gm-brand-suffix {
+    display: none;
+  }
+
+  .gm-nav-link {
+    padding-inline: 0.45rem;
+    font-size: 0.9rem;
+  }
+
+  .gm-nav-cta {
+    padding-inline: 0.8rem;
+  }
+}
+
 @media screen and (max-width: 1023px) {
   .gm-brand-suffix {
     display: none;

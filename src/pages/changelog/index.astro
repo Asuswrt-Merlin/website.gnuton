@@ -6,21 +6,22 @@ import {
   changelogReleasesFor,
   groupReleasesByYear,
 } from '../../data/releases';
-import { branchById } from '../../data/routers';
+import { branchById, firmwareBranches } from '../../data/routers';
 import { formatReleaseDate } from '../../utils/date';
 import { withBase } from '../../utils/url';
 
-const currentBranches = ['3006', '3004', '386'] as const;
-
 const groups = [
-  ...currentBranches.map((version) => {
+  ...firmwareBranches.map(({ version }) => {
     const branch = branchById(version);
+    const is386 = version === '386';
     return {
       id: version,
-      jumpLabel: branch.name,
-      eyebrow: `${branch.name} builds`,
+      jumpLabel: is386 ? '386 line' : branch.name,
+      eyebrow: is386 ? '386 line' : `${branch.name} builds`,
       title: `${branch.version} releases`,
-      description: branch.description,
+      description: is386
+        ? 'The long-lived 386 line: early WiFi 6 builds and the DSL-AC68U (WiFi 5), including the experimental Repeater Mode images. These releases are historical; use the current WiFi 7 and WiFi 6 lines for supported firmware.'
+        : branch.description,
       releases: changelogReleasesFor(version),
       legacy: false,
     };
@@ -43,12 +44,12 @@ const prereleaseCount = changelogReleases.length - stableCount;
 
 <BaseLayout
   title="Changelog"
-  description="Complete GNUton's Asuswrt-Merlin release history with full notes for every WiFi 7, WiFi 6 and WiFi 5 build."
+  description="Complete GNUton's Asuswrt-Merlin release history with full notes for every WiFi 7, WiFi 6 and 386-line build."
 >
   <PageHero
     eyebrow="Changelog"
     title="Every build, documented."
-    subtitle="Browse the full release history with notes for each firmware image. Stable and pre-release builds are grouped by WiFi generation, with the older archive kept below."
+    subtitle="Browse the full release history with notes for each firmware image. Stable and pre-release builds are grouped by firmware line and year, with the older archive kept below."
     compact
   >
     <p class="gm-changelog-hero-meta">

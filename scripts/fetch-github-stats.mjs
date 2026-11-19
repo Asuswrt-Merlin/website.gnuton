@@ -177,6 +177,9 @@ async function main() {
       repository: REPOSITORY,
       ...summary,
       ...repository,
+      // Count the deduplicated changelog set so the home-page tile and
+      // /changelog stay in agreement when a release exists in only one repo.
+      releases: allReleases.length,
       latestRelease: latestStable
         ? {
             tag: latestStable.tag,

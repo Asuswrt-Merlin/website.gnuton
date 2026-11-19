@@ -52,7 +52,7 @@ export const firmwareBranches: FirmwareBranch[] = [
     version: '3006',
     name: 'WiFi 7',
     description:
-      'The newest Merlin line for ASUS WiFi 7 hardware. Same upstream feature set, built for the flagship ROG router.',
+      'The newest Merlin line for ASUS WiFi 7 hardware. Same upstream feature set, including the flagship ROG router.',
     stableUrl: releaseQuery('3006*', false),
     prereleaseUrl: releaseQuery('3006*', true),
     issueUrl: site.bugReport3006,

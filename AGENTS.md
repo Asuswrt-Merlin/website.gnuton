@@ -57,7 +57,7 @@
   only if the tag is missing from the snapshot). Dismissals are stored per release tag in
   `localStorage`, so a new tag shows the banner again. Release notes are rendered from the
   stored Markdown with `marked`; the `Date:`/`Release:` preamble is removed because the
-  page header already shows that metadata.
+  page header already shows the published date and tag.
 - **Source repositories**: the Code menu links to `site.repo3006`, `site.repo3004`
   (the current 3004 repository, later `...-3004.gnuton`) and `site.repo386` (the 386
   tree in the 3004 repository). Update the `site.ts` constants when the 3004 repo is
@@ -69,7 +69,7 @@
 - **Guides**: Content Collections via `src/content.config.ts`, files in
   `src/content/guides/`. Import `z` from `astro/zod`, **not** `astro:content` (deprecated in
   Astro 7). Routes: `/guides` and `/guides/[slug]`.
-- **Routes**: `/`, `/features`, `/firmware`, `/changelog`, `/changelog/[branch]/[tag]`,
+- **Routes**: `/`, `/features`, `/firmware`, `/changelog`, `/changelog/[branch]/[slug]`,
   `/about`, `/guides`, `/guides/[slug]`, `/support`, `/rss.xml`, `/robots.txt`,
   `404.astro`.
 - **Images**: router PNGs live in `public/images/routers/` and must keep real alpha
@@ -179,9 +179,8 @@ Before finishing:
 5. Router changes: check the PNG loads, card link resolves and the model appears under the
    right `/firmware#wifi-*` anchor.
 6. Changelog changes: check the banner link opens the matching notes page, every branch
-   section and year anchor works, legacy releases still render, and top-menu Changelog is
-   active on both the index and detail pages. Verify a release with no body shows the
-   fallback note.
+   section anchor works, legacy releases still render, and top-menu Changelog is active on
+   both the index and detail pages. Verify a release with no body shows the fallback note.
 7. Workflow changes: validate with
    `docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest`, then exercise a
    branch push (`🧪` only), a same-repo PR (`🧪 → 👀`), close (`🧹`), and merge (`🧪 → 🚀`).

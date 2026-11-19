@@ -26,11 +26,12 @@ const { release } = Astro.props;
 const branch = release.branch === 'legacy' ? null : branchById(release.branch);
 const published = new Date(release.publishedAt);
 const notes = releaseNotesBody(release);
+// Release notes come from the project's own GitHub releases, so raw HTML is
+// treated as trusted content. Do not feed user-supplied Markdown through this
+// path. External links should not take over the tab that is reading them.
 const notesHtml = notes
   ? marked
       .parse(notes, { async: false, gfm: true })
-      // Release notes are trusted project content, but external links should
-      // not take over the tab that is reading them.
       .replace(
         /<a href="(https?:\/\/[^"]+)"/g,
         '<a href="$1" target="_blank" rel="noopener"',
@@ -65,6 +66,8 @@ const repositoryUrl = `https://github.com/${release.repository}`;
         ) : (
           <span>Legacy</span>
         )}
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{release.tag}</span>
       </nav>
 
       <header class="gm-changelog-release-head">
@@ -73,7 +76,10 @@ const repositoryUrl = `https://github.com/${release.repository}`;
         </p>
         <h1 class="title is-1 mb-3">{release.tag}</h1>
         <p class="gm-changelog-release-meta">
-          <time datetime={published.toISOString()}>{formatReleaseDate(published)}</time>
+          <span>
+            Published{' '}
+            <time datetime={published.toISOString()}>{formatReleaseDate(published)}</time>
+          </span>
           <span
             class:list={[
               'gm-changelog-badge',
@@ -84,7 +90,7 @@ const repositoryUrl = `https://github.com/${release.repository}`;
           </span>
         </p>
         <p class="gm-changelog-release-source">
-          Published in <a href={repositoryUrl} target="_blank" rel="noopener">
+          Source: <a href={repositoryUrl} target="_blank" rel="noopener">
             {release.repository}
           </a>.
         </p>
@@ -107,7 +113,7 @@ const repositoryUrl = `https://github.com/${release.repository}`;
         <aside class="gm-changelog-release-aside">
           <div class="gm-notice">
             <strong>Before flashing.</strong> Check your exact model and hardware revision.
-            Read the notes above and keep a recovery path available.
+            Read the release notes and keep a recovery path available.
           </div>
           <a
             class="button is-primary is-fullwidth"
@@ -115,7 +121,7 @@ const repositoryUrl = `https://github.com/${release.repository}`;
             target="_blank"
             rel="noopener"
           >
-            Download from GitHub ↗
+            Download from GitHub <span aria-hidden="true">↗</span>
           </a>
           <a class="button gm-button-outline is-fullwidth" href={withBase('/changelog/')}>
             All releases
@@ -132,7 +138,9 @@ const repositoryUrl = `https://github.com/${release.repository}`;
       </div>
 
       <p class="mt-6">
-        <a class="gm-changelog-back" href={withBase('/changelog/')}>← Back to all releases</a>
+        <a class="gm-changelog-back" href={withBase('/changelog/')}>
+          <span aria-hidden="true">←</span> Back to all releases
+        </a>
       </p>
     </div>
   </section>

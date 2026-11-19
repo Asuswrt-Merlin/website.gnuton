@@ -42,7 +42,7 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
         below are upstream Asuswrt-Merlin features. GNUton's builds compile them for additional
         routers; they do not replace them with a separate feature set.
         <a href={upstreamFeaturesUrl} target="_blank" rel="noopener">
-          Read the upstream feature list ↗
+          Read the upstream feature list <span aria-hidden="true">↗</span>
         </a>
       </div>
 
@@ -123,7 +123,8 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
                             target={external ? '_blank' : undefined}
                             rel={external ? 'noopener' : undefined}
                           >
-                            {link.label} {external ? '↗' : '→'}
+                            {link.label}{' '}
+                            <span aria-hidden="true">{external ? '↗' : '→'}</span>
                           </a>
                         </li>
                       );
@@ -147,7 +148,7 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
   <CtaBand
     eyebrow="Ready to try it?"
     title="Pick the build for your router."
-    text="Every supported model is listed with its WiFi generation, download links and ASUS product page."
+    text="Browse the model catalogue for WiFi generation, download links and ASUS product pages."
     ctaLabel="Browse supported models"
     ctaHref="/firmware"
   />

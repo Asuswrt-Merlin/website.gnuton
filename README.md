@@ -65,7 +65,7 @@ with `pnpm astro dev stop | status | logs`.
 | `/features` | Feature catalogue shared with upstream Merlin |
 | `/firmware` | Every supported model grouped by WiFi generation, with live search, release channels and downloads |
 | `/changelog` | Full release history grouped by WiFi generation and year |
-| `/changelog/[branch]/[tag]` | Release notes for one firmware tag |
+| `/changelog/[branch]/[slug]` | Release notes for one firmware tag |
 | `/about` | Project aim, values, credits and ways to help |
 | `/guides` | Guide listing |
 | `/guides/[slug]` | Individual guide with reading time and tags |
