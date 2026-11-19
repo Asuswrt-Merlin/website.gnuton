@@ -41,6 +41,7 @@ jobs:
             core.setOutput('origin', url.origin)
             core.setOutput('base_path', basePath)
             core.setOutput('base_url', `${url.origin}${basePath}`)
+            core.setOutput('base_url_no_scheme', `${url.host}${basePath}`)
             core.info(`Pages site: ${url.origin}${basePath}`)
 
       - name: Install pnpm

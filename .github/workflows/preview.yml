@@ -43,6 +43,7 @@ jobs:
             core.setOutput('origin', url.origin)
             core.setOutput('base_path', basePath)
             core.setOutput('base_url', `${url.origin}${basePath}`)
+            core.setOutput('base_url_no_scheme', `${url.host}${basePath}`)
             core.info(`Pages site: ${url.origin}${basePath}`)
 
       - name: Install pnpm
@@ -80,6 +81,7 @@ jobs:
           source-dir: dist
           preview-branch: gh-pages
           umbrella-dir: pr-preview
-          pages-base-url: ${{ steps.pages.outputs.base_url }}
           wait-for-pages-deployment: true
           qr-code: false
+          # The action prepends https:// itself; pass host + base path only.
+          pages-base-url: ${{ steps.pages.outputs.base_url_no_scheme }}
