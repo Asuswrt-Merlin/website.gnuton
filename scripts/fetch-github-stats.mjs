@@ -16,7 +16,7 @@
 import { rename, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
-const REPOSITORY = 'Asuswrt-Merlin/asuswrt-merlin.ng-gnuton';
+const REPOSITORY = 'Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton';
 const WIFI7_REPOSITORY = 'Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton';
 // 3006 builds live in their own repository; 3004 and 386 share the other one.
 const REPOSITORY_BY_BRANCH = {

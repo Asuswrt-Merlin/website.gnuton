@@ -7,7 +7,7 @@ under the MIT License. The original copyright notice is preserved in [`LICENSE`]
 
 The website content is maintained by the GNUton's Merlin Builds project. Project facts,
 supported-model lists and download links are adapted from the firmware repository:
-https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-gnuton
+https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton
 
 ## Third-party names and images
 

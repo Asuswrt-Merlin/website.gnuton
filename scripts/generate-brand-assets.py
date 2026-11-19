@@ -140,7 +140,7 @@ def make_og() -> None:
         x += w + 12
 
     draw.line((80, 560, 1120, 560), fill=(255, 255, 255, 28), width=1)
-    draw.text((80, 580), "github.com/gnuton/asuswrt-merlin.ng", font=font(FONT_REGULAR, 19), fill=MUTED)
+    draw.text((80, 580), "github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton", font=font(FONT_REGULAR, 19), fill=MUTED)
     draw.text((1120, 580), "Built in the cloud · Open source", font=font(FONT_REGULAR, 19), fill=MUTED, anchor="ra")
 
     image.convert("RGB").save(OUT_OG, "PNG", optimize=True)

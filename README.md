@@ -2,7 +2,7 @@
 
 [![🚀 Pages pipeline](https://github.com/Asuswrt-Merlin/website.gnuton/actions/workflows/pages.yml/badge.svg)](https://github.com/Asuswrt-Merlin/website.gnuton/actions/workflows/pages.yml)
 
-The website for **[GNUton's Asuswrt-Merlin builds](https://github.com/gnuton/asuswrt-merlin.ng)**:
+The website for **[GNUton's Asuswrt-Merlin builds](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton)**:
 supported routers, firmware downloads by branch, installation guides and community links.
 
 Live site (after the first Pages deployment):
@@ -91,7 +91,7 @@ Then add the model under the correct branch in `src/data/routers.ts` and run
 ## Content sources
 
 - Supported models, download links, branch names, credits and project aim come from the
-  [upstream README](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-gnuton/blob/master/README.md).
+  [upstream README](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/README.md).
 - Guides are written for this site and live in `src/content/guides/`.
 - Router artwork is stored locally in `public/images/routers/` as transparent PNGs. The
   images come from ASUS product pages / product-icon CDN and are used for identification.
@@ -187,7 +187,7 @@ SITE_URL=https://example.com BASE_PATH=/firmware pnpm build
 
 - Website template: [Astro Wellness](https://github.com/Domenico-Tenace-Open-Labs/astro-wellness)
   by Domenico Tenace, MIT licensed. See `LICENSE` and `NOTICE.md`.
-- Firmware project: [gnuton/asuswrt-merlin.ng](https://github.com/gnuton/asuswrt-merlin.ng),
+- Firmware project: [Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton),
   an official [Asuswrt-Merlin](https://github.com/RMerl/asuswrt-merlin.ng) fork.
 - ASUS and ROG are trademarks of ASUSTeK Computer Inc. Product images are used to identify
   supported hardware.
