@@ -134,7 +134,7 @@ export const releaseChannels: ReleaseChannel[] = [
     name: 'Experimental',
     description:
       'One-off builds that explore extra functionality, such as Repeater Mode on the WiFi 5 DSL model.',
-    href: 'https://github.com/gnuton/asuswrt-merlin.ng/releases/tag/gnuton-snapshot-feature-repeater',
+    href: 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/tag/gnuton-snapshot-feature-repeater',
     cta: 'Browse experimental builds',
   },
 ];

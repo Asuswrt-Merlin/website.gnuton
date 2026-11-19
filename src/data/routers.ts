@@ -3,7 +3,7 @@
  *
  * This is the single source of truth for the model grid, the home-page
  * counters, and the downloads page. Keep it in sync with the upstream README:
- * https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-gnuton/blob/master/README.md
+ * https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/README.md
  *
  * Adding a model? Use the "add-router-model" skill in .opencode/skills.
  */
@@ -83,7 +83,7 @@ export const firmwareBranches: FirmwareBranch[] = [
       label: 'Repeater Mode',
       description:
         'Experimental WiFi 5 builds that expose Repeater alongside the standard operational modes. AiMesh on regular images remains faster where both ends are ASUS routers.',
-      url: 'https://github.com/gnuton/asuswrt-merlin.ng/releases/tag/gnuton-snapshot-feature-repeater',
+      url: 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/tag/gnuton-snapshot-feature-repeater',
     },
   },
 ];

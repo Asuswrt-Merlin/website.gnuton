@@ -10,7 +10,7 @@ existing model line gets a new hardware revision.
 
 This skill changes the **website only**. Confirm that the firmware model is actually
 supported before touching the site. The source of truth is the project README:
-<https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-gnuton/blob/master/README.md>
+<https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/README.md>
 
 ## Workflow
 

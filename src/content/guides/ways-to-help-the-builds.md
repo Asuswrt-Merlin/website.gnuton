@@ -31,7 +31,7 @@ through the [feature request form](../../support/#request-a-feature).
 
 ## Send code
 
-Developers can read the [project development notes](https://github.com/gnuton/asuswrt-merlin.ng/blob/master/www/DEV.md)
+Developers can read the [project development notes](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/www/DEV.md)
 for build instructions and contribution guidance. Changes that stay close to upstream
 Merlin are the easiest to review and maintain.
 
@@ -43,5 +43,5 @@ or writing up a fix helps the next person more than you might expect.
 
 ## Give the project a star
 
-A star on [GitHub](https://github.com/gnuton/asuswrt-merlin.ng) costs nothing and makes
+A star on [GitHub](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton) costs nothing and makes
 the project easier for other ASUS owners to find.

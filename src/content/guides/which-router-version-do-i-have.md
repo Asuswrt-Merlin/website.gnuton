@@ -41,7 +41,7 @@ Every supported build belongs to one firmware branch:
 - **386** — the DSL-AC68U.
 
 The branch name is part of the release title, so a quick search on the
-[releases page](https://github.com/gnuton/asuswrt-merlin.ng/releases) is usually enough.
+[releases page](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases) is usually enough.
 The [guide to WiFi generations](../understanding-wifi-generations/) explains what changes
 between them.
 

@@ -3,7 +3,7 @@
  * All links point at the real project resources so the site stays a thin,
  * honest layer over the GitHub repository.
  */
-const repo3004Url = 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-gnuton';
+const repo3004Url = 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton';
 const repo3006Url = 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton';
 const repo386Url = `${repo3004Url}/tree/386.12_0-gnuton1`;
 
@@ -25,17 +25,16 @@ export const site = {
   author: 'GNUton',
 
   upstream: 'https://github.com/RMerl/asuswrt-merlin.ng',
-  repo: 'https://github.com/gnuton/asuswrt-merlin.ng',
-  repoLabel: 'gnuton/asuswrt-merlin.ng',
-  // The 3004 line; this repository will move to
-  // https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton
+  repo: 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton',
+  repoLabel: 'Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton',
+  // The 3004 line.
   repo3004: repo3004Url,
   repo3006: repo3006Url,
   // 386 code lives in the 3004 repository; pin to the latest stable 386 tag.
   repo386: repo386Url,
-  releases: 'https://github.com/gnuton/asuswrt-merlin.ng/releases',
+  releases: 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases',
   docs: 'https://github.com/RMerl/asuswrt-merlin.ng/wiki/About-Asuswrt',
-  devDocs: 'https://github.com/gnuton/asuswrt-merlin.ng/blob/master/www/DEV.md',
+  devDocs: 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/www/DEV.md',
   issues: `${repo3004Url}/issues`,
   // Each firmware line has its own issue tracker after the repository split:
   // 3006 builds in the WiFi 7 repository, 3004 and 386 builds in the 3004 one.

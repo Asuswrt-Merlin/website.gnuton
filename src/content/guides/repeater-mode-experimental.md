@@ -34,7 +34,7 @@ when you specifically need repeater functionality.
 5. Test the repeater setup and report issues with logs, your topology and the exact build.
 
 Download it from the
-[Repeater Mode release tag](https://github.com/gnuton/asuswrt-merlin.ng/releases/tag/gnuton-snapshot-feature-repeater).
+[Repeater Mode release tag](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/tag/gnuton-snapshot-feature-repeater).
 
 If you only need a mesh with other ASUS routers, stay on the standard stable build and use
 AiMesh. The [firmware page](../../firmware/#wifi-5) links the regular downloads.
