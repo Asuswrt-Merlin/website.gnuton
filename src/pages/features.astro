@@ -61,7 +61,7 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
                         <>
                           {' '}
                           <a href={item.link.href} target="_blank" rel="noopener">
-                            {item.link.label} ↗
+                            {item.link.label} <span aria-hidden="true">↗</span>
                           </a>
                         </>
                       )}

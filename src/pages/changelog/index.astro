@@ -32,7 +32,7 @@ const groups = [
     eyebrow: 'Historical archive',
     title: 'Legacy & experimental builds',
     description:
-      'Older 384/388 releases and one-off experimental snapshots, kept for reference. These builds are no longer maintained; use the current lines above for supported firmware.',
+      'Older 384/388 releases and one-off experimental snapshots, kept for reference. These builds are no longer maintained; use the current WiFi 7 and WiFi 6 lines above for supported firmware.',
     releases: changelogReleasesFor('legacy'),
     legacy: true,
   },
@@ -87,7 +87,7 @@ const prereleaseCount = changelogReleases.length - stableCount;
           {group.legacy && (
             <div class="gm-notice mb-5">
               <strong>Archived releases.</strong> These builds are no longer maintained. Use
-              the WiFi 7, WiFi 6 or WiFi 5 sections above for current firmware.
+              the WiFi 7 or WiFi 6 sections above for current firmware.
             </div>
           )}
 

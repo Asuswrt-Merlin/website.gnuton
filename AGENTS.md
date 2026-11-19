@@ -59,9 +59,9 @@
   stored Markdown with `marked`; the `Date:`/`Release:` preamble is removed because the
   page header already shows the published date and tag.
 - **Source repositories**: the Code menu links to `site.repo3006`, `site.repo3004`
-  (the current 3004 repository, later `...-3004.gnuton`) and `site.repo386` (the 386
-  tree in the 3004 repository). Update the `site.ts` constants when the 3004 repo is
-  renamed. Issue reporting follows the split: `site.bugReport3006` /
+  (the `...-3004.gnuton` repository) and `site.repo386` (the 386 tree in the 3004
+  repository). Keep the `site.ts` constants in sync when repositories move. Issue
+  reporting follows the split: `site.bugReport3006` /
   `site.featureRequest3006` target the WiFi 7 repository, while the 3004 constants
   serve WiFi 6 and WiFi 5. The support page exposes both through
   `firmwareBranches[].issueUrl` / `featureRequestUrl`; do not add a single global

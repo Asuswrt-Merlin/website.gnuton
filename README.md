@@ -20,9 +20,9 @@ Built with [Astro](https://astro.build) and [Bulma](https://bulma.io), based on 
   three-step flashing checklist.
 - **GitHub stats** — release downloads, stars, forks and release counts, refreshed at build
   time and redeployed daily; no third-party requests from visitors.
-- **Changelog** — every release note mirrored from GitHub Releases, grouped by WiFi
-  generation and year, with stable/pre-release badges and a per-tag page linked from the
-  release banner and top navigation.
+- **Changelog** — every release note mirrored from GitHub Releases, grouped by firmware
+  line and year, with stable/pre-release badges and a per-tag page linked from the release
+  banner and top navigation.
 - **Guides** — Markdown content collection with model-revision, branch, flashing and
   Repeater Mode articles, RSS feed and `TechArticle` structured data.
 - **SEO-ready** — canonical URLs, Open Graph image, sitemap, generated `robots.txt`,
@@ -64,7 +64,7 @@ with `pnpm astro dev stop | status | logs`.
 | `/` | Hero, stats, WiFi generations, GitHub stats, featured routers, project values, flashing steps, latest guides |
 | `/features` | Feature catalogue shared with upstream Merlin |
 | `/firmware` | Every supported model grouped by WiFi generation, with live search, release channels and downloads |
-| `/changelog` | Full release history grouped by WiFi generation and year |
+| `/changelog` | Full release history grouped by firmware line and year |
 | `/changelog/[branch]/[slug]` | Release notes for one firmware tag |
 | `/about` | Project aim, values, credits and ways to help |
 | `/guides` | Guide listing |
