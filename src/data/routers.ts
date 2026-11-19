@@ -2,8 +2,11 @@
  * Supported routers and firmware branches.
  *
  * This is the single source of truth for the model grid, the home-page
- * counters, and the downloads page. Keep it in sync with the upstream README:
- * https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/README.md
+ * counters, and the downloads page. Keep it in sync with the upstream READMEs:
+ * - 3006 / WiFi 7:
+ *   https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/blob/master/README.md
+ * - 3004 / 386:
+ *   https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/README.md
  *
  * Adding a model? Use the "add-router-model" skill in .opencode/skills.
  */
@@ -99,6 +102,31 @@ export const routers: RouterModel[] = [
     featured: true,
   },
   {
+    id: 'rt-be58u',
+    name: 'RT-BE58U',
+    branch: '3006',
+    image: 'rt-be58u.png',
+    asusUrl:
+      'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be58u/',
+  },
+  {
+    id: 'rt-be82u',
+    name: 'RT-BE82U',
+    branch: '3006',
+    image: 'rt-be82u.png',
+    asusUrl:
+      'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be82u/',
+  },
+  {
+    id: 'rt-be82m',
+    name: 'RT-BE82M',
+    branch: '3006',
+    // ASUS has no separate RT-BE82M product page; it uses the RT-BE82U shell.
+    image: 'rt-be82u.png',
+    asusUrl:
+      'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be82u/',
+  },
+  {
     id: 'dsl-ax82u',
     name: 'DSL-AX82U',
     aliases: ['DSL-AX5400'],
@@ -170,7 +198,6 @@ export const routers: RouterModel[] = [
     image: 'rt-ax5400.png',
     asusUrl:
       'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-ax5400/',
-    badge: 'New',
     featured: true,
   },
   {

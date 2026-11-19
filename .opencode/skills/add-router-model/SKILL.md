@@ -9,8 +9,12 @@ Use this skill when a new ASUS model becomes supported by GNUton's builds, or wh
 existing model line gets a new hardware revision.
 
 This skill changes the **website only**. Confirm that the firmware model is actually
-supported before touching the site. The source of truth is the project README:
+supported before touching the site. The source of truth is the project README for the
+branch:
+<https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/blob/master/README.md>
+(WiFi 7 / 3006) and
 <https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/README.md>
+(WiFi 6 / WiFi 5 / 3004 / 386).
 
 ## Workflow
 
