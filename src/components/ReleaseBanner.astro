@@ -1,6 +1,8 @@
 ---
+import { changelogPath, findChangelogRelease } from '../data/releases';
 import { branchById } from '../data/routers';
 import { githubStats } from '../data/stats';
+import { withBase } from '../utils/url';
 
 // Only recent stable releases get the banner. A returning visitor who
 // dismissed it stays dismissed until a different release is published
@@ -14,6 +16,10 @@ const isRecent =
   !Number.isNaN(publishedAt.valueOf()) &&
   Date.now() - publishedAt.valueOf() < BANNER_WINDOW_DAYS * 24 * 60 * 60 * 1000;
 const branch = release?.branch ? branchById(release.branch) : null;
+const changelogRelease = release ? findChangelogRelease(release.tag) : null;
+const releaseHref = changelogRelease
+  ? withBase(changelogPath(changelogRelease))
+  : release?.url;
 ---
 
 {
@@ -35,9 +41,9 @@ const branch = release?.branch ? branchById(release.branch) : null;
         <div class="gm-release-banner-actions">
           <a
             class="gm-release-banner-link"
-            href={release.url}
-            target="_blank"
-            rel="noopener"
+            href={releaseHref}
+            target={changelogRelease ? undefined : '_blank'}
+            rel={changelogRelease ? undefined : 'noopener'}
           >
             Release notes <span aria-hidden="true">→</span>
           </a>

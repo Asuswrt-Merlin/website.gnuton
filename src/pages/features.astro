@@ -1,0 +1,154 @@
+---
+import CtaBand from '../components/CtaBand.astro';
+import PageHero from '../components/PageHero.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  modelFeatures,
+  upstreamFeaturesUrl,
+  upstreamFirsts,
+  upstreamGroups,
+} from '../data/features';
+import { site } from '../data/site';
+import { withBase } from '../utils/url';
+
+const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
+---
+
+<BaseLayout
+  title="Features"
+  description="The Asuswrt-Merlin feature set included in GNUton's builds, with the model-specific extras: a non-ROG interface on GT/TUF models and Repeater mode on the DSL-AC68U."
+>
+  <PageHero
+    eyebrow="Features"
+    title="Merlin's features. More routers."
+    subtitle="GNUton's builds ship the upstream Asuswrt-Merlin feature set. The lists below come from Merlin itself; this fork adds support for more ASUS hardware and a small set of model-specific extras."
+    compact
+  />
+
+  <section class="section gm-section">
+    <div class="container">
+      <div class="gm-section-head">
+        <p class="gm-eyebrow mb-2">Upstream Merlin</p>
+        <h2 class="title is-2">Added or enhanced by Asuswrt-Merlin</h2>
+        <p class="subtitle is-6">
+          Asuswrt-Merlin keeps the features of the original stock ASUS firmware, with rare
+          exceptions such as VPN Fusion being replaced by VPN Director. On top of that, it adds
+          or improves the features below.
+        </p>
+      </div>
+
+      <div class="gm-notice mb-6">
+        <strong>Where these features come from:</strong> this section and the “Merlin first” list
+        below are upstream Asuswrt-Merlin features. GNUton's builds compile them for additional
+        routers; they do not replace them with a separate feature set.
+        <a href={upstreamFeaturesUrl} target="_blank" rel="noopener">
+          Read the upstream feature list ↗
+        </a>
+      </div>
+
+      <div class="columns is-multiline">
+        {
+          upstreamGroups.map((group) => (
+            <div class="column is-6">
+              <div class="box gm-card gm-feature-card">
+                <h3 class="title is-4">{group.title}</h3>
+                <p class="mb-3">{group.description}</p>
+                <ul class="gm-check-list content">
+                  {group.items.map((item) => (
+                    <li>
+                      {item.text}
+                      {item.link && (
+                        <>
+                          {' '}
+                          <a href={item.link.href} target="_blank" rel="noopener">
+                            {item.link.label} ↗
+                          </a>
+                        </>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section gm-section gm-section-alt">
+    <div class="container">
+      <div class="gm-section-head">
+        <p class="gm-eyebrow mb-2">Upstream history</p>
+        <h2 class="title is-2">Merlin first, stock ASUS later</h2>
+        <p class="subtitle is-6">
+          These features debuted in Asuswrt-Merlin and were eventually implemented in the official
+          ASUS firmware. They are still part of the Merlin feature set today.
+        </p>
+      </div>
+
+      <ul class="gm-check-list gm-feature-list content">
+        {upstreamFirsts.map((feature) => <li>{feature}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section gm-section">
+    <div class="container">
+      <div class="gm-section-head">
+        <p class="gm-eyebrow mb-2">GNUton extras</p>
+        <h2 class="title is-2">Beyond upstream: model-specific additions</h2>
+        <p class="subtitle is-6">
+          A small number of changes are specific to GNUton's builds. They are listed separately so
+          it is always clear what comes from Merlin and what comes from this fork.
+        </p>
+      </div>
+
+      <div class="columns is-multiline">
+        {
+          modelFeatures.map((feature) => (
+            <div class="column is-6">
+              <div class="box gm-card gm-feature-card">
+                {feature.badge && <span class="gm-tag mb-3">{feature.badge}</span>}
+                <h3 class="title is-4">{feature.title}</h3>
+                <p class="mb-4">{feature.description}</p>
+                {feature.links && (
+                  <ul class="gm-feature-links content">
+                    {feature.links.map((link) => {
+                      const external = isExternal(link.href);
+                      return (
+                        <li>
+                          <a
+                            href={external ? link.href : withBase(link.href)}
+                            target={external ? '_blank' : undefined}
+                            rel={external ? 'noopener' : undefined}
+                          >
+                            {link.label} {external ? '↗' : '→'}
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="has-text-centered mt-5">
+        Looking for the shared feature documentation? The{' '}
+        <a href={site.docs} target="_blank" rel="noopener">upstream Merlin wiki</a> covers
+        configuration and router administration.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Ready to try it?"
+    title="Pick the build for your router."
+    text="Every supported model is listed with its WiFi generation, download links and ASUS product page."
+    ctaLabel="Browse supported models"
+    ctaHref="/firmware"
+  />
+</BaseLayout>

@@ -20,6 +20,9 @@ Built with [Astro](https://astro.build) and [Bulma](https://bulma.io), based on 
   three-step flashing checklist.
 - **GitHub stats** — release downloads, stars, forks and release counts, refreshed at build
   time and redeployed daily; no third-party requests from visitors.
+- **Changelog** — every release note mirrored from GitHub Releases, grouped by WiFi
+  generation and year, with stable/pre-release badges and a per-tag page linked from the
+  release banner and top navigation.
 - **Guides** — Markdown content collection with model-revision, branch, flashing and
   Repeater Mode articles, RSS feed and `TechArticle` structured data.
 - **SEO-ready** — canonical URLs, Open Graph image, sitemap, generated `robots.txt`,
@@ -48,7 +51,7 @@ pnpm install
 | `pnpm build` | Build the production site to `./dist/` |
 | `pnpm check` | Type-check Astro + TypeScript |
 | `pnpm preview` | Preview the production build |
-| `pnpm stats` | Refresh the GitHub stats snapshot used on the home page |
+| `pnpm stats` | Refresh the GitHub stats and release-notes snapshots used by the home page and changelog |
 | `pnpm assets` | Regenerate `og-image.png`, `favicon.ico` and the touch icon |
 
 Run the dev server in the background with `pnpm astro dev --background`, then manage it
@@ -59,7 +62,10 @@ with `pnpm astro dev stop | status | logs`.
 | Route | Description |
 | --- | --- |
 | `/` | Hero, stats, WiFi generations, GitHub stats, featured routers, project values, flashing steps, latest guides |
+| `/features` | Feature catalogue shared with upstream Merlin |
 | `/firmware` | Every supported model grouped by WiFi generation, with live search, release channels and downloads |
+| `/changelog` | Full release history grouped by WiFi generation and year |
+| `/changelog/[branch]/[tag]` | Release notes for one firmware tag |
 | `/about` | Project aim, values, credits and ways to help |
 | `/guides` | Guide listing |
 | `/guides/[slug]` | Individual guide with reading time and tags |
@@ -93,6 +99,8 @@ Then add the model under the correct branch in `src/data/routers.ts` and run
 - Supported models, download links, branch names, credits and project aim come from the
   [upstream README](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/README.md).
 - Guides are written for this site and live in `src/content/guides/`.
+- The changelog mirrors GitHub release notes. `src/data/github-releases.json` is generated
+  by `pnpm stats`; edit the release on GitHub instead of patching the snapshot by hand.
 - Router artwork is stored locally in `public/images/routers/` as transparent PNGs. The
   images come from ASUS product pages / product-icon CDN and are used for identification.
 
@@ -105,8 +113,8 @@ The single workflow at `.github/workflows/pages.yml` builds the site and pushes 
 `gh-pages` branch, which GitHub Pages serves. It has four jobs:
 
 - **`🧪 Check & build`** — runs for every push (except `gh-pages`), every pull request
-  except `closed`, and the daily schedule; refreshes `src/data/github-stats.json`, runs
-  `pnpm check` + `pnpm build` and uploads `dist`.
+  except `closed`, and the daily schedule; refreshes the GitHub stats and release-notes
+  snapshots, runs `pnpm check` + `pnpm build` and uploads `dist`.
 - **`🚀 Deploy to GitHub Pages`** — runs for `main` pushes, manual runs and the daily
   scheduled refresh.
 - **`👀 Publish PR preview`** — runs for same-repository pull requests and posts a sticky
@@ -170,13 +178,13 @@ SITE_URL=https://example.com BASE_PATH=/firmware pnpm build
 │   ├── images/routers/      # Local transparent router PNGs
 │   ├── favicon.*            # Brand icon
 │   └── og-image.png         # 1200×630 social share image
-├── scripts/                 # Brand asset generator
+├── scripts/                 # GitHub snapshot fetch + brand asset generator
 ├── src/
 │   ├── assets/styles/       # Bulma modules + gm- project styles
 │   ├── components/          # Navbar, footer, router/branch/release cards…
 │   ├── content/guides/      # Markdown guides
 │   ├── content.config.ts    # Guides schema
-│   ├── data/                # site, routers and project content
+│   ├── data/                # site, routers, project content and GitHub snapshots
 │   ├── layouts/             # SEO-ready document shell
 │   ├── pages/               # Routes
 │   └── utils/               # Base-path, date and reading-time helpers

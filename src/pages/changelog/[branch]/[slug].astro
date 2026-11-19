@@ -1,0 +1,139 @@
+---
+import { marked } from 'marked';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import {
+  changelogReleases,
+  releaseNotesBody,
+  type ChangelogRelease,
+} from '../../../data/releases';
+import { branchById } from '../../../data/routers';
+import { site } from '../../../data/site';
+import { formatReleaseDate } from '../../../utils/date';
+import { withBase } from '../../../utils/url';
+
+interface Props {
+  release: ChangelogRelease;
+}
+
+export function getStaticPaths() {
+  return changelogReleases.map((release) => ({
+    params: { branch: release.branch, slug: release.tag },
+    props: { release },
+  }));
+}
+
+const { release } = Astro.props;
+const branch = release.branch === 'legacy' ? null : branchById(release.branch);
+const published = new Date(release.publishedAt);
+const notes = releaseNotesBody(release);
+const notesHtml = notes
+  ? marked
+      .parse(notes, { async: false, gfm: true })
+      // Release notes are trusted project content, but external links should
+      // not take over the tab that is reading them.
+      .replace(
+        /<a href="(https?:\/\/[^"]+)"/g,
+        '<a href="$1" target="_blank" rel="noopener"',
+      )
+  : '';
+
+const description = `Release notes for ${release.tag}${
+  branch ? ` (${branch.name} · ${branch.version})` : ' (legacy build)'
+}, published ${formatReleaseDate(published)}.`;
+const title = `${release.tag} release notes`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: title,
+  description,
+  datePublished: published.toISOString(),
+  url: canonical,
+  author: { '@type': 'Organization', name: site.name, url: site.repo },
+};
+const repositoryUrl = `https://github.com/${release.repository}`;
+---
+
+<BaseLayout title={title} description={description} ogType="article" schema={schema}>
+  <section class="section gm-section">
+    <div class="container">
+      <nav class="gm-changelog-breadcrumb" aria-label="Breadcrumb">
+        <a href={withBase('/changelog/')}>Changelog</a>
+        <span aria-hidden="true">/</span>
+        {branch ? (
+          <a href={withBase(`/changelog/#${branch.version}`)}>{branch.version}</a>
+        ) : (
+          <span>Legacy</span>
+        )}
+      </nav>
+
+      <header class="gm-changelog-release-head">
+        <p class="gm-eyebrow mb-2">
+          {branch ? `${branch.name} · ${branch.version}` : 'Legacy build'}
+        </p>
+        <h1 class="title is-1 mb-3">{release.tag}</h1>
+        <p class="gm-changelog-release-meta">
+          <time datetime={published.toISOString()}>{formatReleaseDate(published)}</time>
+          <span
+            class:list={[
+              'gm-changelog-badge',
+              { 'gm-changelog-badge--pre': release.prerelease },
+            ]}
+          >
+            {release.prerelease ? 'Pre-release' : 'Stable'}
+          </span>
+        </p>
+        <p class="gm-changelog-release-source">
+          Published in <a href={repositoryUrl} target="_blank" rel="noopener">
+            {release.repository}
+          </a>.
+        </p>
+      </header>
+
+      <div class="gm-changelog-release-layout">
+        <article class="gm-prose">
+          {
+            notes ? (
+              <div set:html={notesHtml} />
+            ) : (
+              <p>
+                No additional notes were published for this build. Open the GitHub release
+                for the changelog, firmware images and checksums.
+              </p>
+            )
+          }
+        </article>
+
+        <aside class="gm-changelog-release-aside">
+          <div class="gm-notice">
+            <strong>Before flashing.</strong> Check your exact model and hardware revision.
+            Read the notes above and keep a recovery path available.
+          </div>
+          <a
+            class="button is-primary is-fullwidth"
+            href={release.url}
+            target="_blank"
+            rel="noopener"
+          >
+            Download from GitHub ↗
+          </a>
+          <a class="button gm-button-outline is-fullwidth" href={withBase('/changelog/')}>
+            All releases
+          </a>
+          {branch && (
+            <a
+              class="button gm-button-outline is-fullwidth"
+              href={withBase(`/firmware#${branch.id}`)}
+            >
+              Supported models
+            </a>
+          )}
+        </aside>
+      </div>
+
+      <p class="mt-6">
+        <a class="gm-changelog-back" href={withBase('/changelog/')}>← Back to all releases</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

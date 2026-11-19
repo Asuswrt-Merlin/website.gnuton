@@ -25,6 +25,7 @@ export const site = {
   author: 'GNUton',
 
   upstream: 'https://github.com/RMerl/asuswrt-merlin.ng',
+  upstreamFeatures: 'https://www.asuswrt-merlin.net/features',
   repo: 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton',
   repoLabel: 'Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton',
   // The 3004 line.
@@ -64,7 +65,9 @@ export interface NavItem extends NavLink {
 
 export const navItems: NavItem[] = [
   { label: 'Home', href: '/' },
+  { label: 'Features', href: '/features' },
   { label: 'Downloads', href: '/firmware' },
+  { label: 'Changelog', href: '/changelog' },
   { label: 'About', href: '/about' },
   { label: 'Guides', href: '/guides' },
   { label: 'Help', href: '/support' },

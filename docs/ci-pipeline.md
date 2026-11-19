@@ -29,8 +29,8 @@ flowchart TD
 
 - **`🧪 Check & build`** runs for every push (except `gh-pages`), every pull request
   except `closed`, and the daily scheduled refresh. It resolves the Pages origin/base path,
-  refreshes `src/data/github-stats.json` with `pnpm stats` (authenticated by
-  `GITHUB_TOKEN`), runs `pnpm check` and `pnpm build`, and uploads `dist` as an artifact.
+  refreshes the GitHub stats and release-note snapshots with `pnpm stats` (authenticated
+  by `GITHUB_TOKEN`), runs `pnpm check` and `pnpm build`, and uploads `dist` as an artifact.
 - **`🚀 Deploy to GitHub Pages`** runs for `main` pushes, manual runs and the daily
   scheduled refresh. It downloads the artifact and pushes it to `gh-pages`.
 - **`👀 Publish PR preview`** runs for same-repository pull requests. Fork PRs still get

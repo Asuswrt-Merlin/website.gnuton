@@ -576,6 +576,38 @@ main {
   }
 }
 
+// Multi-column check list used by the feature catalogue.
+.gm-feature-list {
+  column-gap: 2.5rem;
+
+  @media screen and (min-width: 769px) {
+    columns: 2;
+  }
+
+  @media screen and (min-width: 1024px) {
+    columns: 3;
+  }
+
+  li {
+    break-inside: avoid;
+    margin-bottom: 0.65rem;
+  }
+}
+
+.gm-feature-links {
+  margin-bottom: 0;
+
+  a {
+    color: var(--gm-accent);
+    font-weight: 600;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+}
+
 /* ---------------------------- Router cards ----------------------------- */
 
 // Four supported models per row on desktop, two on tablet and one on phones.
@@ -1252,6 +1284,210 @@ main {
   }
 }
 
+/* ------------------------------ Changelog ------------------------------ */
+
+.gm-changelog-hero-meta {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  color: var(--gm-muted);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.gm-jump--center {
+  justify-content: center;
+}
+
+.gm-changelog-count {
+  text-align: right;
+}
+
+.gm-changelog-count-number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--gm-accent);
+}
+
+.gm-changelog-count-label {
+  color: var(--gm-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.gm-changelog-year {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 1.5rem;
+
+  + .gm-changelog-year {
+    margin-top: 1.5rem;
+  }
+}
+
+.gm-changelog-year-label {
+  margin: 0;
+  padding-top: 0.8rem;
+  color: var(--gm-accent);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.gm-changelog-list {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--gm-border);
+  list-style: none;
+}
+
+.gm-changelog-entry {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid var(--gm-border);
+  border-radius: 0.35rem;
+  color: var(--gm-text);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover,
+  &:focus {
+    background-color: var(--gm-ink-raised);
+    color: var(--gm-accent);
+  }
+}
+
+.gm-changelog-entry-date {
+  color: var(--gm-muted);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.gm-changelog-entry-main {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.gm-changelog-entry-tag {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.gm-changelog-entry-arrow {
+  color: var(--gm-accent);
+  font-weight: 800;
+}
+
+.gm-changelog-badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--gm-border);
+  border-radius: 999px;
+  color: var(--gm-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.gm-changelog-badge--pre {
+  border-color: var(--gm-accent);
+  background-color: var(--gm-accent-soft);
+  color: var(--gm-accent);
+}
+
+.gm-changelog-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  color: var(--gm-muted);
+  font-size: 0.85rem;
+
+  a {
+    color: var(--gm-accent);
+    font-weight: 600;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+}
+
+.gm-changelog-release-head {
+  max-width: 52rem;
+  margin-bottom: 2.5rem;
+}
+
+.gm-changelog-release-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--gm-muted);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.gm-changelog-release-source {
+  margin-bottom: 0;
+  color: var(--gm-muted);
+  font-size: 0.9rem;
+
+  a {
+    color: var(--gm-accent);
+    font-weight: 600;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+}
+
+.gm-changelog-release-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18rem;
+  gap: 3rem;
+  align-items: start;
+
+  .gm-prose {
+    max-width: none;
+  }
+}
+
+.gm-changelog-release-aside {
+  position: sticky;
+  top: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.gm-changelog-back {
+  color: var(--gm-accent);
+  font-weight: 600;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+}
+
 /* ------------------------------- Footer -------------------------------- */
 
 .gm-footer {
@@ -1384,6 +1620,16 @@ html {
       white-space: normal;
     }
   }
+
+  .gm-changelog-release-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .gm-changelog-release-aside {
+    position: static;
+    order: -1;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -1429,6 +1675,28 @@ html {
     p {
       text-align: left;
     }
+  }
+
+  .gm-changelog-count {
+    text-align: left;
+  }
+
+  .gm-changelog-year {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .gm-changelog-year-label {
+    padding-top: 0;
+  }
+
+  .gm-changelog-entry {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.35rem 1rem;
+  }
+
+  .gm-changelog-entry-date {
+    grid-column: 1 / -1;
   }
 
   .gm-footer-bottom {
