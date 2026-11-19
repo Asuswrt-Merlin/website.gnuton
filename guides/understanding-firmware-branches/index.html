@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v7.4.1"><meta name="description" content="GNUton's builds follow ASUS firmware generations. This is what the branch number means and why you cannot cross-flash between them."><meta name="author" content="GNUton"><meta name="theme-color" content="#0e1216" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><script>
+      // Apply the theme before first paint to avoid a flash of the wrong theme.
+      // No stored choice: follow the OS `prefers-color-scheme` (light default).
+      (function () {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia(
+            '(prefers-color-scheme: dark)',
+          ).matches;
+          const theme =
+            stored === 'dark' || (!stored && prefersDark) ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+      })();
+    </script><!-- Inter, loaded async so it never blocks first paint --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&amp;display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&amp;display=swap" media="print" onload="this.setAttribute('media', 'all')"><!-- Canonical + Open Graph --><link rel="canonical" href="https://asuswrt-merlin.github.io/website.gnuton/guides/understanding-firmware-branches/"><meta property="og:type" content="article"><meta property="og:site_name" content="GNUton's Merlin Builds"><meta property="og:title" content="Understanding the 3006, 3004 and 386 branches · GNUton's Merlin Builds"><meta property="og:description" content="GNUton's builds follow ASUS firmware generations. This is what the branch number means and why you cannot cross-flash between them."><meta property="og:url" content="https://asuswrt-merlin.github.io/website.gnuton/guides/understanding-firmware-branches/"><meta property="og:image" content="https://asuswrt-merlin.github.io/website.gnuton/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="GNUton's Merlin Builds — Merlin firmware for more ASUS routers"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Understanding the 3006, 3004 and 386 branches · GNUton's Merlin Builds"><meta name="twitter:description" content="GNUton's builds follow ASUS firmware generations. This is what the branch number means and why you cannot cross-flash between them."><meta name="twitter:image" content="https://asuswrt-merlin.github.io/website.gnuton/og-image.png"><!-- RSS feed for the guides --><link rel="alternate" type="application/rss+xml" title="GNUton's Merlin Builds — Guides" href="/website.gnuton/rss.xml"><link rel="icon" type="image/svg+xml" href="/website.gnuton/favicon.svg"><link rel="icon" href="/website.gnuton/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/website.gnuton/apple-touch-icon.png"><title>Understanding the 3006, 3004 and 386 branches · GNUton&#39;s Merlin Builds</title><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/website.gnuton/_astro/ClientRouter.astro_astro_type_script_index_0_lang.BDCjmQ8c.js"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Understanding the 3006, 3004 and 386 branches","description":"GNUton's builds follow ASUS firmware generations. This is what the branch number means and why you cannot cross-flash between them.","datePublished":"2026-11-06T00:00:00.000Z","url":"https://asuswrt-merlin.github.io/website.gnuton/guides/understanding-firmware-branches/","author":{"@type":"Organization","name":"GNUton's Merlin Builds","url":"https://github.com/gnuton/asuswrt-merlin.ng"}}</script><link rel="stylesheet" href="/website.gnuton/_astro/BaseLayout.CP6qqk33.css"></head><body><a class="gm-skip-link" href="#main-content">Skip to main content</a><header><nav class="navbar gm-navbar" aria-label="Main navigation"><div class="container"><div class="navbar-brand"><a class="navbar-item gm-brand" href="/website.gnuton/"><span class="gm-brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 14.5V8.5M12 14.5V5M18.5 14.5V8.5"></path><rect x="3" y="14.5" width="18" height="5.5" rx="2"></rect><circle cx="7" cy="17.2" r="0.9" fill="currentColor" stroke="none"></circle><circle cx="10" cy="17.2" r="0.9" fill="currentColor" stroke="none"></circle><path d="M16 16.2h2.5M16 18.2h2.5"></path></svg></span><span class="gm-brand-name">GNUton</span><span class="gm-brand-suffix">Merlin builds</span></a><button type="button" class="navbar-burger" aria-label="Open menu" aria-expanded="false" aria-controls="main-navbar"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button></div><div id="main-navbar" class="navbar-menu"><div class="navbar-end"><a class="navbar-item" href="/website.gnuton/">Home</a><a class="navbar-item" href="/website.gnuton/firmware/">Firmware</a><a class="navbar-item" href="/website.gnuton/about/">About</a><a class="navbar-item is-active" href="/website.gnuton/guides/" aria-current="page">Guides</a><a class="navbar-item" href="/website.gnuton/support/">Help</a><div class="navbar-item"><button type="button" class="gm-theme-toggle" data-theme-toggle aria-label="Switch to light theme" title="Switch theme"><span class="gm-theme-icon gm-theme-icon-sun" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg></span><span class="gm-theme-icon gm-theme-icon-moon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span></button><script type="module">var e=document.documentElement,t=`theme`,n=()=>{try{return localStorage.getItem(t)}catch{return null}},r=()=>{let t=n(),r=window.matchMedia(`(prefers-color-scheme: dark)`).matches,i=t===`dark`||!t&&r?`dark`:`light`;e.setAttribute(`data-theme`,i),document.querySelector(`[data-theme-toggle]`)?.setAttribute(`aria-label`,i===`light`?`Switch to dark theme`:`Switch to light theme`)};document.addEventListener(`click`,n=>{let i=n.target;if(i instanceof Element&&i.closest(`[data-theme-toggle]`)){let n=e.getAttribute(`data-theme`)===`dark`?`light`:`dark`,i=()=>{e.setAttribute(`data-theme`,n);try{localStorage.setItem(t,n)}catch{}r()};document.startViewTransition?document.startViewTransition(i):i()}}),r(),document.addEventListener(`astro:page-load`,r);</script></div><div class="navbar-item"><a class="button is-primary gm-nav-cta" href="https://github.com/gnuton/asuswrt-merlin.ng/releases" target="_blank" rel="noopener">Download</a></div></div></div></div></nav></header><script type="module">var e=()=>{let e=document.querySelector(`.navbar-burger`),t=document.getElementById(`main-navbar`),n=e?.getAttribute(`aria-expanded`)===`true`;e?.setAttribute(`aria-expanded`,`false`),e?.setAttribute(`aria-label`,`Open menu`),e?.classList.remove(`is-active`),t?.classList.remove(`is-active`),n&&document.activeElement instanceof HTMLElement&&e?.focus()};document.addEventListener(`click`,t=>{let n=t.target;if(!(n instanceof Element))return;let r=n.closest(`.navbar-burger`);if(r){let e=r.getAttribute(`aria-expanded`)===`true`,t=document.getElementById(`main-navbar`);r.setAttribute(`aria-expanded`,String(!e)),r.setAttribute(`aria-label`,e?`Open menu`:`Close menu`),r.classList.toggle(`is-active`,!e),t?.classList.toggle(`is-active`,!e)}else(n.closest(`#main-navbar a`)||!n.closest(`.navbar`))&&e()}),document.addEventListener(`keydown`,t=>{t.key===`Escape`&&e()});</script><main id="main-content"><section class="section gm-section"><div class="container"><article class="gm-prose"><p class="gm-guide-meta mb-3"><time datetime="2026-11-06T00:00:00.000Z">November 6, 2026</time> · 2 min read</p><h1 class="title is-1 mb-5">Understanding the 3006, 3004 and 386 branches</h1><div class="mb-6"><span class="gm-tag">#firmware</span><span class="gm-tag">#models</span></div><p>Every release title starts with a number: <strong>3006</strong>, <strong>3004</strong> or <strong>386</strong>. That is the
+firmware branch, and it is tied to the router hardware and the ASUS software generation
+the build is based on. It is not a version you can choose freely.</p>
+<h2 id="the-three-branches">The three branches</h2>
+<table>
+<thead>
+<tr>
+<th>Branch</th>
+<th>Hardware generation</th>
+<th>Models</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>3006</strong></td>
+<td>WiFi 7</td>
+<td>GT-BE98 / GT-BE25000</td>
+</tr>
+<tr>
+<td><strong>3004</strong></td>
+<td>WiFi 6 and WiFi 6E</td>
+<td>DSL-AX82U, RT-AX82U, RT-AX92U, TUF-AX5400, TUF-AX3000, RT-AX58U v2, RT-AX5400, ZenWiFi XT8, ZenWiFi ET8</td>
+</tr>
+<tr>
+<td><strong>386</strong></td>
+<td>WiFi 5 DSL</td>
+<td>DSL-AC68U</td>
+</tr>
+</tbody>
+</table>
+<p>The <a href="../../firmware/">firmware page</a> lists every supported revision under the correct
+branch. Both RT-AX82U revisions and both TUF-AX3000 revisions are supported on 3004, but
+they still need their matching image.</p>
+<h2 id="stable-and-pre-release-are-channels-not-branches">Stable and pre-release are channels, not branches</h2>
+<p>Inside each branch there are release channels:</p>
+<ul>
+<li><strong>Stable</strong> — recommended for everyday use.</li>
+<li><strong>Pre-release</strong> — beta builds for advanced users and testing new features.</li>
+<li><strong>Experimental</strong> — one-off branches for specific features, such as Repeater Mode on the
+386 DSL build.</li>
+</ul>
+<p>A pre-release is still the same branch. A 3004 beta will never install on a 3006 router,
+and a 386 experimental image will not install on a WiFi 6 model.</p>
+<h2 id="why-cross-flashing-is-a-bad-idea">Why cross-flashing is a bad idea</h2>
+<p>The branch determines the kernel, drivers, bootloader expectations and the web interface
+for that hardware family. Forcing an image across branches can leave the router unable to
+boot normally. If the model is not listed, the firmware is not supported — wait for a
+build instead of trying a neighbouring model’s image.</p>
+<h2 id="choose-in-this-order">Choose in this order</h2>
+<ol>
+<li>Confirm the exact model and hardware revision.</li>
+<li>Find that model in the <a href="../../firmware/">supported list</a>.</li>
+<li>Pick stable, or a pre-release if you can test and report back.</li>
+<li>Read the release notes before downloading.</li>
+<li>Follow the <a href="../how-to-flash-gnuton-firmware/">flashing guide</a>.</li>
+</ol>
+<p>If the model is missing from the list, ask in <a href="https://discord.gg/pm7q6KFSzp">Discord</a>
+whether support is planned. Do not assume a similar model’s image is compatible.</p>
+</article><div class="gm-notice mt-6"><strong>Firmware changes carry risk.</strong> Follow the release notes for your exact model and keep a recovery path available. The project cannot guarantee every flash succeeds.</div><p class="mt-6"><a href="../../guides/">← Back to all guides</a></p></div></section></main><footer class="footer gm-footer"><div class="container"><div class="columns is-multiline"><div class="column is-4"><p class="title is-5 mb-2">GNUton&#39;s Merlin Builds</p><p class="mb-4">Merlin firmware for more ASUS routers.</p><p class="is-size-7">An independent community fork of Asuswrt-Merlin. ASUS and ROG are trademarks of ASUSTeK Computer Inc.</p></div><div class="column is-2"><p class="has-text-weight-semibold mb-3">Explore</p><ul><li class="mb-1"><a href="/website.gnuton/">Home</a></li><li class="mb-1"><a href="/website.gnuton/firmware/">Firmware</a></li><li class="mb-1"><a href="/website.gnuton/about/">About</a></li><li class="mb-1"><a href="/website.gnuton/guides/">Guides</a></li><li class="mb-1"><a href="/website.gnuton/support/">Help</a></li></ul></div><div class="column is-3"><p class="has-text-weight-semibold mb-3">Project</p><ul><li class="mb-1"><a href="https://github.com/gnuton/asuswrt-merlin.ng/releases" target="_blank" rel="noopener">Latest releases</a></li><li class="mb-1"><a href="https://github.com/gnuton/asuswrt-merlin.ng" target="_blank" rel="noopener">Source code</a></li><li class="mb-1"><a href="https://github.com/gnuton/asuswrt-merlin.ng/issues/new?assignees=&amp;labels=bug&amp;template=bug_report.md" target="_blank" rel="noopener">Report a bug</a></li><li class="mb-1"><a href="https://github.com/RMerl/asuswrt-merlin.ng" target="_blank" rel="noopener">Upstream Merlin</a></li></ul></div><div class="column is-3"><p class="has-text-weight-semibold mb-3">Community</p><ul><li class="mb-1"><a href="https://discord.gg/pm7q6KFSzp" target="_blank" rel="noopener">Discord chat</a></li><li class="mb-1"><a href="https://www.snbforums.com/threads/gnutons-merlin-builds-for-dsl-router-386-1_2-released.70980/" target="_blank" rel="noopener">SNBForums thread</a></li><li class="mb-1"><a href="https://retro.pizza/@gnuton" target="_blank" rel="noopener">Mastodon</a></li><li class="mb-1"><a href="https://github.com/gnuton/asuswrt-merlin.ng/blob/master/www/DEV.md" target="_blank" rel="noopener">Developer notes</a></li></ul></div></div><hr><div class="gm-footer-bottom"><p class="is-size-7 mb-0">© 2026 GNUton&#39;s Merlin Builds. Firmware source is public.</p><p class="is-size-7 mb-0">Built with <a href="https://astro.build" target="_blank" rel="noopener">Astro</a> · Theme based on <a href="https://github.com/Domenico-Tenace-Open-Labs/astro-wellness" target="_blank" rel="noopener">Astro Wellness</a></p></div></div></footer></body></html>
