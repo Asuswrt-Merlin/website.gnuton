@@ -1,0 +1,25 @@
+---
+import PageHero from '../components/PageHero.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../utils/url';
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page you are looking for could not be found. Head back to the firmware downloads or the guides."
+  noindex
+>
+  <PageHero
+    eyebrow="Error 404"
+    title="Page not found."
+    subtitle="The page has moved, been renamed, or never existed. Let us get you back to the right firmware."
+    compact
+  >
+    <div class="buttons is-centered mt-5">
+      <a class="button is-primary is-medium" href={withBase('/')}>Back to home</a>
+      <a class="button is-medium gm-button-outline" href={withBase('/firmware')}>
+        Supported models
+      </a>
+    </div>
+  </PageHero>
+</BaseLayout>

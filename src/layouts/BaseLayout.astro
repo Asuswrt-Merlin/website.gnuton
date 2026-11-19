@@ -1,0 +1,125 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Footer from '../components/Footer.astro';
+import NavBar from '../components/NavBar.astro';
+import { site } from '../data/site';
+import { absoluteUrl, withBase } from '../utils/url';
+import '../assets/styles/main.scss';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Open Graph type, e.g. "website" (default) or "article" for guides. */
+  ogType?: string;
+  /** JSON-LD structured data. Serialized as-is. */
+  schema?: Record<string, unknown>;
+  /** Keep utility pages out of search results. */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  ogType = 'website',
+  schema,
+  noindex = false,
+} = Astro.props;
+
+const isPreview = import.meta.env.PUBLIC_IS_PREVIEW === 'true';
+const pageTitle = title === site.name ? title : `${title} · ${site.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = absoluteUrl('/og-image.png', Astro.site);
+const fontUrl =
+  'https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="author" content={site.author} />
+    {noindex || isPreview ? <meta name="robots" content="noindex" /> : null}
+    <meta name="theme-color" content="#0e1216" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+
+    <script is:inline>
+      // Apply the theme before first paint to avoid a flash of the wrong theme.
+      // No stored choice: follow the OS `prefers-color-scheme` (light default).
+      (function () {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia(
+            '(prefers-color-scheme: dark)',
+          ).matches;
+          const theme =
+            stored === 'dark' || (!stored && prefersDark) ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Inter, loaded async so it never blocks first paint -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href={fontUrl} />
+    <link
+      rel="stylesheet"
+      href={fontUrl}
+      media="print"
+      onload="this.setAttribute('media', 'all')"
+    />
+
+    <!-- Canonical + Open Graph -->
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="GNUton's Merlin Builds — Merlin firmware for more ASUS routers" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- RSS feed for the guides -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.name} — Guides`}
+      href={withBase('/rss.xml')}
+    />
+
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="icon" href={withBase('/favicon.ico')} sizes="any" />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    <title>{pageTitle}</title>
+
+    <ClientRouter />
+
+    {
+      schema && (
+        <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+      )
+    }
+  </head>
+  <body>
+    <a class="gm-skip-link" href="#main-content">Skip to main content</a>
+    <NavBar />
+    {
+      isPreview && (
+        <div class="gm-preview-banner">Preview build — not the production site</div>
+      )
+    }
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

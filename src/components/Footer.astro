@@ -1,0 +1,74 @@
+---
+import { communityLinks, navItems, projectLinks, site } from '../data/site';
+import { withBase } from '../utils/url';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer gm-footer">
+  <div class="container">
+    <div class="columns is-multiline">
+      <div class="column is-4">
+        <p class="title is-5 mb-2">{site.name}</p>
+        <p class="mb-4">{site.tagline}</p>
+        <p class="is-size-7">
+          An independent community fork of Asuswrt-Merlin. ASUS and ROG are
+          trademarks of ASUSTeK Computer Inc.
+        </p>
+      </div>
+
+      <div class="column is-2">
+        <p class="has-text-weight-semibold mb-3">Explore</p>
+        <ul>
+          {
+            navItems.map((item) => (
+              <li class="mb-1">
+                <a href={withBase(item.href)}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="column is-3">
+        <p class="has-text-weight-semibold mb-3">Project</p>
+        <ul>
+          {
+            projectLinks.map((link) => (
+              <li class="mb-1">
+                <a href={link.href} target="_blank" rel="noopener">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="column is-3">
+        <p class="has-text-weight-semibold mb-3">Community</p>
+        <ul>
+          {
+            communityLinks.map((link) => (
+              <li class="mb-1">
+                <a href={link.href} target="_blank" rel="noopener">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="gm-footer-bottom">
+      <p class="is-size-7 mb-0">© {year} {site.name}. Firmware source is public.</p>
+      <p class="is-size-7 mb-0">
+        Built with <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>
+        {' · '}Theme based on <a href={site.template} target="_blank" rel="noopener">Astro Wellness</a>
+      </p>
+    </div>
+  </div>
+</footer>

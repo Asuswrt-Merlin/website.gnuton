@@ -1,0 +1,162 @@
+---
+import CtaBand from '../components/CtaBand.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+import PageHero from '../components/PageHero.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { credits, helpWays, values } from '../data/project';
+import { firmwareBranches, routers } from '../data/routers';
+import { site } from '../data/site';
+import { withBase } from '../utils/url';
+---
+
+<BaseLayout
+  title="About"
+  description="GNUton's builds are an official Asuswrt-Merlin fork supported by ASUS and RMerlin, extending Merlin firmware to more ASUS routers."
+>
+  <PageHero
+    eyebrow="About the project"
+    title="One goal: more Merlin routers."
+    subtitle="A community firmware fork that brings the Asuswrt-Merlin experience to additional ASUS models — without forking the feature set or hiding the build process."
+    compact
+  />
+
+  <section class="section gm-section">
+    <div class="container">
+      <div class="columns is-vcentered">
+        <div class="column is-7">
+          <h2 class="title is-2 mb-4">Why this fork exists</h2>
+          <div class="content gm-rich-text">
+            <p>
+              This is an official <a href={site.upstream} target="_blank" rel="noopener">Merlin fork</a>
+              supported by <a href={site.asus} target="_blank" rel="noopener">ASUS</a> and
+              <a href="https://twitter.com/RMerlinDev" target="_blank" rel="noopener">RMerlin</a>.
+              Its aim is straightforward: make Merlin run on additional routers.
+            </p>
+            <p>
+              The builds are intended to support every feature present in the original Merlin
+              firmware. Occasionally the project also adds functionality for specific models.
+              There is no separate ecosystem to learn and no reduced “community edition” — the
+              upstream firmware is the foundation.
+            </p>
+            <p>
+              Images are compiled in the cloud so the process stays transparent, and the
+              source is publicly available in the
+              <a href={site.repo} target="_blank" rel="noopener">GitHub repository</a>. When a
+              build is released, you can trace what went into it.
+            </p>
+          </div>
+        </div>
+        <div class="column is-5">
+          <div class="box gm-card gm-hero-box">
+            <p class="gm-eyebrow mb-3">The short version</p>
+            <ul class="gm-check-list content">
+              <li>Official Asuswrt-Merlin fork</li>
+              <li>Supported by ASUS and RMerlin</li>
+              <li>{routers.length} builds across {firmwareBranches.length} branches</li>
+              <li>WiFi 7, WiFi 6 and DSL models</li>
+              <li>Cloud-built from public source</li>
+            </ul>
+            <a class="button is-primary is-fullwidth mt-4" href={site.releases} target="_blank" rel="noopener">
+              Latest releases
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section gm-section gm-section-alt">
+    <div class="container">
+      <div class="gm-section-head">
+        <p class="gm-eyebrow mb-2">How the project works</p>
+        <h2 class="title is-2">What stays constant</h2>
+      </div>
+
+      <div class="columns">
+        {
+          values.map((value, index) => (
+            <div class="column is-4">
+              <FeatureCard
+                number={String(index + 1).padStart(2, '0')}
+                title={value.title}
+                description={value.description}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section gm-section">
+    <div class="container">
+      <div class="gm-section-head">
+        <p class="gm-eyebrow mb-2">Standing on shoulders</p>
+        <h2 class="title is-2">Thanks to</h2>
+        <p class="subtitle is-6">This project only exists because other people share their work.</p>
+      </div>
+
+      <div class="columns is-multiline">
+        {
+          credits.map((credit) => (
+            <div class="column is-4">
+              <div class="box gm-card">
+                <div class="gm-credit-head mb-4">
+                  <span class="gm-avatar mr-4" aria-hidden="true">{credit.initials}</span>
+                  <div>
+                    <h3 class="title is-5 mb-1">{credit.name}</h3>
+                    <p class="gm-form-note">{credit.role}</p>
+                  </div>
+                </div>
+                <p class="mb-4">{credit.description}</p>
+                <a class="gm-card-format" href={credit.href} target="_blank" rel="noopener">
+                  Learn more ↗
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section gm-section gm-section-alt">
+    <div class="container">
+      <div class="gm-section-head">
+        <p class="gm-eyebrow mb-2">Get involved</p>
+        <h2 class="title is-2">How you can help</h2>
+        <p class="subtitle is-6">
+          You do not need to write firmware to make a difference. Testing and clear reports are just as valuable.
+        </p>
+      </div>
+
+      <div class="columns is-multiline">
+        {
+          helpWays.map((way) => (
+            <div class="column is-3">
+              <div class="box gm-card gm-help-card">
+                <h3 class="title is-6">{way.title}</h3>
+                <p class="mb-4">{way.description}</p>
+                <a class="gm-card-format" href={way.href} target="_blank" rel="noopener">
+                  {way.label} ↗
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="has-text-centered mt-5">
+        Prefer the detail? <a href={withBase('/support')}>All support channels are here</a>.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Ready to update?"
+    title="Find the right build for your router."
+    text="Every supported model is listed with its branch, downloads and ASUS product page."
+    ctaLabel="Browse supported models"
+    ctaHref="/firmware"
+  />
+</BaseLayout>

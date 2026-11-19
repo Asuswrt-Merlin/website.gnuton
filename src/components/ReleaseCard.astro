@@ -1,0 +1,23 @@
+---
+import type { ReleaseChannel } from '../data/project';
+
+interface Props {
+  channel: ReleaseChannel;
+}
+
+const { channel } = Astro.props;
+---
+
+<div class:list={['box', 'gm-card', 'gm-release-card', { 'is-highlighted': channel.highlighted }]}>
+  {channel.highlighted && <div class="gm-plan-badge">Recommended</div>}
+  <h3 class="title is-4">{channel.name}</h3>
+  <p class="mb-4">{channel.description}</p>
+  <a
+    class:list={['button', 'is-fullwidth', channel.highlighted ? 'is-primary' : 'gm-button-outline']}
+    href={channel.href}
+    target="_blank"
+    rel="noopener"
+  >
+    {channel.cta}
+  </a>
+</div>

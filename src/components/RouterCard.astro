@@ -1,0 +1,40 @@
+---
+import type { RouterModel } from '../data/routers';
+import { branchById, branchLabel } from '../data/routers';
+import { withBase } from '../utils/url';
+
+interface Props {
+  router: RouterModel;
+}
+
+const { router } = Astro.props;
+const branch = branchById(router.branch);
+---
+
+<article class="card gm-card gm-router-card">
+  <div class="gm-router-media">
+    <span class="gm-chip gm-chip--version">{router.branch}</span>
+    {router.badge && <span class="gm-badge">{router.badge}</span>}
+    <img
+      src={withBase(`/images/routers/${router.image}`)}
+      alt={`ASUS ${router.name} router`}
+      width="320"
+      height="260"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <div class="card-content gm-card-content">
+    <p class="gm-router-branch">{branchLabel(router.branch)}</p>
+    <h3 class="title is-5 mb-2">{router.name}</h3>
+    {
+      router.aliases && router.aliases.length > 0 && (
+        <p class="gm-router-alias">Also sold as {router.aliases.join(', ')}</p>
+      )
+    }
+    <div class="gm-router-links">
+      <a href={branch.stableUrl} target="_blank" rel="noopener">Downloads</a>
+      <a href={router.asusUrl} target="_blank" rel="noopener">ASUS specs ↗</a>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,136 @@
+---
+import CtaBand from '../components/CtaBand.astro';
+import PageHero from '../components/PageHero.astro';
+import ReleaseCard from '../components/ReleaseCard.astro';
+import RouterCard from '../components/RouterCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { releaseChannels } from '../data/project';
+import { firmwareBranches, routersForBranch } from '../data/routers';
+import { site } from '../data/site';
+import { withBase } from '../utils/url';
+---
+
+<BaseLayout
+  title="Firmware"
+  description="Supported ASUS routers and download links for every GNUton Asuswrt-Merlin branch: WiFi 7 (3006), WiFi 6 (3004) and DSL-AC68U (386)."
+>
+  <PageHero
+    eyebrow="Supported models & downloads"
+    title="Find your build."
+    subtitle="Match your router to a branch, grab the release channel you want, and read the notes before flashing. Every supported model is listed below."
+    compact
+  >
+    <div class="buttons is-centered mt-5">
+      <a class="button is-primary is-medium" href={site.releases} target="_blank" rel="noopener">
+        All releases
+      </a>
+      <a class="button is-medium gm-button-outline" href={withBase('/guides/which-router-version-do-i-have/')}>
+        Which version do I have?
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="section gm-section">
+    <div class="container">
+      <div class="gm-notice">
+        <strong>Not sure whether you have a v1 or v2?</strong> Enable SSH, then run
+        <code>nvram get productid</code> on the router. The exact model and hardware
+        revision decide which images are safe to flash.
+      </div>
+
+      <nav class="gm-jump" aria-label="Jump to a firmware branch">
+        <span class="gm-jump-label">Jump to</span>
+        <a href="#wifi-7">WiFi 7 · 3006</a>
+        <a href="#wifi-6">WiFi 6 · 3004</a>
+        <a href="#dsl">DSL · 386</a>
+      </nav>
+    </div>
+  </section>
+
+  {
+    firmwareBranches.map((branch, index) => {
+      const branchRouters = routersForBranch(branch.version);
+      return (
+        <section
+          id={branch.id}
+          class:list={['section', 'gm-section', { 'gm-section-alt': index % 2 === 1 }]}
+        >
+          <div class="container">
+            <div class="gm-branch-head">
+              <div>
+                <p class="gm-eyebrow mb-2">{branch.eyebrow}</p>
+                <h2 class="title is-2 mb-2">{branch.name}</h2>
+                <p class="gm-branch-head-text">{branch.description}</p>
+              </div>
+              <div class="gm-branch-actions">
+                <a class="button is-primary" href={branch.stableUrl} target="_blank" rel="noopener">
+                  Latest stable
+                </a>
+                <a class="button gm-button-outline" href={branch.prereleaseUrl} target="_blank" rel="noopener">
+                  Pre-release
+                </a>
+                <p class="gm-form-note mt-2">
+                  {branchRouters.length} supported {branchRouters.length === 1 ? 'build' : 'builds'}
+                </p>
+              </div>
+            </div>
+
+            <div class="columns is-multiline">
+              {branchRouters.map((router) => (
+                <div class="column is-4">
+                  <RouterCard router={router} />
+                </div>
+              ))}
+            </div>
+
+            {branch.experimental && (
+              <div class="gm-notice mt-5">
+                <strong>{branch.experimental.label} (experimental):</strong>{' '}
+                {branch.experimental.description}{' '}
+                <a href={branch.experimental.url} target="_blank" rel="noopener">
+                  Open the experimental build ↗
+                </a>
+              </div>
+            )}
+          </div>
+        </section>
+      );
+    })
+  }
+
+  <section class="section gm-section">
+    <div class="container">
+      <div class="gm-section-head">
+        <p class="gm-eyebrow mb-2">Release channels</p>
+        <h2 class="title is-2">Stable, beta, or experimental</h2>
+        <p class="subtitle is-6">
+          Use stable for everyday routing. Try pre-releases when you can test and report back. Experimental builds exist for specific features.
+        </p>
+      </div>
+
+      <div class="columns" style="--column-gap: 1.5rem">
+        {
+          releaseChannels.map((channel) => (
+            <div class="column is-4">
+              <ReleaseCard channel={channel} />
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="gm-notice mt-6">
+        <strong>AiMesh or Repeater?</strong> Standard images already support AiMesh, which is
+        faster when both ends are ASUS routers. Repeater Mode is only available through the
+        experimental 386 build listed above.
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Need a hand?"
+    title="Check the guides before you flash."
+    text="Model revisions, branch names and the flashing flow are covered step by step. If something still looks wrong, ask the community."
+    ctaLabel="Read the guides"
+    ctaHref="/guides"
+  />
+</BaseLayout>

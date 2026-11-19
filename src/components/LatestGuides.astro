@@ -1,0 +1,46 @@
+---
+// Self-contained "latest guides" section for the home page.
+import GuideCard from './GuideCard.astro';
+import { getCollection } from 'astro:content';
+import { withBase } from '../utils/url';
+import { readingTime } from '../utils/reading-time';
+
+const posts = (await getCollection('guides'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<section class="section gm-section">
+  <div class="container">
+    <div class="gm-section-head">
+      <p class="gm-eyebrow mb-2">From the guides</p>
+      <h2 class="title is-2">Latest field notes</h2>
+      <p class="subtitle is-6">Installation, model revisions and firmware branches — explained without the guesswork.</p>
+    </div>
+
+    {
+      posts.length > 0 ? (
+        <div class="columns">
+          {posts.map((post) => (
+            <div class="column is-4">
+              <GuideCard
+                title={post.data.title}
+                description={post.data.description}
+                pubDate={post.data.pubDate}
+                tags={post.data.tags}
+                href={`/guides/${post.id}/`}
+                readingTime={readingTime(post.body ?? '')}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p class="has-text-centered">No guides yet — check back soon.</p>
+      )
+    }
+
+    <div class="has-text-centered mt-6">
+      <a class="button is-medium gm-button-outline" href={withBase('/guides')}>All guides</a>
+    </div>
+  </div>
+</section>

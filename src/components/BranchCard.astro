@@ -1,0 +1,38 @@
+---
+import type { FirmwareBranch } from '../data/routers';
+import { withBase } from '../utils/url';
+
+interface Props {
+  branch: FirmwareBranch;
+  modelCount: number;
+  highlighted?: boolean;
+}
+
+const { branch, modelCount, highlighted = false } = Astro.props;
+---
+
+<div class:list={['box', 'gm-card', 'gm-branch-card', { 'is-highlighted': highlighted }]}>
+  {highlighted && <div class="gm-plan-badge">Most supported models</div>}
+  <p class="gm-branch-version">{branch.version}</p>
+  <h3 class="title is-4 mb-1">{branch.name}</h3>
+  <p class="gm-branch-count mb-3">
+    {modelCount} supported {modelCount === 1 ? 'build' : 'builds'}
+  </p>
+  <p class="mb-4">{branch.description}</p>
+  <div class="buttons">
+    <a
+      class:list={['button', highlighted ? 'is-primary' : 'gm-button-outline']}
+      href={branch.stableUrl}
+      target="_blank"
+      rel="noopener"
+    >
+      Stable
+    </a>
+    <a class="button gm-button-outline" href={branch.prereleaseUrl} target="_blank" rel="noopener">
+      Pre-release
+    </a>
+  </div>
+  <a class="gm-card-format" href={withBase(`/firmware#${branch.id}`)}>
+    See supported models →
+  </a>
+</div>

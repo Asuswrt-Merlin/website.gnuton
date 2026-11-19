@@ -1,0 +1,33 @@
+---
+import { formatDate } from '../utils/date';
+import { withBase } from '../utils/url';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags: string[];
+  href: string;
+  readingTime: string;
+}
+
+const { title, description, pubDate, tags, href, readingTime } = Astro.props;
+---
+
+<article class="card gm-card gm-card--link">
+  <div class="card-content gm-card-content">
+    <p class="gm-guide-meta mb-2">
+      <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+      {' · '}
+      {readingTime}
+    </p>
+    <h2 class="title is-4">
+      <a class="gm-card-link" href={withBase(href)}>{title}</a>
+    </h2>
+    <p class="mb-4">{description}</p>
+    <div class="mb-4">
+      {tags.map((tag) => <span class="gm-tag">#{tag}</span>)}
+    </div>
+    <p class="gm-card-format">Read guide →</p>
+  </div>
+</article>

@@ -1,0 +1,99 @@
+---
+import CtaBand from '../components/CtaBand.astro';
+import PageHero from '../components/PageHero.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { beforeYouPost, helpOptions } from '../data/project';
+import { site } from '../data/site';
+import { withBase } from '../utils/url';
+---
+
+<BaseLayout
+  title="Help"
+  description="Get help with GNUton's Asuswrt-Merlin builds: bug reports, Discord chat, the SNBForums thread, upstream documentation and developer notes."
+>
+  <PageHero
+    eyebrow="Support"
+    title="Ask the people who use it."
+    subtitle="Firmware problems are easiest to solve with the right details. Pick the channel that matches what you need — bugs belong on GitHub, quick questions in chat."
+    compact
+  />
+
+  <section class="section gm-section">
+    <div class="container">
+      <div class="columns is-multiline">
+        {
+          helpOptions.map((option) => (
+            <div class="column is-4">
+              <div class="box gm-card gm-help-card">
+                <h2 class="title is-5">{option.title}</h2>
+                <p class="mb-4">{option.description}</p>
+                <a class="gm-card-format" href={option.href} target="_blank" rel="noopener">
+                  {option.label} ↗
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section gm-section gm-section-alt">
+    <div class="container">
+      <div class="columns">
+        <div class="column is-7">
+          <p class="gm-eyebrow mb-2">Before you post</p>
+          <h2 class="title is-2 mb-4">Make the report reproducible</h2>
+          <p class="mb-4">
+            A clear report is the difference between a quick answer and a long thread. Include
+            these details when asking for help:
+          </p>
+          <ul class="gm-check-list content">
+            {beforeYouPost.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        <div class="column is-5">
+          <div class="box gm-card gm-hero-box">
+            <p class="gm-eyebrow mb-3">Fast checks</p>
+            <ul class="content">
+              <li>
+                <a href={withBase('/guides/which-router-version-do-i-have/')}>Find your hardware revision</a>
+              </li>
+              <li>
+                <a href={withBase('/firmware')}>Confirm the branch for your model</a>
+              </li>
+              <li>
+                <a href={withBase('/guides/how-to-flash-gnuton-firmware/')}>Review the flashing steps</a>
+              </li>
+              <li>
+                <a href={site.docs} target="_blank" rel="noopener">Search the upstream Merlin wiki</a>
+              </li>
+            </ul>
+            <p class="gm-form-note mt-4">
+              Attach the system log if the issue can be reproduced. Never post your admin
+              password or a full configuration backup.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section gm-section">
+    <div class="container">
+      <div class="gm-notice">
+        <strong>Security issue?</strong> Do not publish exploit details, credentials or router
+        configuration backups in a public issue. Report the problem privately through the
+        repository’s security policy or contact the maintainer first.
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Still stuck?"
+    title="The guides cover the common traps."
+    text="Model revisions, branch selection and the flashing flow are documented step by step."
+    ctaLabel="Open the guides"
+    ctaHref="/guides"
+  />
+</BaseLayout>

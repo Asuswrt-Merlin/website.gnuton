@@ -1,0 +1,51 @@
+---
+import GuideCard from '../../components/GuideCard.astro';
+import PageHero from '../../components/PageHero.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { readingTime } from '../../utils/reading-time';
+
+const posts = (await getCollection('guides')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout
+  title="Guides"
+  description="Practical guides for GNUton's Asuswrt-Merlin builds: model revisions, firmware branches, flashing and troubleshooting."
+>
+  <PageHero
+    eyebrow="Guides & field notes"
+    title="Read first, flash second."
+    subtitle="Short, practical notes on identifying your router, choosing a branch and updating without surprises."
+    compact
+  />
+
+  <section class="section gm-section">
+    <div class="container">
+      {
+        posts.length > 0 ? (
+          <div class="columns is-multiline">
+            {posts.map((post) => (
+              <div class="column is-4">
+                <GuideCard
+                  title={post.data.title}
+                  description={post.data.description}
+                  pubDate={post.data.pubDate}
+                  tags={post.data.tags}
+                  href={`/guides/${post.id}/`}
+                  readingTime={readingTime(post.body ?? '')}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p class="has-text-centered">
+            No guides yet. In the meantime, the <a href="../../support/">support page</a> lists
+            every community channel.
+          </p>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

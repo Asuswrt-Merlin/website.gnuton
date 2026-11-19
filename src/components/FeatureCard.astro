@@ -1,0 +1,15 @@
+---
+interface Props {
+  number?: string;
+  title: string;
+  description: string;
+}
+
+const { number, title, description } = Astro.props;
+---
+
+<div class="box gm-card gm-feature-card">
+  {number && <p class="gm-value-number mb-2">{number}</p>}
+  <h3 class="title is-5">{title}</h3>
+  <p>{description}</p>
+</div>

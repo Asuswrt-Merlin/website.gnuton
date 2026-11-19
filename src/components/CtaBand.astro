@@ -1,0 +1,39 @@
+---
+import { withBase } from '../utils/url';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  text?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  text,
+  ctaLabel = 'Download firmware',
+  ctaHref = 'https://github.com/gnuton/asuswrt-merlin.ng/releases',
+} = Astro.props;
+
+const external = /^https?:\/\//.test(ctaHref);
+---
+
+<section class="section gm-section">
+  <div class="container">
+    <div class="gm-cta has-text-centered">
+      {eyebrow && <p class="gm-eyebrow mb-3">{eyebrow}</p>}
+      <h2 class="title is-2 mb-3">{title}</h2>
+      {text && <p class="subtitle is-5 mb-5 gm-cta-text">{text}</p>}
+      <a
+        class="button is-primary is-large"
+        href={external ? ctaHref : withBase(ctaHref)}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener' : undefined}
+      >
+        {ctaLabel}
+      </a>
+    </div>
+  </div>
+</section>

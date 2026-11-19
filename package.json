@@ -1,0 +1,47 @@
+{
+  "name": "gnuton-merlin-website",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "GNUton's Asuswrt-Merlin builds website: supported routers, firmware downloads, guides and community links.",
+  "license": "MIT",
+  "author": "GNUton",
+  "homepage": "https://asuswrt-merlin.github.io/website.gnuton/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Asuswrt-Merlin/website.gnuton.git"
+  },
+  "keywords": [
+    "asuswrt",
+    "asuswrt-merlin",
+    "asus",
+    "router",
+    "firmware",
+    "astro",
+    "bulma",
+    "typescript",
+    "github-pages"
+  ],
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "packageManager": "pnpm@10.34.9",
+  "scripts": {
+    "dev": "astro dev --force",
+    "build": "astro build",
+    "check": "astro check",
+    "preview": "astro preview",
+    "astro": "astro",
+    "assets": "python3 scripts/generate-brand-assets.py"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.1",
+    "bulma": "^1.0.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.11",
+    "sass": "^1.106.0",
+    "typescript": "^6.0.3"
+  }
+}

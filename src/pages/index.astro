@@ -1,0 +1,206 @@
+---
+import BranchCard from '../components/BranchCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+import LatestGuides from '../components/LatestGuides.astro';
+import PageHero from '../components/PageHero.astro';
+import RouterCard from '../components/RouterCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { setupSteps, values } from '../data/project';
+import { firmwareBranches, routers, routersForBranch } from '../data/routers';
+import { site } from '../data/site';
+import { withBase } from '../utils/url';
+
+// Structured data: free firmware distributed through GitHub releases.
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: site.name,
+  description: site.description,
+  url: new URL(import.meta.env.BASE_URL, Astro.site ?? site.url).href,
+  downloadUrl: site.releases,
+  applicationCategory: 'Router firmware',
+  operatingSystem: 'ASUSWRT',
+  softwareVersion: firmwareBranches.map((branch) => branch.version).join(', '),
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  author: { '@type': 'Organization', name: site.name, url: site.repo },
+};
+
+const featuredRouters = routers.filter((router) => router.featured).slice(0, 6);
+const stats = [
+  { value: String(routers.length), label: 'Supported builds' },
+  { value: String(firmwareBranches.length), label: 'Firmware branches' },
+  { value: '2', label: 'Stable + beta' },
+  { value: '100%', label: 'Open source' },
+];
+---
+
+<BaseLayout title={site.name} description={site.description} schema={softwareSchema}>
+  <PageHero
+    eyebrow="Official Asuswrt-Merlin fork"
+    title="Merlin firmware for more ASUS routers."
+    subtitle="GNUton's builds extend Asuswrt-Merlin to WiFi 7, WiFi 6 and DSL models — supported by ASUS and RMerlin, compiled in the cloud, and published as open source."
+  >
+    <div class="buttons mt-5">
+      <a class="button is-primary is-medium" href={site.releases} target="_blank" rel="noopener">
+        Download firmware
+      </a>
+      <a class="button is-medium gm-button-outline" href={withBase('/firmware')}>
+        Supported models
+      </a>
+    </div>
+
+    <Fragment slot="aside">
+      <div class="gm-hero-media">
+        <span class="gm-hero-tag">WiFi 7 · 3006</span>
+        <img
+          src={withBase('/images/routers/gt-be98.png')}
+          alt="ASUS ROG Rapture GT-BE98 router"
+          width="400"
+          height="340"
+          decoding="async"
+        />
+        <p class="gm-hero-caption">ROG Rapture GT-BE98 · supported on the 3006 branch</p>
+      </div>
+    </Fragment>
+  </PageHero>
+
+  <section class="section gm-section" aria-label="Project statistics">
+    <div class="container">
+      <div class="gm-stats">
+        {
+          stats.map((stat) => (
+            <div>
+              <span class="gm-stat-number">{stat.value}</span>
+              <span class="gm-stat-label">{stat.label}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section gm-section gm-section-alt">
+    <div class="container">
+      <div class="gm-section-head">
+        <p class="gm-eyebrow mb-2">Downloads</p>
+        <h2 class="title is-2">Pick your branch</h2>
+        <p class="subtitle is-6">
+          The firmware branch follows your router, not the other way around. Match the model first, then choose stable or a pre-release.
+        </p>
+      </div>
+
+      <div class="columns" style="--column-gap: 1.5rem">
+        {
+          firmwareBranches.map((branch) => (
+            <div class="column is-4">
+              <BranchCard
+                branch={branch}
+                modelCount={routersForBranch(branch.version).length}
+                highlighted={branch.version === '3004'}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section gm-section">
+    <div class="container">
+      <div class="gm-section-head">
+        <p class="gm-eyebrow mb-2">Hardware</p>
+        <h2 class="title is-2">Supported routers</h2>
+        <p class="subtitle is-6">
+          From the flagship ROG GT-BE98 to the long-serving DSL-AC68U. Every model links back to its ASUS product page.
+        </p>
+      </div>
+
+      <div class="columns is-multiline">
+        {
+          featuredRouters.map((router) => (
+            <div class="column is-4">
+              <RouterCard router={router} />
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="has-text-centered mt-6">
+        <a class="button is-medium gm-button-outline" href={withBase('/firmware')}>
+          See all {routers.length} supported builds
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section gm-section gm-section-alt">
+    <div class="container">
+      <div class="gm-section-head">
+        <p class="gm-eyebrow mb-2">Why GNUton's builds</p>
+        <h2 class="title is-2">Upstream features, more hardware</h2>
+        <p class="subtitle is-6">
+          The goal is simple: make Merlin run on additional routers without inventing a different firmware.
+        </p>
+      </div>
+
+      <div class="columns">
+        {
+          values.map((value, index) => (
+            <div class="column is-4">
+              <FeatureCard
+                number={String(index + 1).padStart(2, '0')}
+                title={value.title}
+                description={value.description}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section gm-section">
+    <div class="container">
+      <div class="gm-section-head">
+        <p class="gm-eyebrow mb-2">Before you flash</p>
+        <h2 class="title is-2">Three steps, no guessing</h2>
+      </div>
+
+      <div class="columns">
+        {
+          setupSteps.map((step, index) => (
+            <div class="column is-4">
+              <div class="gm-step">
+                <span class="gm-step-number">{String(index + 1).padStart(2, '0')}</span>
+                <h3 class="title is-5 mb-2">{step.title}</h3>
+                <p class="mb-3">{step.description}</p>
+                {step.linkHref && (
+                  <a class="gm-step-link" href={withBase(step.linkHref)}>
+                    {step.linkLabel} →
+                  </a>
+                )}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="gm-notice mt-6">
+        <strong>Firmware changes carry risk.</strong> Read the release notes, keep a recovery path,
+        and never flash a build from a different model or branch. The project cannot guarantee
+        every flash succeeds.
+      </div>
+    </div>
+  </section>
+
+  <LatestGuides />
+
+  <CtaBand
+    eyebrow="Community powered"
+    title="Help keep the builds coming."
+    text="Star the repository, test a beta, or help another owner in Discord. Testing and clear bug reports are what turn a build into a stable release."
+    ctaLabel="Open the GitHub project"
+    ctaHref={site.repo}
+  />
+</BaseLayout>
