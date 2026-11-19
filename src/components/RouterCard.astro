@@ -9,7 +9,12 @@ interface Props {
 
 const { router } = Astro.props;
 const branch = branchById(router.branch);
-const searchText = [router.name, ...(router.aliases ?? []), branch.name].join(' ');
+const searchText = [
+  router.name,
+  ...(router.aliases ?? []),
+  router.note ?? '',
+  branch.name,
+].join(' ');
 ---
 
 <article class="card gm-card gm-router-card" data-router-card data-search={searchText}>
@@ -32,6 +37,7 @@ const searchText = [router.name, ...(router.aliases ?? []), branch.name].join(' 
         <p class="gm-router-alias">Also sold as {router.aliases.join(', ')}</p>
       )
     }
+    {router.note && <p class="gm-router-note">{router.note}</p>}
     <div class="gm-router-links">
       <a href={branch.stableUrl} target="_blank" rel="noopener">Downloads</a>
       <a

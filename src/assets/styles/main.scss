@@ -663,6 +663,17 @@ main {
   color: var(--gm-muted);
 }
 
+.gm-router-note {
+  margin-top: 0.35rem;
+  padding: 0.45rem 0.6rem;
+  border-left: 2px solid var(--gm-accent);
+  border-radius: 0 0.3rem 0.3rem 0;
+  background-color: var(--gm-accent-soft);
+  color: var(--gm-text);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
 .gm-router-links {
   display: flex;
   flex-wrap: wrap;

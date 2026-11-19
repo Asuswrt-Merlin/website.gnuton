@@ -36,7 +36,7 @@ full output — do not guess.
 
 Every supported build belongs to one firmware branch:
 
-- **3006** — WiFi 7 models including the GT-BE98 / GT-BE25000, RT-BE58U, RT-BE82U and RT-BE82M.
+- **3006** — WiFi 7 models including the GT-BE98 / GT-BE25000, RT-BE58U v1, RT-BE82U and RT-BE82M. Only RT-BE58U V1 hardware is supported; V2 is not. RT-BE82U owners should flash the RT-BE82M image.
 - **3004** — WiFi 6 routers and mesh systems, including both RT-AX82U revisions.
 - **386** — the DSL-AC68U.
 

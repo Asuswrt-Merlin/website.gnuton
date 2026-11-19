@@ -39,8 +39,9 @@
   branch groups, firmware page cards and branch counts derive from `routers`,
   `firmwareBranches`, `routersForBranch()` and `branchById()`. Do not hardcode counts.
   The public UI groups routers by WiFi generation (WiFi 7 / 6 / 5); the numeric branch
-  IDs are internal and only used to build release download links. The firmware page uses
-  `.gm-router-grid`: four cards per row on desktop, two on tablet and one on phones.
+  IDs are internal and only used to build release download links. The firmware page and
+  the home featured grid use `.gm-router-grid`: four cards per row on desktop, two on
+  tablet and one on phones.
   Each branch also carries its `issueUrl` and `featureRequestUrl` (see below).
 - **Router search**: `src/components/RouterSearch.astro` filters cards client-side using
   `data-router-*` attributes, updates branch counts and jump links, and uses
