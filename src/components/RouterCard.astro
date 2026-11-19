@@ -34,7 +34,14 @@ const searchText = [router.name, ...(router.aliases ?? []), branch.name].join(' 
     }
     <div class="gm-router-links">
       <a href={branch.stableUrl} target="_blank" rel="noopener">Downloads</a>
-      <a href={router.asusUrl} target="_blank" rel="noopener">ASUS specs ↗</a>
+      <a
+        href={router.asusUrl}
+        target="_blank"
+        rel="noopener"
+        aria-label={`ASUS ${router.name} specifications`}
+      >
+        ASUS specs <span aria-hidden="true">↗</span>
+      </a>
     </div>
   </div>
 </article>

@@ -97,7 +97,8 @@ Then add the model under the correct branch in `src/data/routers.ts` and run
 ## Content sources
 
 - Supported models, download links, branch names, credits and project aim come from the
-  [upstream README](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/README.md).
+  branch READMEs: [3006 / WiFi 7](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/blob/master/README.md)
+  and [3004 / 386](https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/README.md).
 - Guides are written for this site and live in `src/content/guides/`.
 - The changelog mirrors GitHub release notes. `src/data/github-releases.json` is generated
   by `pnpm stats`; edit the release on GitHub instead of patching the snapshot by hand.
