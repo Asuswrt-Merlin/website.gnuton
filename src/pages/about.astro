@@ -133,17 +133,25 @@ import { withBase } from '../utils/url';
 
       <div class="columns is-multiline">
         {
-          helpWays.map((way) => (
-            <div class="column is-3">
-              <div class="box gm-card gm-help-card">
-                <h3 class="title is-6">{way.title}</h3>
-                <p class="mb-4">{way.description}</p>
-                <a class="gm-card-format" href={way.href} target="_blank" rel="noopener">
-                  {way.label} ↗
-                </a>
+          helpWays.map((way) => {
+            const external = /^https?:\/\//.test(way.href);
+            return (
+              <div class="column is-3">
+                <div class="box gm-card gm-help-card">
+                  <h3 class="title is-6">{way.title}</h3>
+                  <p class="mb-4">{way.description}</p>
+                  <a
+                    class="gm-card-format"
+                    href={external ? way.href : withBase(way.href)}
+                    target={external ? '_blank' : undefined}
+                    rel={external ? 'noopener' : undefined}
+                  >
+                    {way.label} {external ? '↗' : '→'}
+                  </a>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         }
       </div>
 

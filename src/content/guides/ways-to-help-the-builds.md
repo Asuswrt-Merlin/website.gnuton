@@ -25,9 +25,9 @@ A useful report contains:
 - reproduction steps, logs and screenshots where relevant;
 - whether the router was updated from stock, stable or another beta.
 
-Use the [bug report form](https://github.com/gnuton/asuswrt-merlin.ng/issues/new?assignees=&labels=bug&template=bug_report.md)
-so the right details are collected from the start. Feature ideas go through the
-[feature request form](https://github.com/gnuton/asuswrt-merlin.ng/issues/new?assignees=&labels=enhancement&template=feature_request.md).
+Use the [bug report form](../../support/#report-a-bug) so the right details are collected
+from the start; the form routes to the repository for your firmware line. Feature ideas go
+through the [feature request form](../../support/#request-a-feature).
 
 ## Send code
 

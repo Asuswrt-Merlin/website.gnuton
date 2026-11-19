@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import Footer from '../components/Footer.astro';
 import NavBar from '../components/NavBar.astro';
+import ReleaseBanner from '../components/ReleaseBanner.astro';
 import { site } from '../data/site';
 import { absoluteUrl, withBase } from '../utils/url';
 import '../assets/styles/main.scss';
@@ -112,6 +113,7 @@ const fontUrl =
   <body>
     <a class="gm-skip-link" href="#main-content">Skip to main content</a>
     <NavBar />
+    <ReleaseBanner />
     {
       isPreview && (
         <div class="gm-preview-banner">Preview build — not the production site</div>

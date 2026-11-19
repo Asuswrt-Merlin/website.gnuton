@@ -1,3 +1,4 @@
+import { branchById } from './routers';
 import { site } from './site';
 
 export interface Value {
@@ -138,27 +139,44 @@ export const releaseChannels: ReleaseChannel[] = [
   },
 ];
 
+export interface HelpLink {
+  label: string;
+  href: string;
+}
+
 export interface HelpOption {
+  id?: string;
   title: string;
   description: string;
-  href: string;
-  label: string;
+  href?: string;
+  label?: string;
+  /** Several destinations, e.g. one issue tracker per firmware line. */
+  links?: HelpLink[];
 }
+
+const wifi7 = branchById('3006');
+const wifi65 = branchById('3004');
 
 export const helpOptions: HelpOption[] = [
   {
+    id: 'report-a-bug',
     title: 'Report a firmware bug',
     description:
-      'Open an issue with your router model, hardware revision, firmware version and clear reproduction steps.',
-    href: site.bugReport,
-    label: 'Use the bug report form',
+      'WiFi 7 builds are tracked in the 3006 repository; WiFi 6 and WiFi 5 builds share the 3004 repository. Open the form for your firmware line so the report reaches the right maintainers.',
+    links: [
+      { label: 'WiFi 7 · 3006 repository', href: wifi7.issueUrl },
+      { label: 'WiFi 6 / WiFi 5 · 3004 repository', href: wifi65.issueUrl },
+    ],
   },
   {
+    id: 'request-a-feature',
     title: 'Request a feature',
     description:
-      'Have an idea that fits the upstream Merlin feature set? Start a feature request so it can be discussed.',
-    href: site.featureRequest,
-    label: 'Request a feature',
+      'Have an idea that fits the upstream Merlin feature set? Start a feature request in the repository for your firmware line so it can be discussed.',
+    links: [
+      { label: 'WiFi 7 · 3006 repository', href: wifi7.featureRequestUrl },
+      { label: 'WiFi 6 / WiFi 5 · 3004 repository', href: wifi65.featureRequestUrl },
+    ],
   },
   {
     title: 'Ask in Discord',
@@ -215,8 +233,8 @@ export const helpWays: HelpWay[] = [
   {
     title: 'Report bugs',
     description: 'Clear reports make the next release better for everyone.',
-    href: site.bugReport,
-    label: 'Open an issue',
+    href: '/support/#report-a-bug',
+    label: 'Choose your repository',
   },
   {
     title: 'Send code',

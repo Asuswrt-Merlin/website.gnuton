@@ -1,0 +1,110 @@
+---
+import { branchById } from '../data/routers';
+import { githubStats } from '../data/stats';
+
+// Only recent stable releases get the banner. A returning visitor who
+// dismissed it stays dismissed until a different release is published
+// (localStorage below), so a new release brings it back automatically.
+const BANNER_WINDOW_DAYS = 60;
+
+const release = githubStats.latestRelease;
+const publishedAt = release ? new Date(release.publishedAt) : null;
+const isRecent =
+  publishedAt !== null &&
+  !Number.isNaN(publishedAt.valueOf()) &&
+  Date.now() - publishedAt.valueOf() < BANNER_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+const branch = release?.branch ? branchById(release.branch) : null;
+---
+
+{
+  release && isRecent && (
+    <aside
+      class="gm-release-banner"
+      data-release-banner
+      data-release-tag={release.tag}
+      aria-label="New firmware release"
+    >
+      <div class="container gm-release-banner-inner">
+        <p class="gm-release-banner-text">
+          <span class="gm-release-banner-label">New release</span>
+          <span>
+            <strong>{release.tag}</strong>
+            {branch ? ` for ${branch.name}` : ''} is available.
+          </span>
+        </p>
+        <div class="gm-release-banner-actions">
+          <a
+            class="gm-release-banner-link"
+            href={release.url}
+            target="_blank"
+            rel="noopener"
+          >
+            Release notes <span aria-hidden="true">→</span>
+          </a>
+          <button
+            type="button"
+            class="gm-release-banner-dismiss"
+            data-release-banner-dismiss
+            aria-label="Dismiss the new release banner"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+    <script is:inline data-astro-rerun>
+      // Hide before paint when this visitor already dismissed this release.
+      try {
+        const banner = document.currentScript?.previousElementSibling;
+        if (
+          banner instanceof HTMLElement &&
+          banner.dataset.releaseTag === localStorage.getItem('gm-dismissed-release')
+        ) {
+          banner.hidden = true;
+        }
+      } catch (error) {}
+    </script>
+  )
+}
+
+<script>
+  const STORAGE_KEY = 'gm-dismissed-release';
+
+  const syncReleaseBanner = (): void => {
+    const banner = document.querySelector<HTMLElement>('[data-release-banner]');
+    if (!banner) return;
+
+    let dismissed: string | null = null;
+    try {
+      dismissed = localStorage.getItem(STORAGE_KEY);
+    } catch (error) {
+      // Storage can be unavailable (private mode); keep the banner visible.
+    }
+
+    banner.hidden = dismissed !== null && dismissed === banner.dataset.releaseTag;
+  };
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const dismiss = target.closest('[data-release-banner-dismiss]');
+    if (!dismiss) return;
+
+    const banner = dismiss.closest<HTMLElement>('[data-release-banner]');
+    const tag = banner?.dataset.releaseTag;
+    if (!banner || !tag) return;
+
+    try {
+      localStorage.setItem(STORAGE_KEY, tag);
+    } catch (error) {
+      // Still hide it for this page view.
+    }
+
+    banner.hidden = true;
+  });
+
+  // The banner is re-created on every client-side navigation.
+  document.addEventListener('astro:page-load', syncReleaseBanner);
+  syncReleaseBanner();
+</script>

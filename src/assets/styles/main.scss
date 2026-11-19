@@ -108,6 +108,95 @@
   text-transform: uppercase;
 }
 
+/* -------------------------- Release banner ----------------------------- */
+
+.gm-release-banner {
+  padding: 0.6rem 1.5rem;
+  border-bottom: 1px solid var(--gm-border);
+  background:
+    linear-gradient(90deg, var(--gm-accent-soft), transparent 60%),
+    var(--gm-ink-soft);
+  color: var(--gm-text);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.gm-release-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.gm-release-banner-text {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.gm-release-banner-label {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background-color: var(--gm-accent);
+  color: var(--gm-on-accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.gm-release-banner-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.75rem;
+}
+
+.gm-release-banner-link {
+  color: var(--gm-accent);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+}
+
+.gm-release-banner-dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 1px solid var(--gm-border);
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--gm-muted);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    border-color: var(--gm-accent);
+    color: var(--gm-accent);
+  }
+}
+
 body {
   min-height: 100vh;
   display: flex;
@@ -174,6 +263,17 @@ main {
 
   &[open] > summary {
     color: var(--gm-accent);
+  }
+
+  // The other navbar items stretch to the full navbar height; the details
+  // element is the flex item, so make the summary fill it too. Otherwise the
+  // Code label sits higher than the neighbouring links.
+  @media screen and (min-width: 1024px) {
+    display: flex;
+
+    > summary {
+      flex: 1;
+    }
   }
 }
 
@@ -478,6 +578,21 @@ main {
 
 /* ---------------------------- Router cards ----------------------------- */
 
+// Four supported models per row on desktop, two on tablet and one on phones.
+.gm-router-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+
+  @media screen and (min-width: 769px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media screen and (min-width: 1024px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 .gm-router-card {
   display: flex;
   flex-direction: column;
@@ -647,9 +762,22 @@ main {
 .gm-help-card {
   display: flex;
   flex-direction: column;
+  scroll-margin-top: 5rem;
 
   .gm-card-format {
     color: var(--gm-accent);
+  }
+
+  .gm-help-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: auto;
+
+    .gm-card-format {
+      margin-top: 0;
+      font-weight: 600;
+    }
   }
 }
 
@@ -1261,6 +1389,21 @@ html {
 @media screen and (max-width: 768px) {
   .gm-section {
     padding: 3rem 1.25rem;
+  }
+
+  .gm-release-banner {
+    padding-inline: 1.25rem;
+  }
+
+  .gm-release-banner-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .gm-release-banner-actions {
+    justify-content: space-between;
+    width: 100%;
   }
 
   .gm-cta {

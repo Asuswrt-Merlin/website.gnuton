@@ -39,17 +39,26 @@
   branch groups, firmware page cards and branch counts derive from `routers`,
   `firmwareBranches`, `routersForBranch()` and `branchById()`. Do not hardcode counts.
   The public UI groups routers by WiFi generation (WiFi 7 / 6 / 5); the numeric branch
-  IDs are internal and only used to build release download links.
+  IDs are internal and only used to build release download links. The firmware page uses
+  `.gm-router-grid`: four cards per row on desktop, two on tablet and one on phones.
+  Each branch also carries its `issueUrl` and `featureRequestUrl` (see below).
 - **Router search**: `src/components/RouterSearch.astro` filters cards client-side using
   `data-router-*` attributes, updates branch counts and jump links, and uses
   document-level listeners so it survives `<ClientRouter />` navigation.
 - **GitHub stats**: `src/data/github-stats.json` is refreshed by
   `scripts/fetch-github-stats.mjs` (`pnpm stats`) and read through `src/data/stats.ts`.
   The committed snapshot is the offline fallback; the daily Pages run refreshes it.
+  It also carries the latest stable release per firmware line, which
+  `src/components/ReleaseBanner.astro` renders for 60 days. Dismissals are stored per
+  release tag in `localStorage`, so a new tag shows the banner again.
 - **Source repositories**: the Code menu links to `site.repo3006`, `site.repo3004`
   (the current 3004 repository, later `...-3004.gnuton`) and `site.repo386` (the 386
   tree in the 3004 repository). Update the `site.ts` constants when the 3004 repo is
-  renamed.
+  renamed. Issue reporting follows the split: `site.bugReport3006` /
+  `site.featureRequest3006` target the WiFi 7 repository, while the 3004 constants
+  serve WiFi 6 and WiFi 5. The support page exposes both through
+  `firmwareBranches[].issueUrl` / `featureRequestUrl`; do not add a single global
+  issue link.
 - **Guides**: Content Collections via `src/content.config.ts`, files in
   `src/content/guides/`. Import `z` from `astro/zod`, **not** `astro:content` (deprecated in
   Astro 7). Routes: `/guides` and `/guides/[slug]`.

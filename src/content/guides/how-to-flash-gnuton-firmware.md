@@ -57,5 +57,5 @@ before trying anything else.
 ASUS routers generally provide a firmware restoration utility and a rescue mode. The
 exact button sequence and tool differ by model, so use the ASUS support page for your
 router rather than a generic tutorial. Ask in [Discord](https://discord.gg/pm7q6KFSzp) or
-open a [bug report](https://github.com/gnuton/asuswrt-merlin.ng/issues/new?assignees=&labels=bug&template=bug_report.md)
-with the exact model, revision, source firmware and the step where it failed.
+open a [bug report](../../support/#report-a-bug) with the exact model, revision, source
+firmware and the step where it failed. Use the repository that matches your firmware line.
