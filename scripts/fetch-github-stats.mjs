@@ -1,17 +1,20 @@
 #!/usr/bin/env node
 /**
- * Refresh the GitHub stats snapshot used by the home page and the release
- * banner.
+ * Refresh the GitHub snapshots used by the home page, the release banner and
+ * the changelog.
  *
  * The public GitHub REST API needs no dependencies and no token for a handful
  * of requests; CI supplies GITHUB_TOKEN so the build is not limited by the
- * anonymous rate limit. If a request fails, the committed snapshot is left
+ * anonymous rate limit. If a request fails, the committed snapshots are left
  * untouched and the build continues with the previous numbers.
  *
  * Counts every release asset (firmware images, checksums, build logs and
- * changelogs), matching the "release downloads" label on the page. The latest
- * stable release is picked from the repository that owns its firmware line
- * after the 3006/3004 split.
+ * changelogs), matching the "release downloads" label on the page. Releases
+ * are read from both repositories: 3006 lives in its own repository after the
+ * split, while 3004 and 386 share the original one. Copies of the same tag can
+ * exist in both repositories; the snapshot keeps the canonical repository for
+ * the branch and the earliest publication date so imported copies do not look
+ * like new releases.
  */
 import { rename, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -24,7 +27,9 @@ const REPOSITORY_BY_BRANCH = {
   '3004': REPOSITORY,
   '386': REPOSITORY,
 };
-const OUTPUT = fileURLToPath(new URL('../src/data/github-stats.json', import.meta.url));
+const CURRENT_BRANCHES = new Set(Object.keys(REPOSITORY_BY_BRANCH));
+const STATS_OUTPUT = fileURLToPath(new URL('../src/data/github-stats.json', import.meta.url));
+const RELEASES_OUTPUT = fileURLToPath(new URL('../src/data/github-releases.json', import.meta.url));
 const TOKEN = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN;
 
 const headers = {
@@ -55,18 +60,79 @@ async function fetchRepository() {
   };
 }
 
-async function fetchReleases() {
+async function fetchAllReleases(repository) {
   const releases = [];
 
   for (let page = 1; ; page += 1) {
     const batch = await getJson(
-      `https://api.github.com/repos/${REPOSITORY}/releases?per_page=100&page=${page}`,
+      `https://api.github.com/repos/${repository}/releases?per_page=100&page=${page}`,
     );
     releases.push(...batch);
 
     if (batch.length < 100) break;
   }
 
+  return releases;
+}
+
+/** Derive the changelog group from the tag, falling back to the legacy archive. */
+function branchFromTag(tag) {
+  const branch = tag.match(/^(3006|3004|386)[._]/)?.[1];
+  return branch && CURRENT_BRANCHES.has(branch) ? branch : 'legacy';
+}
+
+/** Keep the earlier of two ISO timestamps. */
+function earliest(first, second) {
+  return Date.parse(first) <= Date.parse(second) ? first : second;
+}
+
+/** Merge both repositories, preferring the repository that owns each line. */
+function collectReleases(releasesByRepository) {
+  const byTag = new Map();
+
+  for (const [repository, releases] of Object.entries(releasesByRepository)) {
+    for (const release of releases) {
+      if (release.draft || !release.published_at) continue;
+
+      const branch = branchFromTag(release.tag_name);
+      const candidate = {
+        tag: release.tag_name,
+        name: release.name || release.tag_name,
+        url: release.html_url,
+        publishedAt: release.published_at,
+        repository,
+        branch,
+        prerelease: release.prerelease,
+        body: release.body ?? '',
+      };
+      const existing = byTag.get(candidate.tag);
+
+      if (!existing) {
+        byTag.set(candidate.tag, candidate);
+        continue;
+      }
+
+      const existingPreferred = REPOSITORY_BY_BRANCH[existing.branch] === existing.repository;
+      const candidatePreferred =
+        REPOSITORY_BY_BRANCH[candidate.branch] === candidate.repository;
+      const preferred =
+        candidatePreferred && !existingPreferred ? candidate : existing;
+
+      byTag.set(candidate.tag, {
+        ...preferred,
+        // Imported copies can carry a later date than the original release.
+        publishedAt: earliest(existing.publishedAt, candidate.publishedAt),
+        body: preferred.body || existing.body || candidate.body,
+      });
+    }
+  }
+
+  return [...byTag.values()].sort(
+    (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
+  );
+}
+
+function summarizeReleases(releases) {
   const releaseDownloads = releases.reduce(
     (total, release) =>
       total + release.assets.reduce((sum, asset) => sum + (asset.download_count ?? 0), 0),
@@ -82,63 +148,73 @@ async function fetchReleases() {
   return { releases: releases.length, releaseDownloads, firstRelease };
 }
 
-async function fetchLatestRelease() {
-  const repositories = [...new Set(Object.values(REPOSITORY_BY_BRANCH))];
-  const candidates = [];
-
-  for (const repository of repositories) {
-    const releases = await getJson(
-      `https://api.github.com/repos/${repository}/releases?per_page=100`,
-    );
-
-    for (const release of releases) {
-      if (release.draft || release.prerelease || !release.published_at) continue;
-
-      const branch = release.tag_name.match(/^(3006|3004|386)[._]/)?.[1];
-      if (!branch || REPOSITORY_BY_BRANCH[branch] !== repository) continue;
-
-      candidates.push({
-        tag: release.tag_name,
-        name: release.name || release.tag_name,
-        url: release.html_url,
-        publishedAt: release.published_at,
-        repository,
-        branch,
-      });
-    }
-  }
-
-  candidates.sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
-  return candidates[0] ?? null;
+async function writeJson(output, value) {
+  const temporary = `${output}.tmp`;
+  await writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`);
+  await rename(temporary, output);
 }
 
 async function main() {
   try {
-    const [repository, releases, latestRelease] = await Promise.all([
+    const [repository, mainReleases, wifi7Releases] = await Promise.all([
       fetchRepository(),
-      fetchReleases(),
-      fetchLatestRelease(),
+      fetchAllReleases(REPOSITORY),
+      fetchAllReleases(WIFI7_REPOSITORY),
     ]);
-    const snapshot = {
-      generatedAt: new Date().toISOString(),
+    const allReleases = collectReleases({
+      [REPOSITORY]: mainReleases,
+      [WIFI7_REPOSITORY]: wifi7Releases,
+    });
+    const currentLineReleases = allReleases.filter(
+      (release) => release.branch !== 'legacy',
+    );
+    const latestStable = currentLineReleases.find((release) => !release.prerelease) ?? null;
+    const generatedAt = new Date().toISOString();
+    const summary = summarizeReleases(mainReleases);
+
+    const stats = {
+      generatedAt,
       repository: REPOSITORY,
-      ...releases,
+      ...summary,
       ...repository,
-      latestRelease,
+      // Count the deduplicated changelog set so the home-page tile and
+      // /changelog stay in agreement when a release exists in only one repo.
+      releases: allReleases.length,
+      latestRelease: latestStable
+        ? {
+            tag: latestStable.tag,
+            name: latestStable.name,
+            url: latestStable.url,
+            publishedAt: latestStable.publishedAt,
+            repository: latestStable.repository,
+            branch: latestStable.branch,
+          }
+        : null,
     };
 
-    const temporary = `${OUTPUT}.tmp`;
-    await writeFile(temporary, `${JSON.stringify(snapshot, null, 2)}\n`);
-    await rename(temporary, OUTPUT);
+    const releases = {
+      generatedAt,
+      repository: REPOSITORY,
+      releases: allReleases,
+    };
+
+    await Promise.all([
+      writeJson(STATS_OUTPUT, stats),
+      writeJson(RELEASES_OUTPUT, releases),
+    ]);
 
     console.log(
-      `GitHub stats: ${snapshot.releaseDownloads.toLocaleString('en')} release downloads, ` +
-        `${snapshot.releases} releases, ${snapshot.stars.toLocaleString('en')} stars, ` +
-        `${snapshot.forks} forks.`,
+      `GitHub stats: ${stats.releaseDownloads.toLocaleString('en')} release downloads, ` +
+        `${stats.releases} releases, ${stats.stars.toLocaleString('en')} stars, ` +
+        `${stats.forks} forks.`,
+    );
+    console.log(
+      `Changelog: ${allReleases.length} releases ` +
+        `(${currentLineReleases.length} current, ${allReleases.length - currentLineReleases.length} legacy).`,
     );
   } catch (error) {
     console.warn(
-      '::warning::Could not refresh GitHub stats; keeping the previous snapshot. ' +
+      '::warning::Could not refresh GitHub data; keeping the previous snapshots. ' +
         `${error instanceof Error ? error.message : String(error)}`,
     );
   }

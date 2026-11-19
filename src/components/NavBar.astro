@@ -48,7 +48,7 @@ function isActive(href: string): boolean {
               if (item.children) {
                 return (
                   <details class="gm-nav-code">
-                    <summary class="navbar-item">
+                    <summary class="navbar-item gm-nav-link">
                       {item.label}
                       <span class="gm-nav-caret" aria-hidden="true">▾</span>
                     </summary>
@@ -66,7 +66,7 @@ function isActive(href: string): boolean {
               const active = !item.external && isActive(item.href);
               return (
                 <a
-                  class:list={['navbar-item', { 'is-active': active }]}
+                  class:list={['navbar-item', 'gm-nav-link', { 'is-active': active }]}
                   href={item.external ? item.href : withBase(item.href)}
                   target={item.external ? '_blank' : undefined}
                   rel={item.external ? 'noopener' : undefined}

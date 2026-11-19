@@ -1,0 +1,144 @@
+---
+import PageHero from '../../components/PageHero.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  changelogReleases,
+  changelogReleasesFor,
+  groupReleasesByYear,
+} from '../../data/releases';
+import { branchById, firmwareBranches } from '../../data/routers';
+import { formatReleaseDate } from '../../utils/date';
+import { withBase } from '../../utils/url';
+
+const groups = [
+  ...firmwareBranches.map(({ version }) => {
+    const branch = branchById(version);
+    const is386 = version === '386';
+    return {
+      id: version,
+      jumpLabel: is386 ? '386 line' : branch.name,
+      eyebrow: is386 ? '386 line' : `${branch.name} builds`,
+      title: `${branch.version} releases`,
+      description: is386
+        ? 'The long-lived 386 line: early WiFi 6 builds and the DSL-AC68U (WiFi 5), including the experimental Repeater Mode images. These releases are historical; use the current WiFi 7 and WiFi 6 lines for supported firmware.'
+        : branch.description,
+      releases: changelogReleasesFor(version),
+      legacy: false,
+    };
+  }),
+  {
+    id: 'legacy',
+    jumpLabel: 'Archive',
+    eyebrow: 'Historical archive',
+    title: 'Legacy & experimental builds',
+    description:
+      'Older 384/388 releases and one-off experimental snapshots, kept for reference. These builds are no longer maintained; use the current WiFi 7 and WiFi 6 lines above for supported firmware.',
+    releases: changelogReleasesFor('legacy'),
+    legacy: true,
+  },
+].filter((group) => group.releases.length > 0);
+
+const stableCount = changelogReleases.filter((release) => !release.prerelease).length;
+const prereleaseCount = changelogReleases.length - stableCount;
+---
+
+<BaseLayout
+  title="Changelog"
+  description="Complete GNUton's Asuswrt-Merlin release history with full notes for every WiFi 7, WiFi 6 and 386-line build."
+>
+  <PageHero
+    eyebrow="Changelog"
+    title="Every build, documented."
+    subtitle="Browse the full release history with notes for each firmware image. Stable and pre-release builds are grouped by firmware line and year, with the older archive kept below."
+    compact
+  >
+    <p class="gm-changelog-hero-meta">
+      {changelogReleases.length} releases · {stableCount} stable · {prereleaseCount} pre-release
+    </p>
+    <nav class="gm-jump gm-jump--center" aria-label="Jump to a firmware line">
+      <span class="gm-jump-label">Jump to</span>
+      {
+        groups.map((group) => (
+          <a href={`#${group.id}`}>{group.jumpLabel}</a>
+        ))
+      }
+    </nav>
+  </PageHero>
+
+  {
+    groups.map((group, groupIndex) => (
+      <section
+        id={group.id}
+        class:list={['section', 'gm-section', { 'gm-section-alt': groupIndex % 2 === 1 }]}
+      >
+        <div class="container">
+          <div class="gm-branch-head">
+            <div>
+              <p class="gm-eyebrow mb-2">{group.eyebrow}</p>
+              <h2 class="title is-2 mb-2">{group.title}</h2>
+              <p class="gm-branch-head-text">{group.description}</p>
+            </div>
+            <div class="gm-changelog-count">
+              <span class="gm-changelog-count-number">{group.releases.length}</span>
+              <span class="gm-changelog-count-label">releases</span>
+            </div>
+          </div>
+
+          {group.legacy && (
+            <div class="gm-notice mb-5">
+              <strong>Archived releases.</strong> These builds are no longer maintained. Use
+              the WiFi 7 or WiFi 6 sections above for current firmware.
+            </div>
+          )}
+
+          {
+            groupReleasesByYear(group.releases).map(([year, releases]) => (
+              <div class="gm-changelog-year">
+                <h3 class="gm-changelog-year-label">{year}</h3>
+                <ul class="gm-changelog-list">
+                  {releases.map((release) => (
+                    <li>
+                      <a
+                        class="gm-changelog-entry"
+                        href={withBase(`/changelog/${release.branch}/${release.tag}/`)}
+                      >
+                        <span class="gm-changelog-entry-date">
+                          <time datetime={release.publishedAt}>
+                            {formatReleaseDate(new Date(release.publishedAt))}
+                          </time>
+                        </span>
+                        <span class="gm-changelog-entry-main">
+                          <span class="gm-changelog-entry-tag">{release.tag}</span>
+                          <span
+                            class:list={[
+                              'gm-changelog-badge',
+                              { 'gm-changelog-badge--pre': release.prerelease },
+                            ]}
+                          >
+                            {release.prerelease ? 'Pre-release' : 'Stable'}
+                          </span>
+                        </span>
+                        <span class="gm-changelog-entry-arrow" aria-hidden="true">
+                          →
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="section gm-section">
+    <div class="container">
+      <div class="gm-notice">
+        <strong>Notes are mirrored from GitHub.</strong> This page is refreshed when the site
+        is built. Firmware images, checksums and build logs stay on the linked GitHub release.
+      </div>
+    </div>
+  </section>
+</BaseLayout>

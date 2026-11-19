@@ -19,8 +19,8 @@
   Manage it with `pnpm astro dev stop | status | logs`.
 - `pnpm check` — type-check (`astro check`). Run before and after changes.
 - `pnpm build` — static output in `dist/`, regenerate content types + sitemap.
-- `pnpm stats` — refresh `src/data/github-stats.json` from the GitHub API. CI runs it
-  before the build; local builds use the committed snapshot.
+- `pnpm stats` — refresh the GitHub stats and release-note snapshots from the API. CI runs
+  it before the build; local builds use the committed snapshots.
 - `pnpm assets` — regenerate OG image, `favicon.ico` and touch icon (needs Pillow).
 - Order: `pnpm check` → `pnpm build`.
 - To test the GitHub Pages sub-path locally:
@@ -45,16 +45,23 @@
 - **Router search**: `src/components/RouterSearch.astro` filters cards client-side using
   `data-router-*` attributes, updates branch counts and jump links, and uses
   document-level listeners so it survives `<ClientRouter />` navigation.
-- **GitHub stats**: `src/data/github-stats.json` is refreshed by
-  `scripts/fetch-github-stats.mjs` (`pnpm stats`) and read through `src/data/stats.ts`.
-  The committed snapshot is the offline fallback; the daily Pages run refreshes it.
-  It also carries the latest stable release per firmware line, which
-  `src/components/ReleaseBanner.astro` renders for 60 days. Dismissals are stored per
-  release tag in `localStorage`, so a new tag shows the banner again.
+- **GitHub stats and changelog**: `scripts/fetch-github-stats.mjs` (`pnpm stats`) refreshes
+  both `src/data/github-stats.json` (read through `src/data/stats.ts`) and
+  `src/data/github-releases.json` (read through `src/data/releases.ts`). The committed
+  snapshots are the offline fallback; the daily Pages run refreshes them. The release
+  snapshot carries every published tag from both repositories (3006, plus 3004/386) and
+  the 384/388 archive, deduplicated by tag with the earliest publication date. It powers
+  `/changelog` and the per-release notes pages.
+- **Release banner**: `src/components/ReleaseBanner.astro` shows the latest stable release
+  for 60 days and links to its `/changelog/<branch>/<tag>/` page (falling back to GitHub
+  only if the tag is missing from the snapshot). Dismissals are stored per release tag in
+  `localStorage`, so a new tag shows the banner again. Release notes are rendered from the
+  stored Markdown with `marked`; the `Date:`/`Release:` preamble is removed because the
+  page header already shows the published date and tag.
 - **Source repositories**: the Code menu links to `site.repo3006`, `site.repo3004`
-  (the current 3004 repository, later `...-3004.gnuton`) and `site.repo386` (the 386
-  tree in the 3004 repository). Update the `site.ts` constants when the 3004 repo is
-  renamed. Issue reporting follows the split: `site.bugReport3006` /
+  (the `...-3004.gnuton` repository) and `site.repo386` (the 386 tree in the 3004
+  repository). Keep the `site.ts` constants in sync when repositories move. Issue
+  reporting follows the split: `site.bugReport3006` /
   `site.featureRequest3006` target the WiFi 7 repository, while the 3004 constants
   serve WiFi 6 and WiFi 5. The support page exposes both through
   `firmwareBranches[].issueUrl` / `featureRequestUrl`; do not add a single global
@@ -62,8 +69,9 @@
 - **Guides**: Content Collections via `src/content.config.ts`, files in
   `src/content/guides/`. Import `z` from `astro/zod`, **not** `astro:content` (deprecated in
   Astro 7). Routes: `/guides` and `/guides/[slug]`.
-- **Routes**: `/`, `/firmware`, `/about`, `/guides`, `/guides/[slug]`, `/support`,
-  `/rss.xml`, `/robots.txt`, `404.astro`.
+- **Routes**: `/`, `/features`, `/firmware`, `/changelog`, `/changelog/[branch]/[slug]`,
+  `/about`, `/guides`, `/guides/[slug]`, `/support`, `/rss.xml`, `/robots.txt`,
+  `404.astro`.
 - **Images**: router PNGs live in `public/images/routers/` and must keep real alpha
   transparency. Reuse images for aliases/revisions that are physically identical.
 
@@ -116,9 +124,9 @@
 - `.github/workflows/pages.yml` is the single Pages pipeline:
   - `🧪 Check & build` runs for every push except `gh-pages`, every pull request except
     `closed`, and the daily `schedule`. It resolves the Pages origin/base path, refreshes
-    `src/data/github-stats.json` with `pnpm stats` (`GITHUB_TOKEN`), runs `pnpm check` +
-    `pnpm build`, and uploads `dist` as a one-day artifact. The build job has read-only
-    permissions.
+    the GitHub stats and release-note snapshots with `pnpm stats` (`GITHUB_TOKEN`), runs
+    `pnpm check` + `pnpm build`, and uploads `dist` as a one-day artifact. The build job
+    has read-only permissions.
   - `🚀 Deploy to GitHub Pages` (`needs: build`) runs on `main` pushes, manual runs and the
     daily schedule, downloads `dist`, and pushes it to `gh-pages` with
     `JamesIves/github-pages-deploy-action`. It uses `clean-exclude` for `pr-preview/` and
@@ -170,7 +178,10 @@ Before finishing:
    no-results state.
 5. Router changes: check the PNG loads, card link resolves and the model appears under the
    right `/firmware#wifi-*` anchor.
-6. Workflow changes: validate with
+6. Changelog changes: check the banner link opens the matching notes page, every branch
+   section anchor works, legacy releases still render, and top-menu Changelog is active on
+   both the index and detail pages. Verify a release with no body shows the fallback note.
+7. Workflow changes: validate with
    `docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest`, then exercise a
    branch push (`🧪` only), a same-repo PR (`🧪 → 👀`), close (`🧹`), and merge (`🧪 → 🚀`).
    Confirm the run graph and the Mermaid job-summary map, and that `gh-pages/.nojekyll`
