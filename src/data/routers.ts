@@ -99,6 +99,31 @@ export const routers: RouterModel[] = [
     featured: true,
   },
   {
+    id: 'rt-be58u',
+    name: 'RT-BE58U',
+    branch: '3006',
+    image: 'rt-be58u.png',
+    asusUrl:
+      'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be58u/',
+  },
+  {
+    id: 'rt-be82u',
+    name: 'RT-BE82U',
+    branch: '3006',
+    image: 'rt-be82u.png',
+    asusUrl:
+      'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be82u/',
+  },
+  {
+    id: 'rt-be82m',
+    name: 'RT-BE82M',
+    branch: '3006',
+    // ASUS has no separate RT-BE82M product page; it uses the RT-BE82U shell.
+    image: 'rt-be82u.png',
+    asusUrl:
+      'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be82u/',
+  },
+  {
     id: 'dsl-ax82u',
     name: 'DSL-AX82U',
     aliases: ['DSL-AX5400'],
