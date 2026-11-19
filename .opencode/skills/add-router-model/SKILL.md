@@ -47,7 +47,8 @@ branch:
 
 4. **Add the model entry** to `src/data/routers.ts`. Follow the interface and keep entries
    grouped by branch. Required fields: `id`, `name`, `branch`, `image`, `asusUrl`.
-   Optional: `aliases`, `badge` (`"New"`), `featured` (home-page showcase only).
+   Optional: `aliases`, `badge` (`"New"`), `note` (hardware/firmware warning shown on
+   the card), `featured` (home-page showcase only).
    Example:
    ```ts
    {

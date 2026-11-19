@@ -13,7 +13,7 @@ software generation the build is based on. It is not a version you can choose fr
 
 | Branch | Hardware generation | Models |
 | --- | --- | --- |
-| **3006** | WiFi 7 | GT-BE98 / GT-BE25000, RT-BE58U, RT-BE82U v1 (RT-BE82M firmware) |
+| **3006** | WiFi 7 | GT-BE98 / GT-BE25000, RT-BE58U v1, RT-BE82U, RT-BE82M |
 | **3004** | WiFi 6 and WiFi 6E | DSL-AX82U, RT-AX82U, RT-AX92U, TUF-AX5400, TUF-AX3000, RT-AX58U v2, RT-AX5400, ZenWiFi XT8, ZenWiFi ET8 |
 | **386** | WiFi 5 DSL | DSL-AC68U |
 
