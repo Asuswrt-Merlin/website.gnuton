@@ -3,6 +3,17 @@
  * All links point at the real project resources so the site stays a thin,
  * honest layer over the GitHub repository.
  */
+const repo3004Url = 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-gnuton';
+const repo3006Url = 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton';
+const repo386Url = `${repo3004Url}/tree/386.12_0-gnuton1`;
+
+const issueTemplate = (repo: string, template: string, label: string) =>
+  `${repo}/issues/new?assignees=&labels=${label}&template=${template}`;
+
+const bugReport = (repo: string) => issueTemplate(repo, 'bug_report.md', 'bug');
+const featureRequest = (repo: string) =>
+  issueTemplate(repo, 'feature_request.md', 'enhancement');
+
 export const site = {
   name: "GNUton's Merlin Builds",
   shortName: 'GNUton',
@@ -18,19 +29,20 @@ export const site = {
   repoLabel: 'gnuton/asuswrt-merlin.ng',
   // The 3004 line; this repository will move to
   // https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton
-  repo3004: 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-gnuton',
-  repo3006: 'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton',
+  repo3004: repo3004Url,
+  repo3006: repo3006Url,
   // 386 code lives in the 3004 repository; pin to the latest stable 386 tag.
-  repo386:
-    'https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-gnuton/tree/386.12_0-gnuton1',
+  repo386: repo386Url,
   releases: 'https://github.com/gnuton/asuswrt-merlin.ng/releases',
   docs: 'https://github.com/RMerl/asuswrt-merlin.ng/wiki/About-Asuswrt',
   devDocs: 'https://github.com/gnuton/asuswrt-merlin.ng/blob/master/www/DEV.md',
-  issues: 'https://github.com/gnuton/asuswrt-merlin.ng/issues',
-  bugReport:
-    'https://github.com/gnuton/asuswrt-merlin.ng/issues/new?assignees=&labels=bug&template=bug_report.md',
-  featureRequest:
-    'https://github.com/gnuton/asuswrt-merlin.ng/issues/new?assignees=&labels=enhancement&template=feature_request.md',
+  issues: `${repo3004Url}/issues`,
+  // Each firmware line has its own issue tracker after the repository split:
+  // 3006 builds in the WiFi 7 repository, 3004 and 386 builds in the 3004 one.
+  bugReport3004: bugReport(repo3004Url),
+  bugReport3006: bugReport(repo3006Url),
+  featureRequest3004: featureRequest(repo3004Url),
+  featureRequest3006: featureRequest(repo3006Url),
   forum:
     'https://www.snbforums.com/threads/gnutons-merlin-builds-for-dsl-router-386-1_2-released.70980/',
   discord: 'https://discord.gg/pm7q6KFSzp',
@@ -72,7 +84,7 @@ export const navItems: NavItem[] = [
 export const projectLinks = [
   { label: 'Latest releases', href: site.releases },
   { label: 'Source code', href: site.repo },
-  { label: 'Report a bug', href: site.bugReport },
+  { label: 'Report a bug', href: '/support/#report-a-bug' },
   { label: 'Upstream Merlin', href: site.upstream },
 ];
 

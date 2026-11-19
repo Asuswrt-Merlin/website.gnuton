@@ -19,6 +19,9 @@ export interface FirmwareBranch {
   description: string;
   stableUrl: string;
   prereleaseUrl: string;
+  /** Issue tracker for this firmware line (3006 and 3004 are separate repos). */
+  issueUrl: string;
+  featureRequestUrl: string;
   experimental?: {
     label: string;
     description: string;
@@ -52,6 +55,8 @@ export const firmwareBranches: FirmwareBranch[] = [
       'The newest Merlin line for ASUS WiFi 7 hardware. Same upstream feature set, built for the flagship ROG router.',
     stableUrl: releaseQuery('3006*', false),
     prereleaseUrl: releaseQuery('3006*', true),
+    issueUrl: site.bugReport3006,
+    featureRequestUrl: site.featureRequest3006,
   },
   {
     id: 'wifi-6',
@@ -61,6 +66,8 @@ export const firmwareBranches: FirmwareBranch[] = [
       'The main GNUton line: WiFi 6 routers, mesh systems and DSL gateways. Most supported models live here.',
     stableUrl: releaseQuery('3004*', false),
     prereleaseUrl: releaseQuery('3004*', true),
+    issueUrl: site.bugReport3004,
+    featureRequestUrl: site.featureRequest3004,
   },
   {
     id: 'wifi-5',
@@ -70,6 +77,8 @@ export const firmwareBranches: FirmwareBranch[] = [
       'The long-lived build for the DSL-AC68U, including the optional experimental Repeater Mode images.',
     stableUrl: releaseQuery('386', false),
     prereleaseUrl: releaseQuery('386', true),
+    issueUrl: site.bugReport3004,
+    featureRequestUrl: site.featureRequest3004,
     experimental: {
       label: 'Repeater Mode',
       description:

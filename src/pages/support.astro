@@ -24,12 +24,27 @@ import { withBase } from '../utils/url';
         {
           helpOptions.map((option) => (
             <div class="column is-4">
-              <div class="box gm-card gm-help-card">
+              <div class="box gm-card gm-help-card" id={option.id}>
                 <h2 class="title is-5">{option.title}</h2>
                 <p class="mb-4">{option.description}</p>
-                <a class="gm-card-format" href={option.href} target="_blank" rel="noopener">
-                  {option.label} ↗
-                </a>
+                {option.links ? (
+                  <ul class="gm-help-links">
+                    {option.links.map((link) => (
+                      <li>
+                        <a class="gm-card-format" href={link.href} target="_blank" rel="noopener">
+                          {link.label} ↗
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  option.href &&
+                  option.label && (
+                    <a class="gm-card-format" href={option.href} target="_blank" rel="noopener">
+                      {option.label} ↗
+                    </a>
+                  )
+                )}
               </div>
             </div>
           ))
