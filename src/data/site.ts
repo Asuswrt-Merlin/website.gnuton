@@ -35,14 +35,17 @@ export const site = {
 export interface NavItem {
   label: string;
   href: string;
+  /** External project resources open in a new tab. */
+  external?: boolean;
 }
 
 export const navItems: NavItem[] = [
   { label: 'Home', href: '/' },
-  { label: 'Firmware', href: '/firmware' },
+  { label: 'Downloads', href: '/firmware' },
   { label: 'About', href: '/about' },
   { label: 'Guides', href: '/guides' },
   { label: 'Help', href: '/support' },
+  { label: 'Code', href: site.repo, external: true },
 ];
 
 export const projectLinks = [

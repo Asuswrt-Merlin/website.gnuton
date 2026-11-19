@@ -1,16 +1,22 @@
 ---
 import { githubStats } from '../data/stats';
-import { site } from '../data/site';
-import { formatDate } from '../utils/date';
 import { compactNumber, formatNumber } from '../utils/format';
 
-const updated = formatDate(new Date(githubStats.generatedAt));
 const tiles = [
   { value: githubStats.releaseDownloads, label: 'Release downloads' },
   { value: githubStats.stars, label: 'GitHub stars' },
   { value: githubStats.forks, label: 'Forks' },
   { value: githubStats.releases, label: 'Releases' },
 ];
+
+const firstRelease = githubStats.firstRelease ? new Date(githubStats.firstRelease) : null;
+const firstReleaseLabel =
+  firstRelease && !Number.isNaN(firstRelease.valueOf())
+    ? new Intl.DateTimeFormat('en', {
+        dateStyle: 'long',
+        timeZone: 'UTC',
+      }).format(firstRelease)
+    : null;
 ---
 
 <section class="section gm-section" aria-labelledby="github-stats-title">
@@ -28,7 +34,7 @@ const tiles = [
       {
         tiles.map((tile) => (
           <div>
-            <span class="gm-stat-number" title={formatNumber(tile.value)}>
+            <span class="gm-stat-number" title={formatNumber(tile.value)} data-github-stat>
               {compactNumber(tile.value)}
             </span>
             <span class="gm-stat-label">{tile.label}</span>
@@ -37,11 +43,67 @@ const tiles = [
       }
     </div>
 
-    <p class="gm-stat-note">
-      {formatNumber(githubStats.releaseDownloads)} release downloads across{' '}
-      {githubStats.releases} releases, including checksums and build logs. Source:{' '}
-      <a href={site.repo} target="_blank" rel="noopener">GitHub repository</a> and{' '}
-      <a href={site.releases} target="_blank" rel="noopener">releases</a>. Refreshed {updated}.
-    </p>
+    {
+      firstRelease && firstReleaseLabel && (
+        <p class="gm-stat-reference">
+          First release: <time datetime={firstRelease.toISOString()}>{firstReleaseLabel}</time>
+        </p>
+      )
+    }
   </div>
 </section>
+
+<script>
+  // Count up from zero when the section is first shown. The server-rendered
+  // values stay in place without JS and for visitors who prefer reduced motion.
+  const DURATION = 1200;
+  const STAGGER = 75;
+
+  function animateCounters() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const counters = document.querySelectorAll<HTMLElement>('[data-github-stat]');
+
+    counters.forEach((counter, index) => {
+      if (counter.dataset.animated === 'true') return;
+      counter.dataset.animated = 'true';
+
+      const finalText = (counter.textContent ?? '').trim();
+      const match = finalText.match(/^(\d+(?:\.\d+)?)([kM]?)$/);
+      if (!match) return;
+
+      const target = Number(match[1]);
+      if (!Number.isFinite(target) || target === 0) return;
+
+      const suffix = match[2];
+      const decimals = match[1].includes('.') ? 1 : 0;
+      const start = performance.now() + index * STAGGER;
+
+      const frame = (now: number) => {
+        const elapsed = Math.max(0, now - start);
+        const progress = Math.min(elapsed / DURATION, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        counter.textContent = `${(target * eased).toFixed(decimals)}${suffix}`;
+
+        if (progress < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          counter.textContent = finalText;
+        }
+      };
+
+      counter.textContent = `0${suffix}`;
+      requestAnimationFrame(frame);
+    });
+  }
+
+  // Keep a single listener when Astro re-runs this script after a client-side
+  // navigation; the new counters are animated by the immediate call below.
+  const state = window as Window & { __githubStatsAnimation?: boolean };
+  if (!state.__githubStatsAnimation) {
+    state.__githubStatsAnimation = true;
+    document.addEventListener('astro:page-load', animateCounters);
+  }
+
+  animateCounters();
+</script>

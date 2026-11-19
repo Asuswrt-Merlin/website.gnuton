@@ -13,6 +13,7 @@ export interface GitHubStats {
   releaseDownloads: number;
   stars: number;
   forks: number;
+  firstRelease: string | null;
 }
 
 export const githubStats: GitHubStats = snapshot;

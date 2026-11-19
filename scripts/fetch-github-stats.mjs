@@ -63,7 +63,13 @@ async function fetchReleases() {
     0,
   );
 
-  return { releases: releases.length, releaseDownloads };
+  const firstRelease = releases.reduce((oldest, release) => {
+    const date = release.published_at ?? release.created_at;
+    if (!date) return oldest;
+    return !oldest || date < oldest ? date : oldest;
+  }, null);
+
+  return { releases: releases.length, releaseDownloads, firstRelease };
 }
 
 async function main() {

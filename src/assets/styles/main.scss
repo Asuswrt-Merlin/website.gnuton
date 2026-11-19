@@ -825,6 +825,7 @@ main {
   font-size: clamp(2rem, 4vw, 2.75rem);
   font-weight: 800;
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
   color: var(--gm-accent);
 }
 
@@ -837,17 +838,15 @@ main {
   color: var(--gm-muted);
 }
 
-.gm-stat-note {
-  max-width: 44rem;
-  margin: 2rem auto 0;
+.gm-stat-reference {
+  margin: 2rem 0 0;
   text-align: center;
   font-size: 0.875rem;
   color: var(--gm-muted);
 
-  a {
-    color: var(--gm-accent);
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
+  time {
+    color: var(--gm-text);
+    font-weight: 600;
   }
 }
 

@@ -44,15 +44,20 @@ function isActive(href: string): boolean {
       <div id="main-navbar" class="navbar-menu">
         <div class="navbar-end">
           {
-            navItems.map((item) => (
-              <a
-                class:list={['navbar-item', { 'is-active': isActive(item.href) }]}
-                href={withBase(item.href)}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-              >
-                {item.label}
-              </a>
-            ))
+            navItems.map((item) => {
+              const active = !item.external && isActive(item.href);
+              return (
+                <a
+                  class:list={['navbar-item', { 'is-active': active }]}
+                  href={item.external ? item.href : withBase(item.href)}
+                  target={item.external ? '_blank' : undefined}
+                  rel={item.external ? 'noopener' : undefined}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              );
+            })
           }
           <div class="navbar-item">
             <ThemeToggle />

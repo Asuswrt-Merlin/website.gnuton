@@ -21,11 +21,13 @@ const year = new Date().getFullYear();
         <p class="has-text-weight-semibold mb-3">Explore</p>
         <ul>
           {
-            navItems.map((item) => (
-              <li class="mb-1">
-                <a href={withBase(item.href)}>{item.label}</a>
-              </li>
-            ))
+            navItems
+              .filter((item) => !item.external)
+              .map((item) => (
+                <li class="mb-1">
+                  <a href={withBase(item.href)}>{item.label}</a>
+                </li>
+              ))
           }
         </ul>
       </div>
