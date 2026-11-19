@@ -95,24 +95,35 @@
 
 ## Deployment
 
-- `.github/workflows/deploy.yml` builds on pushes to `main` (and manual runs) and pushes
-  `dist/` to the `gh-pages` branch with `JamesIves/github-pages-deploy-action`. It uses
-  `clean-exclude` for `pr-preview/` and `CNAME` plus `force: false` so production deploys
-  never delete previews, a custom-domain file, or rewrite the whole branch.
-- `.github/workflows/preview.yml` builds same-repository pull requests at
-  `/<repo>/pr-preview/pr-<number>/` with `PUBLIC_IS_PREVIEW=true` (adds `noindex` and a
-  preview banner) and uses `rossjrw/pr-preview-action` to deploy, comment a sticky link
-  and remove the preview when the PR closes.
-- `.github/workflows/ci.yml` runs the checks for all pull requests and non-`main` pushes.
-- Both Pages workflows share the `gh-pages` concurrency group. Do not run two writers to
-  `gh-pages` concurrently.
+- `.github/workflows/pages.yml` is the single Pages pipeline:
+  - `🧪 Check & build` runs for every push except `gh-pages` and every pull request except
+    `closed`. It resolves the Pages origin/base path, runs `pnpm check` + `pnpm build`,
+    and uploads `dist` as a one-day artifact. The build job has read-only permissions.
+  - `🚀 Deploy to GitHub Pages` (`needs: build`) runs on `main` pushes and manual runs,
+    downloads `dist`, and pushes it to `gh-pages` with
+    `JamesIves/github-pages-deploy-action`. It uses `clean-exclude` for `pr-preview/` and
+    `CNAME` plus `force: false` so production deploys never delete previews, a custom-domain
+    file, or rewrite the whole branch.
+  - `👀 Publish PR preview` (`needs: build`) runs for same-repository pull requests at
+    `/<repo>/pr-preview/pr-<number>/` with `PUBLIC_IS_PREVIEW=true` (adds `noindex` and a
+    preview banner) and uses `rossjrw/pr-preview-action` to deploy and comment a sticky link.
+  - `🧹 Remove PR preview` (`needs: build`, `always()`) runs when a same-repository PR
+    closes and removes the preview.
+- The deploy, preview and cleanup jobs share the `gh-pages` concurrency group. Do not run
+  two writers to `gh-pages` concurrently. The build job uses `ci-${{ github.ref }}` and
+  cancels superseded non-`main` builds.
+- Artifact uploads must set `include-hidden-files: true`; `dist/.nojekyll` must survive or
+  GitHub Pages can run Jekyll and drop the `_astro/` assets.
 - GitHub Pages must be enabled with **Source: Deploy from a branch**, branch `gh-pages`,
   folder `/ (root)`. Do not switch it back to "GitHub Actions": PR previews live in
   subdirectories of the same branch.
-- Fork PRs are skipped by the preview workflow; the preview action needs a write token.
-  Their CI checks still run.
-- The Pages origin/base path is resolved from the GitHub Pages API, with a fallback to the
-  default project URL before Pages is enabled. Custom domains follow automatically.
+- Fork PRs still run the read-only check/build job; preview and cleanup are skipped because
+  the preview action needs a write token.
+- The Pages origin/base path is resolved from the GitHub Pages API by the build job, with a
+  fallback to the default project URL before Pages is enabled. Custom domains follow
+  automatically.
+- `docs/ci-pipeline.md` is the canonical trigger/job map. Update it when triggers or jobs
+  change; the build and cleanup jobs write it into their run summaries.
 
 ## SEO / content rules
 
@@ -139,6 +150,11 @@ Before finishing:
    no-results state.
 5. Router changes: check the PNG loads, card link resolves and the model appears under the
    right `/firmware#wifi-*` anchor.
+6. Workflow changes: validate with
+   `docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest`, then exercise a
+   branch push (`🧪` only), a same-repo PR (`🧪 → 👀`), close (`🧹`), and merge (`🧪 → 🚀`).
+   Confirm the run graph and the Mermaid job-summary map, and that `gh-pages/.nojekyll`
+   survives the artifact handoff.
 
 ## Documentation
 

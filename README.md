@@ -1,8 +1,6 @@
 # GNUton's Merlin Builds — website
 
-[![Deploy to GitHub Pages](https://github.com/Asuswrt-Merlin/website.gnuton/actions/workflows/deploy.yml/badge.svg)](https://github.com/Asuswrt-Merlin/website.gnuton/actions/workflows/deploy.yml)
-[![CI](https://github.com/Asuswrt-Merlin/website.gnuton/actions/workflows/ci.yml/badge.svg)](https://github.com/Asuswrt-Merlin/website.gnuton/actions/workflows/ci.yml)
-[![PR preview](https://github.com/Asuswrt-Merlin/website.gnuton/actions/workflows/preview.yml/badge.svg)](https://github.com/Asuswrt-Merlin/website.gnuton/actions/workflows/preview.yml)
+[![🚀 Pages pipeline](https://github.com/Asuswrt-Merlin/website.gnuton/actions/workflows/pages.yml/badge.svg)](https://github.com/Asuswrt-Merlin/website.gnuton/actions/workflows/pages.yml)
 
 The website for **[GNUton's Asuswrt-Merlin builds](https://github.com/gnuton/asuswrt-merlin.ng)**:
 supported routers, firmware downloads by branch, installation guides and community links.
@@ -26,8 +24,8 @@ Built with [Astro](https://astro.build) and [Bulma](https://bulma.io), based on 
   JSON-LD and per-page metadata.
 - **Responsive, accessible UI** — dark/light themes, keyboard-friendly mobile menu,
   skip link, visible focus states and reduced-motion support.
-- **GitHub Pages pipeline** — type-check, build and deploy on every push to `main`,
-  plus live previews with sticky links for pull requests.
+- **GitHub Pages pipeline** — one workflow that type-checks and builds every push and PR,
+  deploys `main`, and publishes live previews with sticky links for pull requests.
 - **No client framework** — Astro components and a few delegated scripts; zero hydration.
 
 ## Requirements
@@ -100,34 +98,44 @@ firmware page derive from it.
 
 ## Deployment
 
-The workflow at `.github/workflows/deploy.yml` builds the site and pushes it to the
-`gh-pages` branch, which GitHub Pages serves. Pull requests and non-`main` branches run
-the CI workflow (`check` + `build`); same-repository pull requests also get a live preview.
+The single workflow at `.github/workflows/pages.yml` builds the site and pushes it to the
+`gh-pages` branch, which GitHub Pages serves. It has four jobs:
+
+- **`🧪 Check & build`** — runs for every push (except `gh-pages`) and every pull request
+  except `closed`; runs `pnpm check` + `pnpm build` and uploads `dist`.
+- **`🚀 Deploy to GitHub Pages`** — runs for `main` pushes and manual runs.
+- **`👀 Publish PR preview`** — runs for same-repository pull requests and posts a sticky
+  preview link.
+- **`🧹 Remove PR preview`** — runs when a same-repository PR closes.
+
+See [`docs/ci-pipeline.md`](docs/ci-pipeline.md) for the full trigger/job map. The build
+job (and cleanup on PR close) renders the same map in the Actions run summary.
 
 **First-time setup:**
 
-1. Push to `main` once. The deploy workflow creates the `gh-pages` branch even before
-   Pages is enabled (it falls back to the default project-site URL).
+1. Push to `main` once. The deploy job creates the `gh-pages` branch even before Pages is
+   enabled (it falls back to the default project-site URL).
 2. In the repository, open **Settings → Pages**.
 3. Set **Build and deployment → Source** to **Deploy from a branch**.
 4. Choose branch **`gh-pages`** and folder **`/ (root)`**, then save.
-5. Re-run the deploy workflow (or push to `main`) if Pages needs a fresh build.
+5. Re-run the pipeline (or push to `main`) if Pages needs a fresh build.
 
-If the workflows cannot push to `gh-pages`, allow write access under
+If the pipeline cannot push to `gh-pages`, allow write access under
 **Settings → Actions → General → Workflow permissions** (read and write permissions).
-The workflows request `contents: write`, but an organisation policy can still block it.
+The deploy, preview and cleanup jobs request `contents: write`; the build job stays
+read-only. An organisation policy can still block the write jobs.
 
 **How previews work:**
 
-- `.github/workflows/preview.yml` builds same-repository PRs under
+- `.github/workflows/pages.yml` builds same-repository PRs under
   `/<repo>/pr-preview/pr-<number>/` and posts a sticky preview link on the PR.
 - Every push updates the preview; closing the PR removes it.
 - Preview builds are marked `noindex` and show a “Preview build” banner.
-- Fork PRs are skipped by the preview workflow because the deploy action needs a write
-  token. Their CI checks still run. Add an external preview provider (Netlify,
-  Cloudflare Pages, etc.) if fork previews are required.
+- Fork PRs still run the read-only check/build job, but preview and cleanup are skipped
+  because the deploy action needs a write token. Add an external preview provider
+  (Netlify, Cloudflare Pages, etc.) if fork previews are required.
 
-The workflow resolves the Pages origin and base path from the GitHub Pages API, falling
+The build job resolves the Pages origin and base path from the GitHub Pages API, falling
 back to the default project-site URL before Pages is enabled:
 
 - `SITE_URL` — pages origin (for example `https://asuswrt-merlin.github.io`).
@@ -150,8 +158,9 @@ SITE_URL=https://example.com BASE_PATH=/firmware pnpm build
 
 ```
 /
-├── .github/workflows/       # CI, PR previews + GitHub Pages deployment
+├── .github/workflows/       # Single Pages pipeline: checks, deploy, PR previews
 ├── .opencode/skills/        # "add-router-model" agent skill and image helper
+├── docs/ci-pipeline.md      # Trigger/job map, also rendered in Actions summaries
 ├── public/
 │   ├── images/routers/      # Local transparent router PNGs
 │   ├── favicon.*            # Brand icon

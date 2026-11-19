@@ -1,0 +1,217 @@
+name: "🚀 Pages pipeline"
+
+run-name: "${{ github.event_name == 'pull_request' && format('👀 PR #{0}', github.event.pull_request.number) || github.event_name == 'workflow_dispatch' && '🚀 Manual deploy' || (github.ref == 'refs/heads/main' && '🚀 Deploy') || format('🧪 {0}', github.ref_name) }}"
+
+on:
+  push:
+    # The deploy/preview actions push to gh-pages with GITHUB_TOKEN, which does
+    # not create new runs, but ignore the branch anyway so manual pushes there
+    # never start a build.
+    branches-ignore: [gh-pages]
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: read
+
+jobs:
+  build:
+    name: "🧪 Check & build"
+    # The build is wasted on a closed PR: only the preview cleanup is needed.
+    if: github.event_name != 'pull_request' || github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ci-${{ github.ref }}
+      # Cancel superseded PR/branch builds, but never drop a main build that
+      # may be followed by a deploy.
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+    outputs:
+      pages_base_url: ${{ steps.pages.outputs.base_url_no_scheme }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: "🗺️ Pipeline map"
+        run: |
+          if [[ -f docs/ci-pipeline.md ]]; then
+            cat docs/ci-pipeline.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "⚠️ docs/ci-pipeline.md is missing; pipeline map not available." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Resolve Pages URL
+        id: pages
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const { owner, repo } = context.repo
+            const fallback = `https://${owner.toLowerCase()}.github.io/${repo}/`
+            let siteUrl = fallback
+            try {
+              const { data } = await github.rest.repos.getPages({ owner, repo })
+              siteUrl = data.html_url || fallback
+            } catch (error) {
+              if (error.status !== 404) throw error
+              // Pages is not enabled yet: use the default project-site URL so
+              // the first run can still create the gh-pages branch.
+            }
+            const url = new URL(siteUrl)
+            const basePath = url.pathname.replace(/\/+$/, '')
+            core.setOutput('origin', url.origin)
+            core.setOutput('base_path', basePath)
+            core.setOutput('base_url', `${url.origin}${basePath}`)
+            core.setOutput('base_url_no_scheme', `${url.host}${basePath}`)
+            core.info(`Pages site: ${url.origin}${basePath}`)
+
+      - name: Compute build base path
+        id: build_path
+        env:
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            printf 'base_path=%s/pr-preview/pr-%s\n' "$PAGES_BASE_PATH" "$PR_NUMBER" >> "$GITHUB_OUTPUT"
+            printf 'is_preview=true\n' >> "$GITHUB_OUTPUT"
+          else
+            printf 'base_path=%s\n' "$PAGES_BASE_PATH" >> "$GITHUB_OUTPUT"
+            printf 'is_preview=false\n' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type-check
+        run: pnpm check
+
+      - name: Build
+        run: pnpm build
+        env:
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          BASE_PATH: ${{ steps.build_path.outputs.base_path }}
+          PUBLIC_IS_PREVIEW: ${{ steps.build_path.outputs.is_preview }}
+
+      - name: Upload built site
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist
+          # dist/.nojekyll is required; without it Pages may run Jekyll and
+          # drop the _astro/ assets.
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    name: "🚀 Deploy to GitHub Pages"
+    needs: build
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: gh-pages
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download built site
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist
+
+      - name: Deploy to gh-pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages
+          clean: true
+          clean-exclude: |
+            pr-preview/
+            CNAME
+          force: false
+
+  preview:
+    name: "👀 Publish PR preview"
+    needs: build
+    # The preview action deploys with the Actions token, so it can only publish
+    # previews for branches that live in this repository.
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    concurrency:
+      group: gh-pages
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+      pages: read
+      deployments: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download built site
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist
+
+      - name: Deploy preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: dist
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          wait-for-pages-deployment: true
+          qr-code: false
+          # The action prepends https:// itself; pass host + base path only.
+          pages-base-url: ${{ needs.build.outputs.pages_base_url }}
+
+  cleanup:
+    name: "🧹 Remove PR preview"
+    needs: build
+    # The build is skipped on closed PRs, so force this job to run anyway.
+    if: always() && github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    concurrency:
+      group: gh-pages
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+      pages: read
+      deployments: read
+    steps:
+      - name: Checkout default branch
+        uses: actions/checkout@v7
+        with:
+          # The PR branch may already be deleted; cleanup does not need its code.
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: "🗺️ Pipeline map"
+        run: |
+          if [[ -f docs/ci-pipeline.md ]]; then
+            cat docs/ci-pipeline.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "⚠️ docs/ci-pipeline.md is missing; pipeline map not available." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Remove preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          wait-for-pages-deployment: true
+          qr-code: false
