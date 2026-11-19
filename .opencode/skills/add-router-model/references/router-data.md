@@ -19,7 +19,7 @@ File: `src/data/routers.ts`
 
 | ID | Anchor | Generation | Models |
 | --- | --- | --- | --- |
-| `3006` | `/firmware#wifi-7` | WiFi 7 | GT-BE98 / GT-BE25000, RT-BE58U, RT-BE82U, RT-BE82M |
+| `3006` | `/firmware#wifi-7` | WiFi 7 | GT-BE98 / GT-BE25000, RT-BE58U, RT-BE82U v1 (RT-BE82M firmware) |
 | `3004` | `/firmware#wifi-6` | WiFi 6 / WiFi 6E | DSL-AX82U, RT-AX82U, RT-AX92U, TUF-AX5400, TUF-AX3000, RT-AX58U, RT-AX5400, ZenWiFi XT8, ZenWiFi ET8 |
 | `386` | `/firmware#wifi-5` | WiFi 5 / DSL | DSL-AC68U |
 

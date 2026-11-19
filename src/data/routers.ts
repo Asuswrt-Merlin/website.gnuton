@@ -43,6 +43,8 @@ export interface RouterModel {
   asusUrl: string;
   /** Short badge, e.g. "New". */
   badge?: string;
+  /** Optional firmware note shown on the card. */
+  note?: string;
   featured?: boolean;
 }
 
@@ -110,21 +112,13 @@ export const routers: RouterModel[] = [
       'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be58u/',
   },
   {
-    id: 'rt-be82u',
-    name: 'RT-BE82U',
+    id: 'rt-be82u-v1',
+    name: 'RT-BE82U v1',
     branch: '3006',
     image: 'rt-be82u.png',
     asusUrl:
       'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be82u/',
-  },
-  {
-    id: 'rt-be82m',
-    name: 'RT-BE82M',
-    branch: '3006',
-    // ASUS has no separate RT-BE82M product page; it uses the RT-BE82U shell.
-    image: 'rt-be82u.png',
-    asusUrl:
-      'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be82u/',
+    note: 'Uses the same firmware as the RT-BE82M — flash the RT-BE82M image for this model.',
   },
   {
     id: 'dsl-ax82u',

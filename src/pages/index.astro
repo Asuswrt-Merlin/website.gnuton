@@ -120,14 +120,8 @@ const stats = [
         </p>
       </div>
 
-      <div class="columns is-multiline">
-        {
-          featuredRouters.map((router) => (
-            <div class="column is-4">
-              <RouterCard router={router} />
-            </div>
-          ))
-        }
+      <div class="gm-router-grid">
+        {featuredRouters.map((router) => <RouterCard router={router} />)}
       </div>
 
       <div class="has-text-centered mt-6">
