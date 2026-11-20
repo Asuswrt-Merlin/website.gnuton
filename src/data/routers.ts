@@ -104,13 +104,13 @@ export const routers: RouterModel[] = [
     featured: true,
   },
   {
-    id: 'rt-be58u-v1',
-    name: 'RT-BE58U v1',
+    id: 'rt-be58m',
+    name: 'RT-BE58M',
+    aliases: ['RT-BE58U v1'],
     branch: '3006',
     image: 'rt-be58u.png',
     asusUrl:
       'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be58u/',
-    note: 'RT-BE58U V2 uses different hardware and is not supported. V1 hardware only.',
   },
   {
     id: 'rt-be82u',
@@ -119,7 +119,6 @@ export const routers: RouterModel[] = [
     image: 'rt-be82u.png',
     asusUrl:
       'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be82u/',
-    note: 'Use the RT-BE82M firmware image for this model.',
   },
   {
     id: 'rt-be82m',
