@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gnuton.asuswrt-merlin.net/pr-preview/pr-8/sitemap-index.xml
