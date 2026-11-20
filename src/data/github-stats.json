@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-11-19T21:12:10.444Z",
+  "generatedAt": "2026-11-20T07:36:41.734Z",
   "repository": "Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton",
   "releases": 159,
-  "releaseDownloads": 342159,
+  "releaseDownloads": 327310,
   "firstRelease": "2019-04-01T18:46:10Z",
-  "stars": 2408,
+  "stars": 2407,
   "forks": 152,
   "latestRelease": {
     "tag": "3006.102.9_1-gnuton1",
     "name": "3006.102.9_1-gnuton1",
     "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/tag/3006.102.9_1-gnuton1",
-    "publishedAt": "2026-11-14T17:17:37Z",
+    "publishedAt": "2026-11-19T12:39:34Z",
     "repository": "Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton",
     "branch": "3006"
   }

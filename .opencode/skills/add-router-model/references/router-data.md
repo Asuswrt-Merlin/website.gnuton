@@ -11,6 +11,8 @@ File: `src/data/routers.ts`
 | `aliases` | no | Other names for the same hardware (`GT-BE25000`, `RT-AX95Q v1`). |
 | `branch` | yes | `3006`, `3004` or `386`. |
 | `image` | yes | Filename inside `public/images/routers/`. Reuse for identical shells. |
+| `assetPrefix` | yes | Prefix of the model's GitHub release image, e.g. `RT-AX82U_V2_`. Aliases can differ from the card name (`RT-BE58M` uses `RT-BE58U_`). |
+| `assetExclude` | no | Asset-name fragments for alternate images to skip, e.g. `['_V2_']` or `['NO-DSL']`. |
 | `asusUrl` | yes | Official ASUS product or store page. |
 | `badge` | no | Short flag such as `New`. Do not leave stale badges behind. |
 | `note` | no | Short firmware or hardware warning shown on the card and included in search. |

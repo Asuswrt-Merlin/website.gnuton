@@ -1,9 +1,8 @@
 ---
-import { marked } from 'marked';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import {
   changelogReleases,
-  releaseNotesBody,
+  renderReleaseNotes,
   type ChangelogRelease,
 } from '../../../data/releases';
 import { branchById } from '../../../data/routers';
@@ -25,18 +24,7 @@ export function getStaticPaths() {
 const { release } = Astro.props;
 const branch = release.branch === 'legacy' ? null : branchById(release.branch);
 const published = new Date(release.publishedAt);
-const notes = releaseNotesBody(release);
-// Release notes come from the project's own GitHub releases, so raw HTML is
-// treated as trusted content. Do not feed user-supplied Markdown through this
-// path. External links should not take over the tab that is reading them.
-const notesHtml = notes
-  ? marked
-      .parse(notes, { async: false, gfm: true })
-      .replace(
-        /<a href="(https?:\/\/[^"]+)"/g,
-        '<a href="$1" target="_blank" rel="noopener"',
-      )
-  : '';
+const notesHtml = renderReleaseNotes(release);
 
 const description = `Release notes for ${release.tag}${
   branch ? ` (${branch.name} · ${branch.version})` : ' (legacy build)'
@@ -99,7 +87,7 @@ const repositoryUrl = `https://github.com/${release.repository}`;
       <div class="gm-changelog-release-layout">
         <article class="gm-prose">
           {
-            notes ? (
+            notesHtml ? (
               <div set:html={notesHtml} />
             ) : (
               <p>

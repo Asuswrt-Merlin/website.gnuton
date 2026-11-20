@@ -1,5 +1,6 @@
 ---
 import CtaBand from '../components/CtaBand.astro';
+import FirmwareModal from '../components/FirmwareModal.astro';
 import PageHero from '../components/PageHero.astro';
 import ReleaseCard from '../components/ReleaseCard.astro';
 import RouterCard from '../components/RouterCard.astro';
@@ -7,7 +8,6 @@ import RouterSearch from '../components/RouterSearch.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { releaseChannels } from '../data/project';
 import { firmwareBranches, routers, routersForBranch } from '../data/routers';
-import { site } from '../data/site';
 import { withBase } from '../utils/url';
 ---
 
@@ -22,7 +22,7 @@ import { withBase } from '../utils/url';
     compact
   >
     <div class="buttons is-centered mt-5">
-      <a class="button is-primary is-medium" href={site.releases} target="_blank" rel="noopener">
+      <a class="button is-primary is-medium" href={withBase('/changelog/')}>
         All releases
       </a>
       <a class="button is-medium gm-button-outline" href={withBase('/guides/which-router-version-do-i-have/')}>
@@ -142,4 +142,6 @@ import { withBase } from '../utils/url';
     ctaLabel="Read the guides"
     ctaHref="/guides"
   />
+
+  <FirmwareModal routers={routers} />
 </BaseLayout>

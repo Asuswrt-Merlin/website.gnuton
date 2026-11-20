@@ -41,6 +41,14 @@ export interface RouterModel {
   branch: BranchId;
   image: string;
   asusUrl: string;
+  /**
+   * Prefix of this model's firmware image in GitHub release assets, e.g.
+   * `RT-AX82U_V2_`. Aliases can have a different asset name, so keep this
+   * explicit instead of deriving it from the displayed model name.
+   */
+  assetPrefix: string;
+  /** Asset-name fragments that identify alternate images to skip. */
+  assetExclude?: string[];
   /** Short badge, e.g. "New". */
   badge?: string;
   /** Optional hardware or firmware note shown on the card. */
@@ -48,8 +56,8 @@ export interface RouterModel {
   featured?: boolean;
 }
 
-const releaseQuery = (filter: string, prerelease: boolean) =>
-  `${site.releases}?q=${filter}+prerelease%3A${prerelease}`;
+const releaseQuery = (repository: string, filter: string, prerelease: boolean) =>
+  `${repository}/releases?q=${filter}+prerelease%3A${prerelease}`;
 
 export const firmwareBranches: FirmwareBranch[] = [
   {
@@ -58,8 +66,8 @@ export const firmwareBranches: FirmwareBranch[] = [
     name: 'WiFi 7',
     description:
       'The newest Merlin line for ASUS WiFi 7 hardware. Same upstream feature set, including the flagship ROG router.',
-    stableUrl: releaseQuery('3006*', false),
-    prereleaseUrl: releaseQuery('3006*', true),
+    stableUrl: releaseQuery(site.repo3006, '3006*', false),
+    prereleaseUrl: releaseQuery(site.repo3006, '3006*', true),
     issueUrl: site.bugReport3006,
     featureRequestUrl: site.featureRequest3006,
   },
@@ -69,8 +77,8 @@ export const firmwareBranches: FirmwareBranch[] = [
     name: 'WiFi 6',
     description:
       'The main GNUton line: WiFi 6 routers, mesh systems and DSL gateways. Most supported models live here.',
-    stableUrl: releaseQuery('3004*', false),
-    prereleaseUrl: releaseQuery('3004*', true),
+    stableUrl: releaseQuery(site.repo3004, '3004*', false),
+    prereleaseUrl: releaseQuery(site.repo3004, '3004*', true),
     issueUrl: site.bugReport3004,
     featureRequestUrl: site.featureRequest3004,
   },
@@ -80,8 +88,8 @@ export const firmwareBranches: FirmwareBranch[] = [
     name: 'WiFi 5',
     description:
       'The long-lived build for the DSL-AC68U, including the optional experimental Repeater Mode images.',
-    stableUrl: releaseQuery('386', false),
-    prereleaseUrl: releaseQuery('386', true),
+    stableUrl: releaseQuery(site.repo3004, '386', false),
+    prereleaseUrl: releaseQuery(site.repo3004, '386', true),
     issueUrl: site.bugReport3004,
     featureRequestUrl: site.featureRequest3004,
     experimental: {
@@ -100,6 +108,8 @@ export const routers: RouterModel[] = [
     aliases: ['GT-BE25000'],
     branch: '3006',
     image: 'gt-be98.png',
+    assetPrefix: 'GT-BE98_',
+    assetExclude: ['_rog_'],
     asusUrl: 'https://rog.asus.com/networking/rog-rapture-gt-be98-model',
     featured: true,
   },
@@ -109,6 +119,7 @@ export const routers: RouterModel[] = [
     aliases: ['RT-BE58U v1'],
     branch: '3006',
     image: 'rt-be58u.png',
+    assetPrefix: 'RT-BE58U_',
     asusUrl:
       'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be58u/',
   },
@@ -117,6 +128,7 @@ export const routers: RouterModel[] = [
     name: 'RT-BE82U',
     branch: '3006',
     image: 'rt-be82u.png',
+    assetPrefix: 'RT-BE82U_',
     asusUrl:
       'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be82u/',
   },
@@ -126,6 +138,7 @@ export const routers: RouterModel[] = [
     branch: '3006',
     // ASUS has no separate RT-BE82M product page; it uses the RT-BE82U shell.
     image: 'rt-be82u.png',
+    assetPrefix: 'RT-BE82M_',
     asusUrl:
       'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-be82u/',
   },
@@ -135,6 +148,7 @@ export const routers: RouterModel[] = [
     aliases: ['DSL-AX5400'],
     branch: '3004',
     image: 'dsl-ax82u.png',
+    assetPrefix: 'DSL-AX82U_',
     asusUrl:
       'https://www.asus.com/Networking-IoT-Servers/WiFi-6/All-series/DSL-AX82U/',
     featured: true,
@@ -144,6 +158,8 @@ export const routers: RouterModel[] = [
     name: 'RT-AX82U v1',
     branch: '3004',
     image: 'rt-ax82u.png',
+    assetPrefix: 'RT-AX82U_',
+    assetExclude: ['_V2_'],
     asusUrl:
       'https://www.asus.com/Networking-IoT-Servers/WiFi-6/All-series/RT-AX82U/',
   },
@@ -152,6 +168,7 @@ export const routers: RouterModel[] = [
     name: 'RT-AX82U v2',
     branch: '3004',
     image: 'rt-ax82u.png',
+    assetPrefix: 'RT-AX82U_V2_',
     asusUrl:
       'https://www.asus.com/Networking-IoT-Servers/WiFi-6/All-series/RT-AX82U/',
   },
@@ -160,6 +177,7 @@ export const routers: RouterModel[] = [
     name: 'RT-AX92U',
     branch: '3004',
     image: 'rt-ax92u.png',
+    assetPrefix: 'RT-AX92U_',
     asusUrl:
       'https://www.asus.com/Networking-IoT-Servers/WiFi-Routers/ASUS-Gaming-Routers/RT-AX92U/',
   },
@@ -168,6 +186,8 @@ export const routers: RouterModel[] = [
     name: 'TUF-AX5400 v1',
     branch: '3004',
     image: 'tuf-ax5400.png',
+    assetPrefix: 'TUF-AX5400_',
+    assetExclude: ['_tuf_'],
     asusUrl:
       'https://www.asus.com/Networking-IoT-Servers/WiFi-Routers/ASUS-Gaming-Routers/TUF-Gaming-AX5400/',
   },
@@ -176,6 +196,8 @@ export const routers: RouterModel[] = [
     name: 'TUF-AX3000 v1',
     branch: '3004',
     image: 'tuf-ax3000.png',
+    assetPrefix: 'TUF-AX3000_',
+    assetExclude: ['_V2_', '_tuf_'],
     asusUrl:
       'https://www.asus.com/Networking-IoT-Servers/WiFi-Routers/ASUS-Gaming-Routers/TUF-Gaming-AX3000/',
   },
@@ -184,6 +206,8 @@ export const routers: RouterModel[] = [
     name: 'TUF-AX3000 v2',
     branch: '3004',
     image: 'tuf-ax3000.png',
+    assetPrefix: 'TUF-AX3000_V2_',
+    assetExclude: ['_tuf_'],
     asusUrl:
       'https://www.asus.com/networking-iot-servers/wifi-routers/asus-gaming-routers/tuf-gaming-ax3000-v2/',
   },
@@ -192,6 +216,7 @@ export const routers: RouterModel[] = [
     name: 'RT-AX58U v2',
     branch: '3004',
     image: 'rt-ax58u.png',
+    assetPrefix: 'RT-AX58U_V2_',
     asusUrl: 'https://uk.store.asus.com/rt-ac58u-v2-122214131-90ig06q0-mu9b00.html',
   },
   {
@@ -199,6 +224,7 @@ export const routers: RouterModel[] = [
     name: 'RT-AX5400',
     branch: '3004',
     image: 'rt-ax5400.png',
+    assetPrefix: 'RT-AX5400_',
     asusUrl:
       'https://www.asus.com/networking-iot-servers/wifi-routers/asus-wifi-routers/rt-ax5400/',
     featured: true,
@@ -209,6 +235,7 @@ export const routers: RouterModel[] = [
     aliases: ['RT-AX95Q v1'],
     branch: '3004',
     image: 'zenwifi-xt8.png',
+    assetPrefix: 'RT-AX95Q_',
     asusUrl:
       'https://www.asus.com/Networking-IoT-Servers/Whole-Home-Mesh-WiFi-System/ZenWiFi-WiFi-Systems/ASUS-ZenWiFi-AX-XT8/',
     featured: true,
@@ -219,6 +246,7 @@ export const routers: RouterModel[] = [
     aliases: ['RT-AXE95Q'],
     branch: '3004',
     image: 'zenwifi-et8.png',
+    assetPrefix: 'RT-AXE95Q_',
     asusUrl:
       'https://www.asus.com/networking-iot-servers/whole-home-mesh-wifi-system/zenwifi-wifi-systems/asus-zenwifi-et8/',
     featured: true,
@@ -228,6 +256,8 @@ export const routers: RouterModel[] = [
     name: 'DSL-AC68U',
     branch: '386',
     image: 'dsl-ac68u.png',
+    assetPrefix: 'DSL-AC68U_',
+    assetExclude: ['NO-DSL'],
     asusUrl:
       'https://www.asus.com/Networking-IoT-Servers/Modem-Routers/All-series/DSLAC68U/',
     featured: true,

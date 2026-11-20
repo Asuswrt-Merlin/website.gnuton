@@ -43,16 +43,26 @@
   the home featured grid use `.gm-router-grid`: four cards per row on desktop, two on
   tablet and one on phones.
   Each branch also carries its `issueUrl` and `featureRequestUrl` (see below).
+  Each router also has an `assetPrefix` (and optional `assetExclude`) that maps it to its
+  firmware image in the GitHub release assets.
 - **Router search**: `src/components/RouterSearch.astro` filters cards client-side using
   `data-router-*` attributes, updates branch counts and jump links, and uses
   document-level listeners so it survives `<ClientRouter />` navigation.
+- **Firmware downloads**: `src/data/firmware.ts` resolves the newest stable image for each
+  model (falling back to the latest pre-release when no stable image exists).
+  `RouterCard` shows that version and a Download button; `FirmwareModal` renders the
+  release date, file name, size, MD5, changelog and direct GitHub links in a native
+  `<dialog>`. The modal payload is embedded as JSON in `firmware.astro`, and the card link
+  still points at the image so it works without JavaScript.
 - **GitHub stats and changelog**: `scripts/fetch-github-stats.mjs` (`pnpm stats`) refreshes
   both `src/data/github-stats.json` (read through `src/data/stats.ts`) and
   `src/data/github-releases.json` (read through `src/data/releases.ts`). The committed
   snapshots are the offline fallback; the daily Pages run refreshes them. The release
   snapshot carries every published tag from both repositories (3006, plus 3004/386) and
-  the 384/388 archive, deduplicated by tag with the earliest publication date. It powers
-  `/changelog` and the per-release notes pages.
+  the 384/388 archive, deduplicated by tag with the earliest publication date. It stores
+  the release assets and reads the `.md5` companion asset for the newest stable and
+  pre-release of each current branch. It powers `/changelog`, the per-release notes pages
+  and the firmware download dialog.
 - **Release banner**: `src/components/ReleaseBanner.astro` shows the latest stable release
   for 60 days and links to its `/changelog/<branch>/<tag>/` page (falling back to GitHub
   only if the tag is missing from the snapshot). Dismissals are stored per release tag in
@@ -177,8 +187,9 @@ Before finishing:
 3. Browser pass: both themes, mobile width, keyboard navigation, mobile menu.
 4. Search changes: filter by model, alias and WiFi generation; test Clear, Escape and the
    no-results state.
-5. Router changes: check the PNG loads, card link resolves and the model appears under the
-   right `/firmware#wifi-*` anchor.
+5. Router changes: check the PNG loads, the card shows the latest version, the download
+   dialog shows the release date, MD5, changelog and working download/GitHub buttons, and
+   the model appears under the right `/firmware#wifi-*` anchor.
 6. Changelog changes: check the banner link opens the matching notes page, every branch
    section anchor works, legacy releases still render, and top-menu Changelog is active on
    both the index and detail pages. Verify a release with no body shows the fallback note.
