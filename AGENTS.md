@@ -52,8 +52,9 @@
   model (falling back to the latest pre-release when no stable image exists).
   `RouterCard` shows that version and a Download button; `FirmwareModal` renders the
   release date, file name, size, MD5, changelog and direct GitHub links in a native
-  `<dialog>`. The modal payload is embedded as JSON in `firmware.astro`, and the card link
-  still points at the image so it works without JavaScript.
+  `<dialog>`. The modal payload is embedded as JSON by each page that renders the cards
+  (`firmware.astro` and the home featured grid), and the card link still points at the
+  image so it works without JavaScript.
 - **GitHub stats and changelog**: `scripts/fetch-github-stats.mjs` (`pnpm stats`) refreshes
   both `src/data/github-stats.json` (read through `src/data/stats.ts`) and
   `src/data/github-releases.json` (read through `src/data/releases.ts`). The committed

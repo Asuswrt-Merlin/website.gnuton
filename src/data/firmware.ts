@@ -5,6 +5,10 @@
  * show the newest stable release that actually contains an image for the
  * model; a pre-release is used only when no stable image exists yet, so the
  * default download never silently switches to a beta build.
+ *
+ * MD5 values are refreshed for the newest stable and pre-release of each
+ * branch. If a model falls back to an older release, its dialog still links the
+ * image and GitHub release but reports that the checksum is not in the snapshot.
  */
 import {
   changelogReleases,
