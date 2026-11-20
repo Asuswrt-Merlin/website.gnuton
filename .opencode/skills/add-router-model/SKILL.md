@@ -46,9 +46,12 @@ branch:
      (for example RT-AX82U v1/v2, or ZenWiFi XT8 / RT-AX95Q). Do not duplicate files.
 
 4. **Add the model entry** to `src/data/routers.ts`. Follow the interface and keep entries
-   grouped by branch. Required fields: `id`, `name`, `branch`, `image`, `asusUrl`.
-   Optional: `aliases`, `badge` (`"New"`), `note` (hardware/firmware warning shown on
-   the card), `featured` (home-page showcase only).
+   grouped by branch. Required fields: `id`, `name`, `branch`, `image`, `assetPrefix`,
+   `asusUrl`. Optional: `aliases`, `assetExclude`, `badge` (`"New"`), `note`
+   (hardware/firmware warning shown on the card), `featured` (home-page showcase only).
+   `assetPrefix` is the prefix of the model's image inside the GitHub release assets;
+   aliases can differ from the card name (`RT-BE58M` uses `RT-BE58U_`). Use `assetExclude`
+   for alternate images such as `_V2_`, `_tuf_`, `_rog_` or `NO-DSL`.
    Example:
    ```ts
    {
@@ -56,6 +59,7 @@ branch:
      name: 'RT-AX86U Pro',
      branch: '3004',
      image: 'rt-ax86u-pro.png',
+     assetPrefix: 'RT-AX86U_PRO_',
      asusUrl: 'https://www.asus.com/.../rt-ax86u-pro/',
    },
    ```
@@ -79,6 +83,8 @@ branch:
    Confirm:
    - the PNG renders with transparency on the card;
    - the ASUS link resolves;
+   - the card shows the latest stable/beta version and the download dialog shows the
+     release date, MD5, changelog and working download/GitHub buttons;
    - the model is under the correct branch anchor on `/firmware`;
    - no layout shift or stretched image.
 

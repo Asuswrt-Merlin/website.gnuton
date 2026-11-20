@@ -1,4 +1,5 @@
 ---
+import { firmwareForRouter } from '../data/firmware';
 import type { RouterModel } from '../data/routers';
 import { branchById } from '../data/routers';
 import { withBase } from '../utils/url';
@@ -9,11 +10,13 @@ interface Props {
 
 const { router } = Astro.props;
 const branch = branchById(router.branch);
+const firmware = firmwareForRouter(router);
 const searchText = [
   router.name,
   ...(router.aliases ?? []),
   router.note ?? '',
   branch.name,
+  ...(firmware ? [firmware.release.tag, firmware.release.prerelease ? 'beta' : 'stable'] : []),
 ].join(' ');
 ---
 
@@ -38,8 +41,42 @@ const searchText = [
       )
     }
     {router.note && <p class="gm-router-note">{router.note}</p>}
+    {
+      firmware ? (
+        <p class="gm-router-version">
+          <span
+            class:list={[
+              'gm-router-version-label',
+              { 'gm-router-version-label--pre': firmware.release.prerelease },
+            ]}
+          >
+            {firmware.release.prerelease ? 'Beta' : 'Stable'}
+          </span>
+          <strong>{firmware.release.tag}</strong>
+        </p>
+      ) : (
+        <p class="gm-router-version gm-router-version--missing">No published image found</p>
+      )
+    }
     <div class="gm-router-links">
-      <a href={branch.stableUrl} target="_blank" rel="noopener">Downloads</a>
+      {
+        firmware ? (
+          <a
+            class="gm-router-download"
+            href={firmware.asset.url}
+            data-firmware-download={router.id}
+            target="_blank"
+            rel="noopener"
+            aria-label={`Download firmware for ${router.name}`}
+          >
+            Download
+          </a>
+        ) : (
+          <a href={branch.stableUrl} target="_blank" rel="noopener">
+            Downloads
+          </a>
+        )
+      }
       <a
         href={router.asusUrl}
         target="_blank"

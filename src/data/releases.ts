@@ -6,9 +6,19 @@
  * GitHub stats file. Current firmware lines get their own URL segment
  * (`/changelog/3004/<tag>/`); older 384/388 builds are grouped as `legacy`.
  */
+import { marked } from 'marked';
 import snapshot from './github-releases.json';
 
 export type ChangelogBranch = '3006' | '3004' | '386' | 'legacy';
+
+export interface FirmwareAsset {
+  name: string;
+  url: string;
+  /** Size in bytes. */
+  size: number;
+  /** MD5 checksum from the companion `.md5` asset, when the snapshot has it. */
+  md5?: string;
+}
 
 export interface ChangelogRelease {
   tag: string;
@@ -20,6 +30,8 @@ export interface ChangelogRelease {
   branch: ChangelogBranch;
   prerelease: boolean;
   body: string;
+  /** Firmware images, checksums, build logs and changelogs attached to the release. */
+  assets: FirmwareAsset[];
 }
 
 const isChangelogBranch = (value: string): value is ChangelogBranch =>
@@ -36,6 +48,12 @@ const normalizeRelease = (
   branch: isChangelogBranch(release.branch) ? release.branch : 'legacy',
   prerelease: release.prerelease,
   body: release.body,
+  assets: release.assets.map((asset) => ({
+    name: asset.name,
+    url: asset.url,
+    size: asset.size,
+    ...(asset.md5 ? { md5: asset.md5 } : {}),
+  })),
 });
 
 export const changelogReleases: ChangelogRelease[] = snapshot.releases
@@ -135,4 +153,20 @@ export function releaseNotesBody(release: ChangelogRelease): string {
     .replace(CHANGELOG_RELEASE, '');
 
   return normalizeIndentation(notes);
+}
+
+/**
+ * Render a release body for the changelog and the firmware download dialog.
+ * Release notes are trusted project content; external links open in a new tab.
+ */
+export function renderReleaseNotes(release: ChangelogRelease): string {
+  const notes = releaseNotesBody(release);
+  if (!notes) return '';
+
+  return marked
+    .parse(notes, { async: false, gfm: true })
+    .replace(
+      /<a href="(https?:\/\/[^"]+)"/g,
+      '<a href="$1" target="_blank" rel="noopener"',
+    );
 }

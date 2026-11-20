@@ -1,0 +1,276 @@
+---
+import { formatFileSize, firmwareForRouter } from '../data/firmware';
+import { changelogPath } from '../data/releases';
+import type { RouterModel } from '../data/routers';
+import { formatReleaseDate } from '../utils/date';
+import { withBase } from '../utils/url';
+
+interface Props {
+  routers: RouterModel[];
+}
+
+interface FirmwareDialogItem {
+  model: string;
+  branch: string;
+  version: string;
+  released: string;
+  publishedAt: string;
+  prerelease: boolean;
+  filename: string;
+  size: string;
+  md5: string;
+  downloadUrl: string;
+  releaseUrl: string;
+  changelogUrl: string;
+  notesHtml: string;
+}
+
+const { routers } = Astro.props;
+const models: Record<string, FirmwareDialogItem> = {};
+
+for (const router of routers) {
+  const firmware = firmwareForRouter(router);
+  if (!firmware) continue;
+
+  const release = firmware.release;
+  models[router.id] = {
+    model: router.name,
+    branch: `${firmware.branch.name} · ${firmware.branch.version}`,
+    version: release.tag,
+    released: formatReleaseDate(new Date(release.publishedAt)),
+    publishedAt: release.publishedAt,
+    prerelease: release.prerelease,
+    filename: firmware.asset.name,
+    size: formatFileSize(firmware.asset.size),
+    md5: firmware.asset.md5 ?? '',
+    downloadUrl: firmware.asset.url,
+    releaseUrl: release.url,
+    changelogUrl: withBase(changelogPath(release)),
+    notesHtml: firmware.notesHtml,
+  };
+}
+
+// `<` must be escaped so Markdown/HTML from the release body cannot close the
+// JSON script element early. The notes themselves are trusted project content.
+const dataJson = JSON.stringify(models).replace(/</g, '\\u003c');
+---
+
+{
+  Object.keys(models).length > 0 && (
+    <>
+      <dialog
+        id="firmware-download-dialog"
+        class="gm-firmware-dialog"
+        data-firmware-dialog
+        aria-labelledby="firmware-download-title"
+      >
+        <div class="gm-firmware-dialog-panel">
+          <header class="gm-firmware-dialog-head">
+            <div>
+              <p class="gm-eyebrow mb-1" data-firmware-branch />
+              <h2 class="title is-4 mb-2" id="firmware-download-title" data-firmware-model />
+              <p class="gm-firmware-dialog-version">
+                <span class="gm-firmware-status" data-firmware-status />
+                <span data-firmware-version />
+              </p>
+            </div>
+            <button
+              type="button"
+              class="gm-firmware-close"
+              data-firmware-close
+              aria-label="Close download dialog"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </header>
+
+          <div
+            class="gm-firmware-dialog-body"
+            data-firmware-dialog-body
+            tabindex="0"
+            role="region"
+            aria-labelledby="firmware-download-title"
+          >
+            <dl class="gm-firmware-meta">
+              <div>
+                <dt>Released</dt>
+                <dd><time data-firmware-date /></dd>
+              </div>
+              <div>
+                <dt>Size</dt>
+                <dd data-firmware-size />
+              </div>
+              <div class="gm-firmware-meta-wide">
+                <dt>File</dt>
+                <dd class="gm-firmware-file" data-firmware-file />
+              </div>
+              <div class="gm-firmware-meta-wide">
+                <dt>MD5</dt>
+                <dd><code data-firmware-md5 /></dd>
+              </div>
+            </dl>
+
+            <div class="gm-notice gm-firmware-warning">
+              <strong>Verify before flashing.</strong> Compare the MD5 above with the file
+              you downloaded, and check your exact model and hardware revision first.
+            </div>
+
+            <section class="gm-firmware-notes" aria-labelledby="firmware-notes-title">
+              <h3 class="title is-6" id="firmware-notes-title">Changelog</h3>
+              <div class="gm-prose gm-firmware-prose" data-firmware-notes />
+            </section>
+          </div>
+
+          <footer class="gm-firmware-dialog-actions">
+            <a class="button is-primary" data-firmware-download-link>
+              Download firmware
+            </a>
+            <a
+              class="button gm-button-outline"
+              data-firmware-release-link
+              target="_blank"
+              rel="noopener"
+            >
+              GitHub release <span aria-hidden="true">↗</span>
+            </a>
+            <a class="button gm-button-outline" data-firmware-changelog-link>
+              Full release notes
+            </a>
+          </footer>
+        </div>
+      </dialog>
+
+      <script type="application/json" id="firmware-download-data" set:html={dataJson} />
+    </>
+  )
+}
+
+<script>
+  interface FirmwareDialogItem {
+    model: string;
+    branch: string;
+    version: string;
+    released: string;
+    publishedAt: string;
+    prerelease: boolean;
+    filename: string;
+    size: string;
+    md5: string;
+    downloadUrl: string;
+    releaseUrl: string;
+    changelogUrl: string;
+    notesHtml: string;
+  }
+
+  const getDialog = (): HTMLDialogElement | null => {
+    if (typeof HTMLDialogElement === 'undefined') return null;
+
+    const dialog = document.getElementById('firmware-download-dialog');
+    return dialog instanceof HTMLDialogElement ? dialog : null;
+  };
+
+  const loadModels = (): Record<string, FirmwareDialogItem> => {
+    const data = document.getElementById('firmware-download-data');
+    if (!(data instanceof HTMLScriptElement)) return {};
+
+    try {
+      return JSON.parse(data.textContent ?? '{}') as Record<string, FirmwareDialogItem>;
+    } catch (error) {
+      return {};
+    }
+  };
+
+  const setText = (dialog: HTMLDialogElement, selector: string, value: string): void => {
+    const element = dialog.querySelector<HTMLElement>(selector);
+    if (element) element.textContent = value;
+  };
+
+  const setLink = (dialog: HTMLDialogElement, selector: string, href: string): void => {
+    const link = dialog.querySelector<HTMLAnchorElement>(selector);
+    if (link) link.href = href;
+  };
+
+  const openFirmwareDialog = (routerId: string): boolean => {
+    const dialog = getDialog();
+    const item = loadModels()[routerId];
+    if (!dialog || !item) return false;
+
+    setText(dialog, '[data-firmware-branch]', item.branch);
+    setText(dialog, '[data-firmware-model]', item.model);
+    setText(dialog, '[data-firmware-version]', item.version);
+    setText(dialog, '[data-firmware-size]', item.size);
+    setText(dialog, '[data-firmware-file]', item.filename);
+    setText(dialog, '[data-firmware-md5]', item.md5 || 'Not published in the release snapshot');
+
+    const status = dialog.querySelector<HTMLElement>('[data-firmware-status]');
+    if (status) {
+      status.textContent = item.prerelease ? 'Pre-release' : 'Stable';
+      status.classList.toggle('gm-firmware-status--pre', item.prerelease);
+    }
+
+    const date = dialog.querySelector<HTMLTimeElement>('[data-firmware-date]');
+    if (date) {
+      date.textContent = item.released;
+      date.dateTime = item.publishedAt;
+    }
+
+    const notes = dialog.querySelector<HTMLElement>('[data-firmware-notes]');
+    if (notes) {
+      notes.innerHTML =
+        item.notesHtml ||
+        '<p>No additional notes were published for this build. Open the GitHub release for the full changelog.</p>';
+    }
+
+    setLink(dialog, '[data-firmware-download-link]', item.downloadUrl);
+    setLink(dialog, '[data-firmware-release-link]', item.releaseUrl);
+    setLink(dialog, '[data-firmware-changelog-link]', item.changelogUrl);
+
+    const body = dialog.querySelector<HTMLElement>('[data-firmware-dialog-body]');
+    if (body) body.scrollTop = 0;
+
+    if (!dialog.open) {
+      if (typeof dialog.showModal === 'function') {
+        dialog.showModal();
+      } else {
+        dialog.setAttribute('open', '');
+      }
+    }
+
+    // Focus the scroll region so PageDown/arrow keys read the changelog instead
+    // of moving the page behind the modal.
+    body?.focus({ preventScroll: true });
+
+    return true;
+  };
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const trigger = target.closest<HTMLElement>('[data-firmware-download]');
+    if (trigger) {
+      // Keep modifier/middle clicks as a direct download (and a usable fallback
+      // without JavaScript); a plain click opens the details dialog.
+      if (
+        event instanceof MouseEvent &&
+        (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+      ) {
+        return;
+      }
+
+      const routerId = trigger.dataset.firmwareDownload;
+      if (routerId && openFirmwareDialog(routerId)) {
+        event.preventDefault();
+      }
+      return;
+    }
+
+    if (target.closest('[data-firmware-close]')) {
+      getDialog()?.close();
+      return;
+    }
+
+    const dialog = getDialog();
+    if (dialog && target === dialog) dialog.close();
+  });
+</script>

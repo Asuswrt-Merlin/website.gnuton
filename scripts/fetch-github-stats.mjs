@@ -15,6 +15,12 @@
  * exist in both repositories; the snapshot keeps the canonical repository for
  * the branch and the earliest publication date so imported copies do not look
  * like new releases.
+ *
+ * Release assets are stored in the snapshot so the firmware page can show the
+ * latest image per model and link straight to it. The MD5 checksum is read
+ * from the `.md5` companion asset for the newest stable and pre-release build
+ * of each current branch, which is enough for the model cards without turning
+ * every stats refresh into thousands of download requests.
  */
 import { rename, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -50,6 +56,20 @@ async function getJson(url) {
   }
 
   return response.json();
+}
+
+/** Release assets redirect to a download host; do not forward the API token. */
+async function getText(url) {
+  const response = await fetch(url, {
+    headers: { 'User-Agent': headers['User-Agent'] },
+    signal: AbortSignal.timeout(20_000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`${response.status} ${response.statusText} for ${url}`);
+  }
+
+  return response.text();
 }
 
 async function fetchRepository() {
@@ -104,6 +124,11 @@ function collectReleases(releasesByRepository) {
         branch,
         prerelease: release.prerelease,
         body: release.body ?? '',
+        assets: (release.assets ?? []).map((asset) => ({
+          name: asset.name,
+          url: asset.browser_download_url,
+          size: asset.size,
+        })),
       };
       const existing = byTag.get(candidate.tag);
 
@@ -130,6 +155,60 @@ function collectReleases(releasesByRepository) {
   return [...byTag.values()].sort(
     (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
   );
+}
+
+const MD5_LINE = /^([a-f0-9]{32})\s+\*?(.+?)\s*$/im;
+
+/**
+ * Attach the published MD5 checksum to the image asset it belongs to. The
+ * checksum files carry the path used during the build, so match on the final
+ * filename rather than the asset name alone. A failed download only leaves the
+ * checksum empty for that asset; it never aborts the whole snapshot refresh.
+ */
+async function addChecksums(release) {
+  const checksumAssets = release.assets.filter((asset) => asset.name.endsWith('.md5'));
+
+  const checksums = await Promise.all(
+    checksumAssets.map(async (asset) => {
+      try {
+        const content = await getText(asset.url);
+        const match = content.match(MD5_LINE);
+        if (!match) return null;
+
+        return {
+          md5: match[1].toLowerCase(),
+          filename: match[2].split('/').pop(),
+        };
+      } catch (error) {
+        console.warn(
+          `::warning::Could not read checksum ${asset.name}: ` +
+            `${error instanceof Error ? error.message : String(error)}`,
+        );
+        return null;
+      }
+    }),
+  );
+
+  for (const checksum of checksums) {
+    if (!checksum?.filename) continue;
+    const image = release.assets.find((asset) => asset.name === checksum.filename);
+    if (image) image.md5 = checksum.md5;
+  }
+}
+
+/** Newest stable and pre-release per current branch: enough for model cards. */
+function releasesForChecksums(releases) {
+  const selected = new Set();
+
+  for (const branch of CURRENT_BRANCHES) {
+    const branchReleases = releases.filter((release) => release.branch === branch);
+    const stable = branchReleases.find((release) => !release.prerelease);
+    const prerelease = branchReleases.find((release) => release.prerelease);
+    if (stable) selected.add(stable);
+    if (prerelease) selected.add(prerelease);
+  }
+
+  return [...selected];
 }
 
 function summarizeReleases(releases) {
@@ -165,6 +244,8 @@ async function main() {
       [REPOSITORY]: mainReleases,
       [WIFI7_REPOSITORY]: wifi7Releases,
     });
+    const checksumReleases = releasesForChecksums(allReleases);
+    await Promise.all(checksumReleases.map((release) => addChecksums(release)));
     const currentLineReleases = allReleases.filter(
       (release) => release.branch !== 'legacy',
     );
