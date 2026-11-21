@@ -122,15 +122,48 @@ Each firmware repository has a `notify-website.yml` workflow. It runs on
 ```
 
 The dispatch requires a token with `Contents: write` on `website.gnuton`. The
-preferred setup is a GitHub App installed **only** on `website.gnuton`; the
-firmware repositories store the App id and private key as
-`WEBSITE_APP_ID` / `WEBSITE_APP_PRIVATE_KEY` secrets (repository or
-organisation level). A fine-grained PAT is a fallback only.
+credential mode is selected per firmware repository; see
+[Dispatch credentials](#dispatch-credentials).
 
 The website workflow passes the payload as `FIRMWARE_REPOSITORY` and
 `FIRMWARE_TAG` to `pnpm stats`. If the GitHub API has not caught up with the
 new tag yet, the refresh warns and keeps the previous snapshots; the daily cron
 is the reconciliation path.
+
+## Dispatch credentials
+
+Both firmware repositories use a repository variable to select the credential:
+
+| Setting | Value |
+| --- | --- |
+| `WEBSITE_DISPATCH_MODE` | `app` or `pat` |
+
+### App mode
+
+Set `WEBSITE_DISPATCH_MODE=app` and provide these repository secrets:
+
+- `WEBSITE_APP_ID`
+- `WEBSITE_APP_PRIVATE_KEY`
+
+The App is user-owned. An Asuswrt-Merlin organisation owner must install it on
+`website.gnuton` with **Contents: write** before app mode can work. The App does
+not need access to the firmware repositories.
+
+### PAT mode
+
+Set `WEBSITE_DISPATCH_MODE=pat` and provide:
+
+- `WEBSITE_DISPATCH_TOKEN` — a fine-grained PAT scoped to `website.gnuton` with
+  **Contents: Read and write**.
+
+This is the current mode until the user-owned App can be installed by an
+organisation owner. The PAT is a fallback, not a replacement: the App path
+remains ready in both notify workflows.
+
+### Mode resolution
+
+If `WEBSITE_DISPATCH_MODE` is unset or empty, the notify workflow falls back to
+`app` when `WEBSITE_APP_ID` exists, otherwise to `pat`.
 
 ## Website validation and fallback
 

@@ -130,9 +130,10 @@ The single workflow at `.github/workflows/pages.yml` builds the site and pushes 
 - **`🧹 Remove PR preview`** — runs when a same-repository PR closes.
 
 A release published in the 3004/3006 repositories sends a `firmware-release` dispatch
-through a GitHub App installed on this repository; the daily cron remains the fallback.
-See [`docs/firmware-release-contract.md`](docs/firmware-release-contract.md) for the
-manifest, dispatch payload and App/secrets setup, and
+through a GitHub App or a fine-grained PAT selected by `WEBSITE_DISPATCH_MODE`; the daily
+cron remains the fallback. See
+[`docs/firmware-release-contract.md`](docs/firmware-release-contract.md) for the
+manifest, dispatch payload and dispatch-credential setup, and
 [`docs/ci-pipeline.md`](docs/ci-pipeline.md) for the full trigger/job map. The build job
 (and cleanup on PR close) renders the same map in the Actions run summary.
 
