@@ -18,11 +18,14 @@ Built with [Astro](https://astro.build) and [Bulma](https://bulma.io), based on 
   PNGs and links to ASUS product pages.
 - **Download-first home page** — branch cards for stable and pre-release releases, plus a
   three-step flashing checklist.
-- **GitHub stats** — release downloads, stars, forks and release counts, refreshed at build
-  time and redeployed daily; no third-party requests from visitors.
+- **GitHub stats** — release downloads (both firmware repositories, deduplicated by tag),
+  stars, forks and release counts, refreshed at build time and redeployed daily; no
+  third-party requests from visitors.
 - **Changelog** — every release note mirrored from GitHub Releases, grouped by firmware
   line and year, with stable/pre-release badges and a per-tag page linked from the release
   banner and top navigation.
+- **Firmware metadata** — manifest-first model/variant resolution, MD5 and SHA-256 in the
+  download dialog, and a theme selector when a release ships `default`/TUF/ROG images.
 - **Guides** — Markdown content collection with model-revision, branch, flashing and
   Repeater Mode articles, RSS feed and `TechArticle` structured data.
 - **SEO-ready** — canonical URLs, Open Graph image, sitemap, generated `robots.txt`,
@@ -52,6 +55,7 @@ pnpm install
 | `pnpm check` | Type-check Astro + TypeScript |
 | `pnpm preview` | Preview the production build |
 | `pnpm stats` | Refresh the GitHub stats and release-notes snapshots used by the home page and changelog |
+| `pnpm test` | Run the firmware release contract tests (`node:test`) |
 | `pnpm assets` | Regenerate `og-image.png`, `favicon.ico` and the touch icon |
 
 Run the dev server in the background with `pnpm astro dev --background`, then manage it
@@ -111,19 +115,26 @@ firmware page derive from it.
 ## Deployment
 
 The single workflow at `.github/workflows/pages.yml` builds the site and pushes it to the
-`gh-pages` branch, which GitHub Pages serves. It has four jobs:
+`gh-pages` branch, which GitHub Pages serves. It has five jobs:
 
 - **`🧪 Check & build`** — runs for every push (except `gh-pages`), every pull request
-  except `closed`, and the daily schedule; refreshes the GitHub stats and release-notes
-  snapshots, runs `pnpm check` + `pnpm build` and uploads `dist`.
-- **`🚀 Deploy to GitHub Pages`** — runs for `main` pushes, manual runs and the daily
-  scheduled refresh.
+  except `closed`, the daily schedule and a `firmware-release` repository dispatch;
+  refreshes the GitHub stats and release-notes snapshots, runs `pnpm check` + `pnpm build`,
+  and uploads `dist` plus the refreshed `data-snapshots`.
+- **`🚀 Deploy to GitHub Pages`** — runs for `main` pushes, manual runs, the daily
+  scheduled refresh and firmware dispatches.
+- **`💾 Commit data snapshot`** — runs for firmware dispatches and the daily schedule,
+  committing the refreshed JSON to `main` with `[skip ci]` when it changed.
 - **`👀 Publish PR preview`** — runs for same-repository pull requests and posts a sticky
   preview link.
 - **`🧹 Remove PR preview`** — runs when a same-repository PR closes.
 
-See [`docs/ci-pipeline.md`](docs/ci-pipeline.md) for the full trigger/job map. The build
-job (and cleanup on PR close) renders the same map in the Actions run summary.
+A release published in the 3004/3006 repositories sends a `firmware-release` dispatch
+through a GitHub App installed on this repository; the daily cron remains the fallback.
+See [`docs/firmware-release-contract.md`](docs/firmware-release-contract.md) for the
+manifest, dispatch payload and App/secrets setup, and
+[`docs/ci-pipeline.md`](docs/ci-pipeline.md) for the full trigger/job map. The build job
+(and cleanup on PR close) renders the same map in the Actions run summary.
 
 **First-time setup:**
 
@@ -172,9 +183,10 @@ SITE_URL=https://example.com BASE_PATH=/firmware pnpm build
 
 ```
 /
-├── .github/workflows/       # Single Pages pipeline: checks, deploy, PR previews
+├── .github/workflows/       # Single Pages pipeline: checks, deploy, PR previews, snapshot
 ├── .opencode/skills/        # "add-router-model" agent skill and image helper
 ├── docs/ci-pipeline.md      # Trigger/job map, also rendered in Actions summaries
+├── docs/firmware-release-contract.md  # Firmware manifest, checksums and dispatch contract
 ├── public/
 │   ├── images/routers/      # Local transparent router PNGs
 │   ├── favicon.*            # Brand icon

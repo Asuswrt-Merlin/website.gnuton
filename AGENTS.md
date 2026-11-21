@@ -21,8 +21,10 @@
 - `pnpm build` — static output in `dist/`, regenerate content types + sitemap.
 - `pnpm stats` — refresh the GitHub stats and release-note snapshots from the API. CI runs
   it before the build; local builds use the committed snapshots.
+- `pnpm test` — run the dependency-free `node:test` suite for the firmware release
+  contract.
 - `pnpm assets` — regenerate OG image, `favicon.ico` and touch icon (needs Pillow).
-- Order: `pnpm check` → `pnpm build`.
+- Order: `pnpm test` → `pnpm check` → `pnpm build`.
 - To test the GitHub Pages sub-path locally:
   `BASE_PATH=/website.gnuton pnpm build`, then preview with the same env.
   `pnpm preview --port 4322` serves at `/website.gnuton/`.
@@ -48,22 +50,35 @@
 - **Router search**: `src/components/RouterSearch.astro` filters cards client-side using
   `data-router-*` attributes, updates branch counts and jump links, and uses
   document-level listeners so it survives `<ClientRouter />` navigation.
-- **Firmware downloads**: `src/data/firmware.ts` resolves the newest stable image for each
-  model (falling back to the latest pre-release when no stable image exists).
-  `RouterCard` shows that version and a Download button; `FirmwareModal` renders the
-  release date, file name, size, MD5, changelog and direct GitHub links in a native
-  `<dialog>`. The modal payload is embedded as JSON by each page that renders the cards
-  (`firmware.astro` and the home featured grid), and the card link still points at the
-  image so it works without JavaScript.
+- **Firmware downloads**: `src/data/firmware.ts` resolves one card per model. Assets from
+  a release with a valid `firmware-release.json` manifest are matched by packaging model
+  (`asset.model === assetPrefix.replace(/_$/, '')`) and keep every theme variant
+  (`default`, `tuf`, `rog`, future keys); legacy assets keep the `assetPrefix` /
+  `assetExclude` name match. The resolver prefers the newest stable release with a
+  `default` image, then the newest stable with any variant, then the same rule for
+  pre-releases. The primary asset is `default`, otherwise the first variant in preference
+  order. `RouterCard` shows the version and the primary Download button; `FirmwareModal`
+  renders the release date, file name, size, MD5, SHA-256, a theme selector when the model
+  has multiple variants, changelog and direct GitHub links in a native `<dialog>`. The
+  modal payload is embedded as JSON by each page that renders the cards (`firmware.astro`
+  and the home featured grid), and the card link always points at the primary/default
+  image so it works without JavaScript. The producer contract is documented in
+  `docs/firmware-release-contract.md`.
 - **GitHub stats and changelog**: `scripts/fetch-github-stats.mjs` (`pnpm stats`) refreshes
   both `src/data/github-stats.json` (read through `src/data/stats.ts`) and
   `src/data/github-releases.json` (read through `src/data/releases.ts`). The committed
-  snapshots are the offline fallback; the daily Pages run refreshes them. The release
+  snapshots are the offline fallback; the daily Pages run reconciles them. The release
   snapshot carries every published tag from both repositories (3006, plus 3004/386) and
-  the 384/388 archive, deduplicated by tag with the earliest publication date. It stores
-  the release assets and reads the `.md5` companion asset for the newest stable and
-  pre-release of each current branch. It powers `/changelog`, the per-release notes pages
-  and the firmware download dialog.
+  the 384/388 archive, deduplicated by tag with the earliest publication date. For current
+  firmware lines it reads `firmware-release.json` first, validates repository, tag, branch,
+  asset names and sizes, attaches `model`/`variant`/`md5`/`sha256`, keeps every theme
+  variant and cross-checks the manifest SHA-256 against the GitHub API asset digest.
+  Releases without a valid manifest fall back to the `.md5` companion asset for the newest
+  stable and pre-release of each branch. `releaseDownloads` sums both repositories from the
+  deduplicated set. A `firmware-release` repository dispatch passes
+  `FIRMWARE_REPOSITORY`/`FIRMWARE_TAG`; the refresh warns if the API has not caught up and
+  writes a run summary. It powers `/changelog`, the per-release notes pages and the
+  firmware download dialog.
 - **Release banner**: `src/components/ReleaseBanner.astro` shows the latest stable release
   for 60 days and links to its `/changelog/<branch>/<tag>/` page (falling back to GitHub
   only if the tag is missing from the snapshot). Dismissals are stored per release tag in
@@ -135,23 +150,32 @@
 
 - `.github/workflows/pages.yml` is the single Pages pipeline:
   - `🧪 Check & build` runs for every push except `gh-pages`, every pull request except
-    `closed`, and the daily `schedule`. It resolves the Pages origin/base path, refreshes
-    the GitHub stats and release-note snapshots with `pnpm stats` (`GITHUB_TOKEN`), runs
-    `pnpm check` + `pnpm build`, and uploads `dist` as a one-day artifact. The build job
-    has read-only permissions.
-  - `🚀 Deploy to GitHub Pages` (`needs: build`) runs on `main` pushes, manual runs and the
-    daily schedule, downloads `dist`, and pushes it to `gh-pages` with
-    `JamesIves/github-pages-deploy-action`. It uses `clean-exclude` for `pr-preview/` and
-    `CNAME` plus `force: false` so production deploys never delete previews, a custom-domain
-    file, or rewrite the whole branch.
+    `closed`, the daily `schedule`, and `repository_dispatch` with type
+    `firmware-release`. It resolves the Pages origin/base path, refreshes the GitHub stats
+    and release-note snapshots with `pnpm stats` (`GITHUB_TOKEN`, plus
+    `FIRMWARE_REPOSITORY`/`FIRMWARE_TAG` from the dispatch payload), runs `pnpm check` +
+    `pnpm build`, uploads `dist`, and on non-PR events uploads the refreshed
+    `github-stats.json`/`github-releases.json` as the one-day `data-snapshots` artifact.
+    The build job has read-only permissions.
+  - `🚀 Deploy to GitHub Pages` (`needs: build`) runs on `main` pushes, manual runs, the
+    daily schedule and firmware dispatches, downloads `dist`, and pushes it to `gh-pages`
+    with `JamesIves/github-pages-deploy-action`. It uses `clean-exclude` for `pr-preview/`
+    and `CNAME` plus `force: false` so production deploys never delete previews, a
+    custom-domain file, or rewrite the whole branch.
+  - `💾 Commit data snapshot` (`needs: build`) runs on `repository_dispatch` and `schedule`
+    only. It checks out the default branch, downloads the `data-snapshots` artifact into
+    `src/data`, does nothing when the JSON is unchanged, otherwise commits as
+    `github-actions[bot]` with `[skip ci]`, rebases onto the branch and pushes. It uses
+    the `data-snapshot` concurrency group.
   - `👀 Publish PR preview` (`needs: build`) runs for same-repository pull requests at
     `/<repo>/pr-preview/pr-<number>/` with `PUBLIC_IS_PREVIEW=true` (adds `noindex` and a
     preview banner) and uses `rossjrw/pr-preview-action` to deploy and comment a sticky link.
   - `🧹 Remove PR preview` (`needs: build`, `always()`) runs when a same-repository PR
     closes and removes the preview.
 - The deploy, preview and cleanup jobs share the `gh-pages` concurrency group. Do not run
-  two writers to `gh-pages` concurrently. The build job uses `ci-${{ github.ref }}` and
-  cancels superseded non-`main` builds.
+  two writers to `gh-pages` concurrently. The snapshot job is independent and uses the
+  `data-snapshot` group. The build job uses `ci-${{ github.ref }}` and cancels superseded
+  non-`main` builds.
 - Artifact uploads must set `include-hidden-files: true`; `dist/.nojekyll` must survive or
   GitHub Pages can run Jekyll and drop the `_astro/` assets.
 - GitHub Pages must be enabled with **Source: Deploy from a branch**, branch `gh-pages`,
@@ -180,28 +204,37 @@
 
 Before finishing:
 
-1. `pnpm check`
-2. `pnpm build` (and, for deployment-sensitive changes,
+1. `pnpm test`
+2. `pnpm check`
+3. `pnpm build` (and, for deployment-sensitive changes,
    `BASE_PATH=/website.gnuton pnpm build` + preview). To exercise the PR preview path:
    `SITE_URL=https://asuswrt-merlin.github.io BASE_PATH=/website.gnuton/pr-preview/pr-1 PUBLIC_IS_PREVIEW=true pnpm build`,
    then preview at `/website.gnuton/pr-preview/pr-1/`.
-3. Browser pass: both themes, mobile width, keyboard navigation, mobile menu.
-4. Search changes: filter by model, alias and WiFi generation; test Clear, Escape and the
+4. Browser pass: both themes, mobile width, keyboard navigation, mobile menu.
+5. Search changes: filter by model, alias and WiFi generation; test Clear, Escape and the
    no-results state.
-5. Router changes: check the PNG loads, the card shows the latest version, the download
-   dialog shows the release date, MD5, changelog and working download/GitHub buttons, and
-   the model appears under the right `/firmware#wifi-*` anchor.
-6. Changelog changes: check the banner link opens the matching notes page, every branch
+6. Router changes: check the PNG loads, the card shows the latest version, the download
+   dialog shows the release date, MD5, SHA-256, changelog and working download/GitHub
+   buttons, and the model appears under the right `/firmware#wifi-*` anchor. For a release
+   with multiple themes, select each variant and confirm the file, size, both checksums and
+   download URL change; the card link must stay on `default`.
+7. Firmware contract changes: run `pnpm test`, validate a fixture manifest through
+   `pnpm stats` (or `FIRMWARE_TAG=... GITHUB_TOKEN=... pnpm stats`) and confirm the run
+   summary shows the trigger, manifest coverage and any API-not-caught-up warning. Legacy
+   releases and the 386 card must still resolve through `.md5`.
+8. Changelog changes: check the banner link opens the matching notes page, every branch
    section anchor works, legacy releases still render, and top-menu Changelog is active on
    both the index and detail pages. Verify a release with no body shows the fallback note.
-7. Workflow changes: validate with
+9. Workflow changes: validate with
    `docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest`, then exercise a
    branch push (`🧪` only), a same-repo PR (`🧪 → 👀`), close (`🧹`), and merge (`🧪 → 🚀`).
-   Confirm the run graph and the Mermaid job-summary map, and that `gh-pages/.nojekyll`
-   survives the artifact handoff.
+   For dispatch changes, send a `firmware-release` dry run and confirm
+   `🧪 → 🚀 → 💾`, the snapshot artifact, the `[skip ci]` commit and that
+   `gh-pages/.nojekyll` survives the artifact handoff.
 
 ## Documentation
 
+- Firmware release contract: `docs/firmware-release-contract.md`
 - Astro: https://docs.astro.build
 - Bulma: https://bulma.io/documentation/
 - Content collections: https://docs.astro.build/en/guides/content-collections/
