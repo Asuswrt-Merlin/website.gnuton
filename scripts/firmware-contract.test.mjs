@@ -68,6 +68,36 @@ test('accepts a valid two-variant manifest and normalises checksums', () => {
   );
 });
 
+test('rejects unsupported manifest schema versions', () => {
+  const unsupported = clone(manifest);
+  unsupported.schemaVersion = 2;
+
+  assert.throws(
+    () => validateFirmwareManifest(unsupported, expected),
+    /Unsupported .* schemaVersion 2; expected 1/,
+  );
+});
+
+test('rejects a manifest whose repository does not match the release', () => {
+  const wrongRepository = clone(manifest);
+  wrongRepository.repository = 'Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton';
+
+  assert.throws(
+    () => validateFirmwareManifest(wrongRepository, expected),
+    /repository .* does not match the release repository/,
+  );
+});
+
+test('rejects a manifest whose branch does not match the release', () => {
+  const wrongBranch = clone(manifest);
+  wrongBranch.branch = '3004';
+
+  assert.throws(
+    () => validateFirmwareManifest(wrongBranch, expected),
+    /branch .* does not match the release branch/,
+  );
+});
+
 test('rejects a manifest whose tag does not match the release', () => {
   const wrongTag = clone(manifest);
   wrongTag.tag = '3006.102.8_0-gnuton0';

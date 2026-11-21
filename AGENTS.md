@@ -218,10 +218,13 @@ Before finishing:
    buttons, and the model appears under the right `/firmware#wifi-*` anchor. For a release
    with multiple themes, select each variant and confirm the file, size, both checksums and
    download URL change; the card link must stay on `default`.
-7. Firmware contract changes: run `pnpm test`, validate a fixture manifest through
-   `pnpm stats` (or `FIRMWARE_TAG=... GITHUB_TOKEN=... pnpm stats`) and confirm the run
-   summary shows the trigger, manifest coverage and any API-not-caught-up warning. Legacy
-   releases and the 386 card must still resolve through `.md5`.
+7. Firmware contract changes: run `pnpm test` (unit fixtures cover valid and
+   invalid manifests, schema/repository/branch checks and legacy `.md5` parsing). For a
+   live refresh run `FIRMWARE_TAG=... GITHUB_TOKEN=... pnpm stats` and check the run
+   summary for the trigger, manifest coverage and any API-not-caught-up warning. Exercise
+   the variant UI by injecting a synthetic release into `src/data/github-releases.json`,
+   building, and checking the dialog payload and default card link; remove the fixture
+   before committing. Legacy releases and the 386 card must still resolve through `.md5`.
 8. Changelog changes: check the banner link opens the matching notes page, every branch
    section anchor works, legacy releases still render, and top-menu Changelog is active on
    both the index and detail pages. Verify a release with no body shows the fallback note.

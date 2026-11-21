@@ -31,6 +31,7 @@ import {
   type FirmwareBranch,
   type RouterModel,
 } from './routers';
+import variantConfig from './firmware-variants.json';
 
 export interface FirmwareVariant {
   key: string;
@@ -51,13 +52,10 @@ export interface RouterFirmware {
 
 const IMAGE_ASSET = /\.(pkgtb|w|trx|bin|img|chk)$/i;
 
-const VARIANT_LABELS: Record<string, string> = {
-  default: 'Default',
-  tuf: 'TUF Gaming',
-  rog: 'ROG',
-};
-
-const VARIANT_PREFERENCE = ['default', 'tuf', 'rog'];
+// Shared with scripts/lib/firmware-contract.mjs so the Node refresh and the UI
+// agree on labels and preference order.
+const VARIANT_LABELS: Record<string, string> = variantConfig.labels;
+const VARIANT_PREFERENCE: string[] = variantConfig.preference;
 
 /** `tuf` -> "TUF Gaming", `special` -> "Special", `foo-bar` -> "Foo Bar". */
 export const variantLabel = (key: string): string => {

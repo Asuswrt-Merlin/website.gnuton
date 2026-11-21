@@ -9,19 +9,16 @@
  * Keep this module dependency-free: it runs in the stats script before Astro
  * or the project dependencies are needed.
  */
+import variantConfig from '../../src/data/firmware-variants.json' with { type: 'json' };
 
 export const SUPPORTED_SCHEMA_VERSION = 1;
 export const FIRMWARE_MANIFEST_NAME = 'firmware-release.json';
 
-/** Human labels for the schema v1 theme vocabulary. */
-export const VARIANT_LABELS = Object.freeze({
-  default: 'Default',
-  tuf: 'TUF Gaming',
-  rog: 'ROG',
-});
+/** Human labels for the schema v1 theme vocabulary (shared with the UI). */
+export const VARIANT_LABELS = Object.freeze({ ...variantConfig.labels });
 
 /** Primary download first, then the known themes, then future keys. */
-export const VARIANT_PREFERENCE = Object.freeze(['default', 'tuf', 'rog']);
+export const VARIANT_PREFERENCE = Object.freeze([...variantConfig.preference]);
 
 const MD5_PATTERN = /^[a-f0-9]{32}$/i;
 const SHA256_PATTERN = /^[a-f0-9]{64}$/i;

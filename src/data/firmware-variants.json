@@ -1,0 +1,8 @@
+{
+  "labels": {
+    "default": "Default",
+    "tuf": "TUF Gaming",
+    "rog": "ROG"
+  },
+  "preference": ["default", "tuf", "rog"]
+}

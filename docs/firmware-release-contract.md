@@ -143,9 +143,10 @@ is the reconciliation path.
 3. Cross-check the manifest SHA-256 against the GitHub API asset `digest`
    (`sha256:<hex>`) when present. On a mismatch, warn and drop SHA-256 instead
    of displaying an unverified value.
-4. If the manifest is missing or invalid, warn once and use the legacy path:
-   read the `.md5` companion asset for the newest stable and pre-release of the
-   branch. A valid manifest is never accompanied by an extra `.md5` download.
+4. If the manifest is missing, use the legacy path silently: read the `.md5`
+   companion asset for the newest stable and pre-release of the branch. If it
+   is present but invalid, warn once and use the same fallback. A valid
+   manifest is never accompanied by an extra `.md5` download.
 5. For releases without a manifest, keep the API asset digest as `sha256` when
    GitHub provides one.
 6. Build failure keeps the previous snapshots; a bad manifest never fails the
