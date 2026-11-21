@@ -9,6 +9,16 @@ interface Props {
   routers: RouterModel[];
 }
 
+interface FirmwareDialogVariant {
+  key: string;
+  label: string;
+  filename: string;
+  size: string;
+  md5: string;
+  sha256: string;
+  downloadUrl: string;
+}
+
 interface FirmwareDialogItem {
   model: string;
   branch: string;
@@ -16,10 +26,8 @@ interface FirmwareDialogItem {
   released: string;
   publishedAt: string;
   prerelease: boolean;
-  filename: string;
-  size: string;
-  md5: string;
-  downloadUrl: string;
+  variants: FirmwareDialogVariant[];
+  primaryVariant: string;
   releaseUrl: string;
   changelogUrl: string;
   notesHtml: string;
@@ -27,12 +35,25 @@ interface FirmwareDialogItem {
 
 const { routers } = Astro.props;
 const models: Record<string, FirmwareDialogItem> = {};
+let hasVariantSelector = false;
 
 for (const router of routers) {
   const firmware = firmwareForRouter(router);
   if (!firmware) continue;
 
   const release = firmware.release;
+  const variants = firmware.variants.map((variant) => ({
+    key: variant.key,
+    label: variant.label,
+    filename: variant.asset.name,
+    size: formatFileSize(variant.asset.size),
+    md5: variant.asset.md5 ?? '',
+    sha256: variant.asset.sha256 ?? '',
+    downloadUrl: variant.asset.url,
+  }));
+  const primary = firmware.variants.find((variant) => variant.asset === firmware.asset);
+  if (variants.length > 1) hasVariantSelector = true;
+
   models[router.id] = {
     model: router.name,
     branch: `${firmware.branch.name} · ${firmware.branch.version}`,
@@ -40,10 +61,8 @@ for (const router of routers) {
     released: formatReleaseDate(new Date(release.publishedAt)),
     publishedAt: release.publishedAt,
     prerelease: release.prerelease,
-    filename: firmware.asset.name,
-    size: formatFileSize(firmware.asset.size),
-    md5: firmware.asset.md5 ?? '',
-    downloadUrl: firmware.asset.url,
+    variants,
+    primaryVariant: primary?.key ?? variants[0].key,
     releaseUrl: release.url,
     changelogUrl: withBase(changelogPath(release)),
     notesHtml: firmware.notesHtml,
@@ -96,6 +115,16 @@ const dataJson = JSON.stringify(models).replace(/</g, '\\u003c');
                 <dt>Released</dt>
                 <dd><time data-firmware-date /></dd>
               </div>
+              {hasVariantSelector && (
+                <div class="gm-firmware-meta-wide" data-firmware-variant-row hidden>
+                  <dt><label for="firmware-variant">Theme</label></dt>
+                  <dd>
+                    <div class="select is-small">
+                      <select id="firmware-variant" data-firmware-variant disabled />
+                    </div>
+                  </dd>
+                </div>
+              )}
               <div>
                 <dt>Size</dt>
                 <dd data-firmware-size />
@@ -108,11 +137,15 @@ const dataJson = JSON.stringify(models).replace(/</g, '\\u003c');
                 <dt>MD5</dt>
                 <dd><code data-firmware-md5 /></dd>
               </div>
+              <div class="gm-firmware-meta-wide">
+                <dt>SHA-256</dt>
+                <dd><code data-firmware-sha256 /></dd>
+              </div>
             </dl>
 
             <div class="gm-notice gm-firmware-warning">
-              <strong>Verify before flashing.</strong> Compare the MD5 above with the file
-              you downloaded, and check your exact model and hardware revision first.
+              <strong>Verify before flashing.</strong> Compare the MD5 and SHA-256 above with
+              the file you downloaded, and check your exact model and hardware revision first.
             </div>
 
             <section class="gm-firmware-notes" aria-labelledby="firmware-notes-title">
@@ -146,6 +179,16 @@ const dataJson = JSON.stringify(models).replace(/</g, '\\u003c');
 }
 
 <script>
+  interface FirmwareDialogVariant {
+    key: string;
+    label: string;
+    filename: string;
+    size: string;
+    md5: string;
+    sha256: string;
+    downloadUrl: string;
+  }
+
   interface FirmwareDialogItem {
     model: string;
     branch: string;
@@ -153,14 +196,14 @@ const dataJson = JSON.stringify(models).replace(/</g, '\\u003c');
     released: string;
     publishedAt: string;
     prerelease: boolean;
-    filename: string;
-    size: string;
-    md5: string;
-    downloadUrl: string;
+    variants: FirmwareDialogVariant[];
+    primaryVariant: string;
     releaseUrl: string;
     changelogUrl: string;
     notesHtml: string;
   }
+
+  const EMPTY_CHECKSUM = 'Not published in the release snapshot';
 
   const getDialog = (): HTMLDialogElement | null => {
     if (typeof HTMLDialogElement === 'undefined') return null;
@@ -190,6 +233,24 @@ const dataJson = JSON.stringify(models).replace(/</g, '\\u003c');
     if (link) link.href = href;
   };
 
+  const applyVariant = (
+    dialog: HTMLDialogElement,
+    item: FirmwareDialogItem,
+    variantKey: string,
+  ): void => {
+    const variant =
+      item.variants.find((candidate) => candidate.key === variantKey) ??
+      item.variants.find((candidate) => candidate.key === item.primaryVariant) ??
+      item.variants[0];
+    if (!variant) return;
+
+    setText(dialog, '[data-firmware-size]', variant.size);
+    setText(dialog, '[data-firmware-file]', variant.filename);
+    setText(dialog, '[data-firmware-md5]', variant.md5 || EMPTY_CHECKSUM);
+    setText(dialog, '[data-firmware-sha256]', variant.sha256 || EMPTY_CHECKSUM);
+    setLink(dialog, '[data-firmware-download-link]', variant.downloadUrl);
+  };
+
   const openFirmwareDialog = (routerId: string): boolean => {
     const dialog = getDialog();
     const item = loadModels()[routerId];
@@ -198,9 +259,23 @@ const dataJson = JSON.stringify(models).replace(/</g, '\\u003c');
     setText(dialog, '[data-firmware-branch]', item.branch);
     setText(dialog, '[data-firmware-model]', item.model);
     setText(dialog, '[data-firmware-version]', item.version);
-    setText(dialog, '[data-firmware-size]', item.size);
-    setText(dialog, '[data-firmware-file]', item.filename);
-    setText(dialog, '[data-firmware-md5]', item.md5 || 'Not published in the release snapshot');
+
+    const variantRow = dialog.querySelector<HTMLElement>('[data-firmware-variant-row]');
+    const variantSelect = dialog.querySelector<HTMLSelectElement>('[data-firmware-variant]');
+    if (variantRow) variantRow.hidden = item.variants.length <= 1;
+    if (variantSelect) {
+      variantSelect.replaceChildren(
+        ...item.variants.map((variant) => {
+          const option = document.createElement('option');
+          option.value = variant.key;
+          option.textContent = variant.label;
+          return option;
+        }),
+      );
+      variantSelect.value = item.primaryVariant;
+      variantSelect.disabled = item.variants.length <= 1;
+    }
+    applyVariant(dialog, item, item.primaryVariant);
 
     const status = dialog.querySelector<HTMLElement>('[data-firmware-status]');
     if (status) {
@@ -221,9 +296,10 @@ const dataJson = JSON.stringify(models).replace(/</g, '\\u003c');
         '<p>No additional notes were published for this build. Open the GitHub release for the full changelog.</p>';
     }
 
-    setLink(dialog, '[data-firmware-download-link]', item.downloadUrl);
     setLink(dialog, '[data-firmware-release-link]', item.releaseUrl);
     setLink(dialog, '[data-firmware-changelog-link]', item.changelogUrl);
+
+    dialog.dataset.firmwareRouter = routerId;
 
     const body = dialog.querySelector<HTMLElement>('[data-firmware-dialog-body]');
     if (body) body.scrollTop = 0;
@@ -272,5 +348,22 @@ const dataJson = JSON.stringify(models).replace(/</g, '\\u003c');
 
     const dialog = getDialog();
     if (dialog && target === dialog) dialog.close();
+  });
+
+  // The dialog body is shared by every model. Delegation keeps the handler alive
+  // across <ClientRouter /> navigations, where the dialog element is re-created.
+  document.addEventListener('change', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLSelectElement)) return;
+    if (!target.matches('[data-firmware-variant]')) return;
+
+    const dialog = getDialog();
+    const routerId = dialog?.dataset.firmwareRouter;
+    if (!dialog || !routerId) return;
+
+    const item = loadModels()[routerId];
+    if (!item) return;
+
+    applyVariant(dialog, item, target.value);
   });
 </script>

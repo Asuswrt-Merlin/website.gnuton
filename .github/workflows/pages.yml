@@ -1,6 +1,6 @@
 name: "🚀 Pages pipeline"
 
-run-name: "${{ github.event_name == 'schedule' && '📊 Daily stats refresh' || github.event_name == 'pull_request' && format('👀 PR #{0}', github.event.pull_request.number) || github.event_name == 'workflow_dispatch' && '🚀 Manual deploy' || (github.ref == 'refs/heads/main' && '🚀 Deploy') || format('🧪 {0}', github.ref_name) }}"
+run-name: "${{ github.event_name == 'schedule' && '📊 Daily stats refresh' || github.event_name == 'repository_dispatch' && format('📦 {0}', github.event.client_payload.tag) || github.event_name == 'pull_request' && format('👀 PR #{0}', github.event.pull_request.number) || github.event_name == 'workflow_dispatch' && '🚀 Manual deploy' || (github.ref == 'refs/heads/main' && '🚀 Deploy') || format('🧪 {0}', github.ref_name) }}"
 
 on:
   push:
@@ -11,6 +11,8 @@ on:
   pull_request:
     types: [opened, reopened, synchronize, closed]
   workflow_dispatch:
+  repository_dispatch:
+    types: [firmware-release]
   schedule:
     # Refresh the GitHub stats snapshot and redeploy once a day.
     - cron: '17 10 * * *'
@@ -98,6 +100,8 @@ jobs:
         run: pnpm stats
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FIRMWARE_REPOSITORY: ${{ github.event.client_payload.repository }}
+          FIRMWARE_TAG: ${{ github.event.client_payload.tag }}
 
       - name: Type-check
         run: pnpm check
@@ -120,10 +124,21 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+      - name: Upload data snapshots
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: data-snapshots
+          path: |
+            src/data/github-stats.json
+            src/data/github-releases.json
+          if-no-files-found: error
+          retention-days: 1
+
   deploy:
     name: "🚀 Deploy to GitHub Pages"
     needs: build
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     concurrency:
       group: gh-pages
@@ -150,6 +165,66 @@ jobs:
             pr-preview/
             CNAME
           force: false
+
+  snapshot:
+    name: "💾 Commit data snapshot"
+    needs: build
+    if: github.event_name == 'repository_dispatch' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: data-snapshot
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout default branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Preserve checked-out snapshots
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/snapshot-before"
+          cp src/data/github-stats.json src/data/github-releases.json "$RUNNER_TEMP/snapshot-before/"
+
+      - name: Download refreshed snapshots
+        uses: actions/download-artifact@v8
+        with:
+          name: data-snapshots
+          path: src/data
+
+      - name: Commit
+        env:
+          TAG: ${{ github.event.client_payload.tag }}
+        run: |
+          set -euo pipefail
+
+          # generatedAt changes on every refresh. Compare the semantic JSON so the
+          # daily schedule does not commit a timestamp-only change. Substantive
+          # changes (releases, downloads, counts) still commit by design.
+          SNAPSHOT_BEFORE="$RUNNER_TEMP/snapshot-before"
+          if diff -q \
+              <(jq -S 'del(.generatedAt)' "$SNAPSHOT_BEFORE/github-stats.json") \
+              <(jq -S 'del(.generatedAt)' src/data/github-stats.json) >/dev/null \
+            && diff -q \
+              <(jq -S 'del(.generatedAt)' "$SNAPSHOT_BEFORE/github-releases.json") \
+              <(jq -S 'del(.generatedAt)' src/data/github-releases.json) >/dev/null; then
+            git checkout -- src/data/github-stats.json src/data/github-releases.json
+            echo "Snapshots unchanged apart from generatedAt."
+            exit 0
+          fi
+
+          git add src/data/github-stats.json src/data/github-releases.json
+          if git diff --cached --quiet; then
+            echo "Snapshots unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(data): refresh firmware snapshot${TAG:+ for $TAG} [skip ci]"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push
 
   preview:
     name: "👀 Publish PR preview"

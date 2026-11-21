@@ -1,14 +1,24 @@
 /**
  * Resolve the best downloadable firmware image for each supported router.
  *
- * The release snapshot stores every asset from both GitHub repositories. Cards
- * show the newest stable release that actually contains an image for the
- * model; a pre-release is used only when no stable image exists yet, so the
- * default download never silently switches to a beta build.
+ * The release snapshot stores every asset from both GitHub repositories.
+ * Releases with a `firmware-release.json` manifest identify each image by its
+ * packaging model and theme variant; older releases keep the asset-name
+ * prefix match. Cards show one entry per model:
  *
- * MD5 values are refreshed for the newest stable and pre-release of each
- * branch. If a model falls back to an older release, its dialog still links the
- * image and GitHub release but reports that the checksum is not in the snapshot.
+ * - prefer the newest stable release with a `default` image for the model;
+ * - otherwise the newest stable release with any variant;
+ * - then the same rules for pre-releases.
+ *
+ * Every matching theme variant is kept for the download dialog. The card and
+ * the no-JavaScript link always use the primary asset: `default` when present,
+ * otherwise the first variant in the preference order `default`, `tuf`, `rog`,
+ * then future keys.
+ *
+ * MD5 and SHA-256 values are refreshed from the manifest, or from the `.md5`
+ * companion asset for legacy releases. If a model falls back to an older
+ * release, its dialog still links the image and GitHub release but reports
+ * that the checksum is not in the snapshot.
  */
 import {
   changelogReleases,
@@ -21,21 +31,97 @@ import {
   type FirmwareBranch,
   type RouterModel,
 } from './routers';
+import variantConfig from './firmware-variants.json';
+
+export interface FirmwareVariant {
+  key: string;
+  label: string;
+  asset: FirmwareAsset;
+}
 
 export interface RouterFirmware {
   router: RouterModel;
   branch: FirmwareBranch;
   release: ChangelogRelease;
+  /** Primary/default download used by the card. */
   asset: FirmwareAsset;
+  /** Every theme variant in the selected release, in preference order. */
+  variants: FirmwareVariant[];
   notesHtml: string;
 }
 
 const IMAGE_ASSET = /\.(pkgtb|w|trx|bin|img|chk)$/i;
 
-const matchesAsset = (asset: FirmwareAsset, router: RouterModel): boolean =>
-  IMAGE_ASSET.test(asset.name) &&
-  asset.name.startsWith(router.assetPrefix) &&
-  !(router.assetExclude ?? []).some((fragment) => asset.name.includes(fragment));
+// Shared with scripts/lib/firmware-contract.mjs so the Node refresh and the UI
+// agree on labels and preference order.
+const VARIANT_LABELS: Record<string, string> = variantConfig.labels;
+const VARIANT_PREFERENCE: string[] = variantConfig.preference;
+
+/** `tuf` -> "TUF Gaming", `special` -> "Special", `foo-bar` -> "Foo Bar". */
+export const variantLabel = (key: string): string => {
+  if (VARIANT_LABELS[key]) return VARIANT_LABELS[key];
+  if (!key) return VARIANT_LABELS.default;
+
+  return key
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(' ');
+};
+
+const variantRank = (key: string): number => {
+  const index = VARIANT_PREFERENCE.indexOf(key);
+  return index === -1 ? VARIANT_PREFERENCE.length : index;
+};
+
+const packagingModel = (router: RouterModel): string =>
+  router.assetPrefix.replace(/_$/, '');
+
+/**
+ * Manifest assets match only by packaging model. Legacy assets have no model
+ * and keep the prefix + exclusion match.
+ */
+const matchesAsset = (asset: FirmwareAsset, router: RouterModel): boolean => {
+  if (asset.model) return asset.model === packagingModel(router);
+
+  return (
+    IMAGE_ASSET.test(asset.name) &&
+    asset.name.startsWith(router.assetPrefix) &&
+    !(router.assetExclude ?? []).some((fragment) => asset.name.includes(fragment))
+  );
+};
+
+/**
+ * Keep every theme variant for the model. The same variant can only appear
+ * once: a manifest-labelled asset wins over an unlabelled legacy match.
+ */
+const variantsForRelease = (
+  release: ChangelogRelease,
+  router: RouterModel,
+): FirmwareVariant[] => {
+  const assetsByVariant = new Map<string, FirmwareAsset>();
+
+  for (const asset of release.assets) {
+    if (!matchesAsset(asset, router)) continue;
+
+    const key = asset.variant ?? 'default';
+    const existing = assetsByVariant.get(key);
+    if (!existing || (!existing.model && asset.model)) {
+      assetsByVariant.set(key, asset);
+    }
+  }
+
+  return [...assetsByVariant.entries()]
+    .map(([key, asset]) => ({ key, label: variantLabel(key), asset }))
+    .sort(
+      (first, second) =>
+        variantRank(first.key) - variantRank(second.key) ||
+        first.key.localeCompare(second.key),
+    );
+};
+
+const hasDefaultVariant = (variants: FirmwareVariant[]): boolean =>
+  variants.some((variant) => variant.key === 'default');
 
 const notesCache = new Map<string, string>();
 
@@ -53,26 +139,31 @@ export function firmwareForRouter(router: RouterModel): RouterFirmware | null {
     .filter((release) => release.branch === router.branch)
     .map((release) => ({
       release,
-      asset: release.assets.find((asset) => matchesAsset(asset, router)),
+      variants: variantsForRelease(release, router),
     }))
-    .filter(
-      (
-        candidate,
-      ): candidate is { release: ChangelogRelease; asset: FirmwareAsset } =>
-        candidate.asset !== undefined,
-    );
+    .filter((candidate) => candidate.variants.length > 0);
+
+  const stable = candidates.filter(({ release }) => !release.prerelease);
+  const prerelease = candidates.filter(({ release }) => release.prerelease);
 
   const selected =
-    candidates.find(({ release }) => !release.prerelease) ??
-    candidates.find(({ release }) => release.prerelease);
+    stable.find(({ variants }) => hasDefaultVariant(variants)) ??
+    stable[0] ??
+    prerelease.find(({ variants }) => hasDefaultVariant(variants)) ??
+    prerelease[0];
 
   if (!selected) return null;
+
+  const primary =
+    selected.variants.find((variant) => variant.key === 'default') ??
+    selected.variants[0];
 
   return {
     router,
     branch: branchById(router.branch),
     release: selected.release,
-    asset: selected.asset,
+    asset: primary.asset,
+    variants: selected.variants,
     notesHtml: notesFor(selected.release),
   };
 }
