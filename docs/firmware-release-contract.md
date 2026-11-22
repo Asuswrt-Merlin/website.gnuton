@@ -136,34 +136,49 @@ Both firmware repositories use a repository variable to select the credential:
 
 | Setting | Value |
 | --- | --- |
-| `WEBSITE_DISPATCH_MODE` | `app` or `pat` |
+| `WEBSITE_DISPATCH_MODE` | `app` (current) or `pat` (fallback) |
 
-### App mode
+The App is owned by the **Asuswrt-Merlin** organisation and installed on
+`website.gnuton` with **Contents: write**. It does not need access to the
+firmware repositories.
 
-Set `WEBSITE_DISPATCH_MODE=app` and provide these repository secrets:
+### App mode (current)
 
-- `WEBSITE_APP_ID`
-- `WEBSITE_APP_PRIVATE_KEY`
+Set `WEBSITE_DISPATCH_MODE=app` and provide:
 
-The App is user-owned. An Asuswrt-Merlin organisation owner must install it on
-`website.gnuton` with **Contents: write** before app mode can work. The App does
-not need access to the firmware repositories.
+- repository variable `WEBSITE_APP_CLIENT_ID` — the App's public client ID
+  (`Iv23li0Ji1UN674ixOoN`)
+- repository secret `WEBSITE_APP_PRIVATE_KEY` — the App private key
 
-### PAT mode
+The notify workflow mints the installation token with
+`actions/create-github-app-token@v3`:
+
+```yaml
+- uses: actions/create-github-app-token@v3
+  with:
+    client-id: ${{ vars.WEBSITE_APP_CLIENT_ID }}
+    private-key: ${{ secrets.WEBSITE_APP_PRIVATE_KEY }}
+```
+
+`WEBSITE_APP_ID` is legacy. `actions/create-github-app-token@v3` authenticates
+with the client ID, so the numeric App ID is neither required nor read.
+
+### PAT fallback
 
 Set `WEBSITE_DISPATCH_MODE=pat` and provide:
 
 - `WEBSITE_DISPATCH_TOKEN` — a fine-grained PAT scoped to `website.gnuton` with
   **Contents: Read and write**.
 
-This is the current mode until the user-owned App can be installed by an
-organisation owner. The PAT is a fallback, not a replacement: the App path
-remains ready in both notify workflows.
+The PAT is a documented fallback, not the current mode. Creating a fine-grained
+PAT for an organisation-owned repository can require approval from an
+Asuswrt-Merlin organisation owner, so the secret is currently removed from both
+firmware repositories.
 
 ### Mode resolution
 
-If `WEBSITE_DISPATCH_MODE` is unset or empty, the notify workflow falls back to
-`app` when `WEBSITE_APP_ID` exists, otherwise to `pat`.
+If `WEBSITE_DISPATCH_MODE` is unset or empty, the notify workflow uses `app`
+when `WEBSITE_APP_CLIENT_ID` exists, otherwise `pat`.
 
 ## Website validation and fallback
 

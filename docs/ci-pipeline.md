@@ -62,13 +62,15 @@ flowchart TD
 - **Firmware release provenance:** `release: published` in either firmware repository
   starts `notify-website.yml` there. That workflow checks the tag prefix, selects the
   dispatch credential with `WEBSITE_DISPATCH_MODE` (`app` or `pat`) and sends the
-  `firmware-release` dispatch with `repository`, `tag` and `prerelease`. In `app` mode it
-  uses a user-owned GitHub App installation token scoped to `website.gnuton`
-  (`Contents: write`); an Asuswrt-Merlin organisation owner must install the App on the
-  website repository first. In `pat` mode it uses the `WEBSITE_DISPATCH_TOKEN` secret, a
-  fine-grained PAT scoped to `website.gnuton` with `Contents: Read and write`. If the
-  variable is unset, the workflow uses `app` when `WEBSITE_APP_ID` exists, otherwise
-  `pat`. The PAT is the current fallback until the App can be installed; the daily cron
-  remains the reconciliation path if the dispatch is delayed or missing.
+  `firmware-release` dispatch with `repository`, `tag` and `prerelease`. In `app` mode
+  (current) it mints a token with `actions/create-github-app-token@v3` from the
+  org-owned Asuswrt-Merlin App, using the `WEBSITE_APP_CLIENT_ID` variable and the
+  `WEBSITE_APP_PRIVATE_KEY` secret; the App is installed on `website.gnuton` with
+  `Contents: write`. `WEBSITE_APP_ID` is legacy and unused. In `pat` mode it uses the
+  `WEBSITE_DISPATCH_TOKEN` secret, a fine-grained PAT scoped to `website.gnuton` with
+  `Contents: Read and write`; org approval can be required and the secret is currently
+  removed. If the variable is unset, the workflow uses `app` when
+  `WEBSITE_APP_CLIENT_ID` exists, otherwise `pat`. The daily cron remains the
+  reconciliation path if the dispatch is delayed or missing.
 - GitHub's native run graph shows jobs and `needs` dependencies inside this workflow, not
   triggers or `pages-build-deployment`. This map is the trigger-level view.
