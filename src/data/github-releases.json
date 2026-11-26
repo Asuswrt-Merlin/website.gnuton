@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T19:56:30.981Z",
+  "generatedAt": "2026-11-26T19:37:30.738Z",
   "repository": "Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton",
   "releases": [
     {
@@ -16,14 +16,14 @@
           "name": "CHANGELOG",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1/CHANGELOG",
           "size": 1031,
-          "downloadCount": 19,
+          "downloadCount": 22,
           "sha256": "4c29e57c3cc60be6ff52175600c9e8b0f62b1a94aff4ba079fee3620b44962e9"
         },
         {
           "name": "GT-BE98_3006_102.9_1-gnuton1_nand_squashfs.pkgtb",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1/GT-BE98_3006_102.9_1-gnuton1_nand_squashfs.pkgtb",
           "size": 78681280,
-          "downloadCount": 55,
+          "downloadCount": 58,
           "sha256": "16520fb8e19153c3f41f1b91b5ca7813699f07d6ec9c0686a2ca518c08c664f5",
           "md5": "169f9aa6d2246e9b886698ca029e07ce"
         },
@@ -31,14 +31,14 @@
           "name": "GT-BE98_3006_102.9_1-gnuton1_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1/GT-BE98_3006_102.9_1-gnuton1_nand_squashfs.pkgtb.md5",
           "size": 147,
-          "downloadCount": 40,
+          "downloadCount": 41,
           "sha256": "d2f06fdcaadfa416377c7c036a2bac0733468bd091279d99bd950944e1969c20"
         },
         {
           "name": "GT-BE98_3006_102.9_1-gnuton1_rog_nand_squashfs.pkgtb",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1/GT-BE98_3006_102.9_1-gnuton1_rog_nand_squashfs.pkgtb",
           "size": 81007292,
-          "downloadCount": 32,
+          "downloadCount": 36,
           "sha256": "af100c0f04b7d2b60f007d6a81752a242b8db2874085d76209c0f440e4822190",
           "md5": "2eae054470913ccb7d44c67c00ad5c51"
         },
@@ -46,7 +46,7 @@
           "name": "GT-BE98_3006_102.9_1-gnuton1_rog_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1/GT-BE98_3006_102.9_1-gnuton1_rog_nand_squashfs.pkgtb.md5",
           "size": 151,
-          "downloadCount": 40,
+          "downloadCount": 41,
           "sha256": "a73dbdd525c56d6047c138d7fbe1857de6eeaaf790dfed29effb0705c8eb7cd4"
         },
         {
@@ -61,14 +61,14 @@
           "name": "RT-BE82M_3006_102.9_1-gnuton1_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1/RT-BE82M_3006_102.9_1-gnuton1_nand_squashfs.pkgtb.md5",
           "size": 148,
-          "downloadCount": 30,
+          "downloadCount": 31,
           "sha256": "4011a640b140f72f38abdbd7e838e70f35e8ce719a17ec80266715b6ca08e2ca"
         },
         {
           "name": "RT-BE82U_3006_102.9_1-gnuton1_nand_squashfs.pkgtb",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1/RT-BE82U_3006_102.9_1-gnuton1_nand_squashfs.pkgtb",
           "size": 60754016,
-          "downloadCount": 17,
+          "downloadCount": 18,
           "sha256": "90869277edf7ec37ac00ebacaef5067ed8250decfe927dd94055d9617a002c2d",
           "md5": "2b2657d410f180d219070424fbc699e9"
         },
@@ -76,7 +76,7 @@
           "name": "RT-BE82U_3006_102.9_1-gnuton1_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1/RT-BE82U_3006_102.9_1-gnuton1_nand_squashfs.pkgtb.md5",
           "size": 148,
-          "downloadCount": 29,
+          "downloadCount": 30,
           "sha256": "4274329de9ebd8acba9d02c421f2f815c8d313bf0509197a8cab7a4e704696b3"
         }
       ]
@@ -110,7 +110,7 @@
           "name": "GT-BE98_3006_102.9_1-gnuton1_beta3_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1_beta3/GT-BE98_3006_102.9_1-gnuton1_beta3_nand_squashfs.pkgtb.md5",
           "size": 153,
-          "downloadCount": 28,
+          "downloadCount": 29,
           "sha256": "dbbe2102dae6e4aebce71c142cf20027dc29bbfe3505e34d7e4707919ff0454f"
         },
         {
@@ -125,14 +125,14 @@
           "name": "GT-BE98_3006_102.9_1-gnuton1_beta3_rog_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1_beta3/GT-BE98_3006_102.9_1-gnuton1_beta3_rog_nand_squashfs.pkgtb.md5",
           "size": 157,
-          "downloadCount": 28,
+          "downloadCount": 29,
           "sha256": "a5080c12a123c70851fa21187d511dc84b7ccbde9b56f518672ca1a4b1723cbd"
         },
         {
           "name": "RT-BE58U_3006_102.9_1-gnuton1_beta3_nand_squashfs.pkgtb",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1_beta3/RT-BE58U_3006_102.9_1-gnuton1_beta3_nand_squashfs.pkgtb",
           "size": 60677180,
-          "downloadCount": 15,
+          "downloadCount": 16,
           "sha256": "e7a01f920a8b4916684974cdec4d099a46759b1848edebc55c5d98723bdb0599",
           "md5": "5a94112cbba679d3747d6a9bb8e7c718"
         },
@@ -140,7 +140,7 @@
           "name": "RT-BE58U_3006_102.9_1-gnuton1_beta3_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1_beta3/RT-BE58U_3006_102.9_1-gnuton1_beta3_nand_squashfs.pkgtb.md5",
           "size": 154,
-          "downloadCount": 33,
+          "downloadCount": 34,
           "sha256": "03e6921cbecfe69a22339403005301f14b607ec894512d625543b2df3160302f"
         },
         {
@@ -155,7 +155,7 @@
           "name": "RT-BE82M_3006_102.9_1-gnuton1_beta3_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1_beta3/RT-BE82M_3006_102.9_1-gnuton1_beta3_nand_squashfs.pkgtb.md5",
           "size": 154,
-          "downloadCount": 28,
+          "downloadCount": 29,
           "sha256": "b70992841801cbedfc9386a48e4ffcabd7a6d7cb226bfb3ef063ec9622593caf"
         },
         {
@@ -170,7 +170,7 @@
           "name": "RT-BE82U_3006_102.9_1-gnuton1_beta3_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton/releases/download/3006.102.9_1-gnuton1_beta3/RT-BE82U_3006_102.9_1-gnuton1_beta3_nand_squashfs.pkgtb.md5",
           "size": 154,
-          "downloadCount": 28,
+          "downloadCount": 29,
           "sha256": "a8d9370fe583d6f44f02c278ec538931750e749ce439751e9af9e1994b6bdce2"
         }
       ]
@@ -748,14 +748,14 @@
           "name": "CHANGELOG",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/CHANGELOG",
           "size": 233,
-          "downloadCount": 2027,
+          "downloadCount": 2032,
           "sha256": "cc5c6a48cf2a58ac3bba72191edb121ea40fb39095c30dafe51e0ffd6299bae1"
         },
         {
           "name": "DSL-AX82U_3004_388.11_1-gnuton1_puresqubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/DSL-AX82U_3004_388.11_1-gnuton1_puresqubi.w",
           "size": 50069524,
-          "downloadCount": 1533,
+          "downloadCount": 1540,
           "sha256": "b6a0ca23b9545893cb336b95229ba50905f8ca29f609d8f033a4b172019b2063",
           "md5": "bade24720001ce36c0ca3d1bc3eb1d5f"
         },
@@ -763,14 +763,14 @@
           "name": "DSL-AX82U_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/DSL-AX82U_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "size": 142,
-          "downloadCount": 247,
+          "downloadCount": 250,
           "sha256": "031bc57dcb2cb64945d7f4e9b5b19c57547f3a8cabdb1568f5176fa01bf3f526"
         },
         {
           "name": "RT-AX5400_3004_388.11_1-gnuton1_nand_squashfs.pkgtb",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX5400_3004_388.11_1-gnuton1_nand_squashfs.pkgtb",
           "size": 54779688,
-          "downloadCount": 883,
+          "downloadCount": 891,
           "sha256": "c5a48799cebe1b10194a28e60016ab41bc709e4bc723a381d869a53ddd09f185",
           "md5": "3448c008ef1d88255f33003e230ac64a"
         },
@@ -778,14 +778,14 @@
           "name": "RT-AX5400_3004_388.11_1-gnuton1_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX5400_3004_388.11_1-gnuton1_nand_squashfs.pkgtb.md5",
           "size": 150,
-          "downloadCount": 290,
+          "downloadCount": 297,
           "sha256": "a61abc033abb6e7aabedc592d0949683ad07667db28bcdbee4789b1e4d01e438"
         },
         {
           "name": "RT-AX58U_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX58U_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb",
           "size": 55475196,
-          "downloadCount": 1952,
+          "downloadCount": 1957,
           "sha256": "aa1f068ad41a62363511790b51aa04b2cdf82a9b416d467b5a9c2e036d67c53e",
           "md5": "bb68c549b0e1773f1c381add97e86d41"
         },
@@ -793,14 +793,14 @@
           "name": "RT-AX58U_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX58U_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb.md5",
           "size": 152,
-          "downloadCount": 532,
+          "downloadCount": 534,
           "sha256": "45c23c5a1d4dd98489e44722faea0a3c68a84de172613baacfe56a1f0601b557"
         },
         {
           "name": "RT-AX82U_3004_388.11_1-gnuton1_puresqubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX82U_3004_388.11_1-gnuton1_puresqubi.w",
           "size": 50593812,
-          "downloadCount": 2599,
+          "downloadCount": 2607,
           "sha256": "fd33741107ff4a9b5d3809f3343f74a36851ecbe028c02c39546ae95df87c78b",
           "md5": "f4f965a46fa3023fd3a89db3f4675aaf"
         },
@@ -808,14 +808,14 @@
           "name": "RT-AX82U_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX82U_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "size": 141,
-          "downloadCount": 444,
+          "downloadCount": 447,
           "sha256": "b697818f0ddc9b53acaf3a467c2c112201a2ddaace53da72818f2b1a24d330f7"
         },
         {
           "name": "RT-AX82U_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX82U_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb",
           "size": 56718336,
-          "downloadCount": 863,
+          "downloadCount": 868,
           "sha256": "86022b128058fdc0fa211ac1ca92a37b55dfd8250e563d1691b1b66bd2bbc5c4",
           "md5": "95de66562eac55e96d3375096ef66846"
         },
@@ -823,14 +823,14 @@
           "name": "RT-AX82U_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX82U_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb.md5",
           "size": 152,
-          "downloadCount": 176,
+          "downloadCount": 178,
           "sha256": "a45fc987336e25e17196ca6e7c0c89288faf87f194e01d271cbd41512929227a"
         },
         {
           "name": "RT-AX92U_3004_388.11_1-gnuton1_ubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX92U_3004_388.11_1-gnuton1_ubi.w",
           "size": 79298580,
-          "downloadCount": 1705,
+          "downloadCount": 1716,
           "sha256": "943100b8a158d9aff5d1d563e31e70583977985e0abb189bdb9fd7c779c0ca28",
           "md5": "4d289c0608743078412087dd1c24cb8c"
         },
@@ -838,14 +838,14 @@
           "name": "RT-AX92U_3004_388.11_1-gnuton1_ubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX92U_3004_388.11_1-gnuton1_ubi.w.md5",
           "size": 130,
-          "downloadCount": 427,
+          "downloadCount": 434,
           "sha256": "6df9e6432efdbcaa18be2bb8360683cbefed508d0898278e35bc41458763d93d"
         },
         {
           "name": "RT-AX95Q_3004_388.11_1-gnuton1_puresqubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX95Q_3004_388.11_1-gnuton1_puresqubi.w",
           "size": 53739540,
-          "downloadCount": 2223,
+          "downloadCount": 2227,
           "sha256": "cdcf776606868040654020201a5aec516499efe08c4e818822dfecb607485946",
           "md5": "03a7940f5486dd8c5ca310356956b0c5"
         },
@@ -853,14 +853,14 @@
           "name": "RT-AX95Q_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AX95Q_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "size": 141,
-          "downloadCount": 534,
+          "downloadCount": 535,
           "sha256": "dbfa59f251f909da1b994d3976e307be98d600c0665161ae58309477cb65d514"
         },
         {
           "name": "RT-AXE95Q_3004_388.11_1-gnuton1_puresqubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AXE95Q_3004_388.11_1-gnuton1_puresqubi.w",
           "size": 52690964,
-          "downloadCount": 348,
+          "downloadCount": 349,
           "sha256": "261e08eaaa086ff4ea62c2aae06460089f7b843cd72d3e9ab8fd4a90892a5e32",
           "md5": "c1593cd40b7559fc753a3339f91045b5"
         },
@@ -868,14 +868,14 @@
           "name": "RT-AXE95Q_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/RT-AXE95Q_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "size": 142,
-          "downloadCount": 116,
+          "downloadCount": 117,
           "sha256": "48e8d194827ef396797c7179cf1e9e25aa87c22a1a9674aa1506b81b174fc3f2"
         },
         {
           "name": "TUF-AX3000_3004_388.11_1-gnuton1_puresqubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX3000_3004_388.11_1-gnuton1_puresqubi.w",
           "size": 49807380,
-          "downloadCount": 275,
+          "downloadCount": 278,
           "sha256": "8b3f917ea8c31a7c19fd3ea96382e4ed2e431af1381fa3038d2f67ec65a2a023",
           "md5": "3d9a6659b6809a4456668e1d1cd127a6"
         },
@@ -883,14 +883,14 @@
           "name": "TUF-AX3000_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX3000_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "size": 143,
-          "downloadCount": 84,
+          "downloadCount": 85,
           "sha256": "c2b2d8d2308c1195b3ed02842f25a58c047d042ee37e539f7e186aa340868f59"
         },
         {
           "name": "TUF-AX3000_3004_388.11_1-gnuton1_tuf_puresqubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX3000_3004_388.11_1-gnuton1_tuf_puresqubi.w",
           "size": 50331668,
-          "downloadCount": 378,
+          "downloadCount": 382,
           "sha256": "f6d224a549aaf1b873ca5a2685f448327b298b57e0c247b9460a4b2f0cd4423a",
           "md5": "5dcaec995bbba927153e11db18cf16e0"
         },
@@ -898,14 +898,14 @@
           "name": "TUF-AX3000_3004_388.11_1-gnuton1_tuf_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX3000_3004_388.11_1-gnuton1_tuf_puresqubi.w.md5",
           "size": 147,
-          "downloadCount": 94,
+          "downloadCount": 95,
           "sha256": "d5b044986ff64bea192221c65bd6b21a8dbacfc0d23db0e1f4f2ca9b5d0fc5f2"
         },
         {
           "name": "TUF-AX3000_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX3000_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb",
           "size": 55794120,
-          "downloadCount": 1015,
+          "downloadCount": 1016,
           "sha256": "34794204343d591f11be5f91f88e1edb1b41649efaad0ec685bf192d7fee658d",
           "md5": "c7d5bd83941820f6982002151ad02364"
         },
@@ -913,14 +913,14 @@
           "name": "TUF-AX3000_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX3000_V2_3004_388.11_1-gnuton1_nand_squashfs.pkgtb.md5",
           "size": 154,
-          "downloadCount": 243,
+          "downloadCount": 244,
           "sha256": "89dae8d9e83696f44f9330ca548556d361ba31a6254d8e09b8549c1ca6fc311d"
         },
         {
           "name": "TUF-AX3000_V2_3004_388.11_1-gnuton1_tuf_nand_squashfs.pkgtb",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX3000_V2_3004_388.11_1-gnuton1_tuf_nand_squashfs.pkgtb",
           "size": 56281544,
-          "downloadCount": 955,
+          "downloadCount": 957,
           "sha256": "805c64b7bcc16f47caa685aaf4e1cdebd7fb9b8dc3bd5f34145b06109416a65c",
           "md5": "7ace1153725289f6c125914b8d866f14"
         },
@@ -928,14 +928,14 @@
           "name": "TUF-AX3000_V2_3004_388.11_1-gnuton1_tuf_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX3000_V2_3004_388.11_1-gnuton1_tuf_nand_squashfs.pkgtb.md5",
           "size": 158,
-          "downloadCount": 242,
+          "downloadCount": 243,
           "sha256": "8ccd5a144bda8cd5e35294f9e88be15ed73fc244a8d68dca678100465474f277"
         },
         {
           "name": "TUF-AX5400_3004_388.11_1-gnuton1_puresqubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX5400_3004_388.11_1-gnuton1_puresqubi.w",
           "size": 50200596,
-          "downloadCount": 563,
+          "downloadCount": 568,
           "sha256": "a08def1e12fd67efe0c971fb9709ebfd51ea542a24df49354be370145107088a",
           "md5": "3e5feefbb944cb7baa3a0e4bd9d4d4e1"
         },
@@ -943,14 +943,14 @@
           "name": "TUF-AX5400_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX5400_3004_388.11_1-gnuton1_puresqubi.w.md5",
           "size": 143,
-          "downloadCount": 153,
+          "downloadCount": 156,
           "sha256": "d54482e66def3e5ce0f9ae599697080158ffd1f01b144c6aea794003faa3f03a"
         },
         {
           "name": "TUF-AX5400_3004_388.11_1-gnuton1_tuf_puresqubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX5400_3004_388.11_1-gnuton1_tuf_puresqubi.w",
           "size": 50724884,
-          "downloadCount": 672,
+          "downloadCount": 674,
           "sha256": "69a0458d7edb54a42e083029d3cb2c689c5fb9dce0339d0f245cf3b1398598a7",
           "md5": "0f5a4064fb398063ca10efc25066d8c4"
         },
@@ -958,7 +958,7 @@
           "name": "TUF-AX5400_3004_388.11_1-gnuton1_tuf_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton1/TUF-AX5400_3004_388.11_1-gnuton1_tuf_puresqubi.w.md5",
           "size": 147,
-          "downloadCount": 160,
+          "downloadCount": 162,
           "sha256": "773e3b08991f070899541f1e624b3d26151ee36dd7f550b6d25a6fb6d5420bf1"
         }
       ]
@@ -992,7 +992,7 @@
           "name": "DSL-AX82U_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/DSL-AX82U_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "size": 148,
-          "downloadCount": 81,
+          "downloadCount": 82,
           "sha256": "635c6a313ad219e6d5868f36302ffa17db8a4207298380a3b6152639b7ad20e9"
         },
         {
@@ -1007,7 +1007,7 @@
           "name": "RT-AX5400_3004_388.11_1-gnuton0_beta1_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/RT-AX5400_3004_388.11_1-gnuton0_beta1_nand_squashfs.pkgtb.md5",
           "size": 156,
-          "downloadCount": 69,
+          "downloadCount": 70,
           "sha256": "ba4375669ee307a47e9459e0a38b8a20aed0e7a6f40508670f86e691e9c3e940"
         },
         {
@@ -1022,7 +1022,7 @@
           "name": "RT-AX58U_V2_3004_388.11_1-gnuton0_beta1_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/RT-AX58U_V2_3004_388.11_1-gnuton0_beta1_nand_squashfs.pkgtb.md5",
           "size": 158,
-          "downloadCount": 102,
+          "downloadCount": 103,
           "sha256": "38e18a64b472a6e8506d9e165671eaaa7869bb631cab37616e065327d605d9b7"
         },
         {
@@ -1037,7 +1037,7 @@
           "name": "RT-AX82U_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/RT-AX82U_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "size": 147,
-          "downloadCount": 90,
+          "downloadCount": 91,
           "sha256": "e3f5171e2266a56bb21221a42b4c9d1ba11b71083c8dbb6d4912dd9ac4bfa6e8"
         },
         {
@@ -1052,14 +1052,14 @@
           "name": "RT-AX82U_V2_3004_388.11_1-gnuton0_beta1_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/RT-AX82U_V2_3004_388.11_1-gnuton0_beta1_nand_squashfs.pkgtb.md5",
           "size": 158,
-          "downloadCount": 78,
+          "downloadCount": 79,
           "sha256": "4b7f03d88eab81e08d7a06e6e2845d5a38117cc79dce755bb1e75dd66216224d"
         },
         {
           "name": "RT-AX92U_3004_388.11_1-gnuton0_beta1_ubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/RT-AX92U_3004_388.11_1-gnuton0_beta1_ubi.w",
           "size": 79298580,
-          "downloadCount": 333,
+          "downloadCount": 334,
           "sha256": "f80951002389041e19dd025cc658e052516298bf4dcb7dff5cf0d0d0756616c3",
           "md5": "da9193c6830e2e22add3d5f915b37367"
         },
@@ -1067,7 +1067,7 @@
           "name": "RT-AX92U_3004_388.11_1-gnuton0_beta1_ubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/RT-AX92U_3004_388.11_1-gnuton0_beta1_ubi.w.md5",
           "size": 136,
-          "downloadCount": 76,
+          "downloadCount": 77,
           "sha256": "406d95f64d2ceaeb5b957a25c79e3219e220408baaa6211dade620fa10c5cb94"
         },
         {
@@ -1082,7 +1082,7 @@
           "name": "RT-AX95Q_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/RT-AX95Q_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "size": 147,
-          "downloadCount": 91,
+          "downloadCount": 92,
           "sha256": "26bb1e03c6bbc2fc4021dd3a2d2dabf69af06fe78afec39b8032d68bd1ac0239"
         },
         {
@@ -1097,7 +1097,7 @@
           "name": "RT-AXE95Q_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/RT-AXE95Q_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "size": 148,
-          "downloadCount": 51,
+          "downloadCount": 52,
           "sha256": "487286dee3d0de812ecd3e242a8273733d53f48ed4d49a6034b5f5af60701879"
         },
         {
@@ -1112,7 +1112,7 @@
           "name": "TUF-AX3000_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/TUF-AX3000_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "size": 149,
-          "downloadCount": 44,
+          "downloadCount": 45,
           "sha256": "817abbe51ef65feff976678b1b07305a337fd64024e2385675596812158806b3"
         },
         {
@@ -1127,7 +1127,7 @@
           "name": "TUF-AX3000_3004_388.11_1-gnuton0_beta1_tuf_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/TUF-AX3000_3004_388.11_1-gnuton0_beta1_tuf_puresqubi.w.md5",
           "size": 153,
-          "downloadCount": 55,
+          "downloadCount": 56,
           "sha256": "02dd52600129dfa8748e988992690df6b260ff76a4de7a00f6cb97158f05335f"
         },
         {
@@ -1142,7 +1142,7 @@
           "name": "TUF-AX3000_V2_3004_388.11_1-gnuton0_beta1_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/TUF-AX3000_V2_3004_388.11_1-gnuton0_beta1_nand_squashfs.pkgtb.md5",
           "size": 160,
-          "downloadCount": 82,
+          "downloadCount": 83,
           "sha256": "36693965a717946303a6fd9460fb2df6a5d5d067bb8253e057c1db1a2aea6a4b"
         },
         {
@@ -1157,7 +1157,7 @@
           "name": "TUF-AX3000_V2_3004_388.11_1-gnuton0_beta1_tuf_nand_squashfs.pkgtb.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/TUF-AX3000_V2_3004_388.11_1-gnuton0_beta1_tuf_nand_squashfs.pkgtb.md5",
           "size": 164,
-          "downloadCount": 89,
+          "downloadCount": 90,
           "sha256": "a01f5ee56e05755192a304b947b0c1ad44927f0092e3287046363db18960f5ba"
         },
         {
@@ -1172,7 +1172,7 @@
           "name": "TUF-AX5400_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/TUF-AX5400_3004_388.11_1-gnuton0_beta1_puresqubi.w.md5",
           "size": 149,
-          "downloadCount": 50,
+          "downloadCount": 51,
           "sha256": "c7f319310704bddb6eddef984fbec8161abfb9df0b87c834a57b6d56164cdd6e"
         },
         {
@@ -1187,7 +1187,7 @@
           "name": "TUF-AX5400_3004_388.11_1-gnuton0_beta1_tuf_puresqubi.w.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.11_1-gnuton0_beta1/TUF-AX5400_3004_388.11_1-gnuton0_beta1_tuf_puresqubi.w.md5",
           "size": 153,
-          "downloadCount": 59,
+          "downloadCount": 60,
           "sha256": "3e31f3596e32f25889eef7a341cfa90834377b0524b33cfaa0eb237ac4dc1bca"
         }
       ]
@@ -1470,7 +1470,7 @@
           "name": "RT-AX82U_3004_388.10_2-gnuton1_puresqubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.10_2-gnuton1/RT-AX82U_3004_388.10_2-gnuton1_puresqubi.w",
           "size": 52822036,
-          "downloadCount": 1965,
+          "downloadCount": 1967,
           "sha256": "84f4ca3c526372d99bb8a4be8261e3e00dc8a03635d42579e386e8bf5429973d"
         },
         {
@@ -1596,7 +1596,7 @@
           "name": "TUF-AX5400_3004_388.10_2-gnuton1_puresqubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/3004.388.10_2-gnuton1/TUF-AX5400_3004_388.10_2-gnuton1_puresqubi.w",
           "size": 52297748,
-          "downloadCount": 584,
+          "downloadCount": 585,
           "sha256": "a8645531312523d589dceb2816f79a0408484309d44087d85af4ebdccc6032a9"
         },
         {
@@ -4435,7 +4435,7 @@
           "name": "DSL-AC68U_386.14_0-gnuton0_beta1_DSL_1.0.5.3.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/386.14_0-gnuton0_beta1/DSL-AC68U_386.14_0-gnuton0_beta1_DSL_1.0.5.3.md5",
           "size": 89,
-          "downloadCount": 60
+          "downloadCount": 61
         },
         {
           "name": "DSL-AC68U_386.14_0-gnuton0_beta1_DSL_1.0.5.3.trx",
@@ -5222,7 +5222,7 @@
           "name": "DSL-AC68U_386.12_0-gnuton1_DSL_1.0.5.3.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/386.12_0-gnuton1/DSL-AC68U_386.12_0-gnuton1_DSL_1.0.5.3.md5",
           "size": 83,
-          "downloadCount": 265
+          "downloadCount": 266
         },
         {
           "name": "DSL-AC68U_386.12_0-gnuton1_DSL_1.0.5.3.trx",
@@ -10527,43 +10527,43 @@
           "name": "CHANGELOG",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/386.03_1-gnuton0_alpha4/CHANGELOG",
           "size": 3330,
-          "downloadCount": 15
+          "downloadCount": 16
         },
         {
           "name": "dsl-ac68u-build.log",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/386.03_1-gnuton0_alpha4/dsl-ac68u-build.log",
           "size": 8642294,
-          "downloadCount": 8
+          "downloadCount": 9
         },
         {
           "name": "DSL-AC68U_386.03_1-gnuton0_alpha4_DSL_1.0.5.3.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/386.03_1-gnuton0_alpha4/DSL-AC68U_386.03_1-gnuton0_alpha4_DSL_1.0.5.3.md5",
           "size": 90,
-          "downloadCount": 6
+          "downloadCount": 7
         },
         {
           "name": "DSL-AC68U_386.03_1-gnuton0_alpha4_DSL_1.0.5.3.trx",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/386.03_1-gnuton0_alpha4/DSL-AC68U_386.03_1-gnuton0_alpha4_DSL_1.0.5.3.trx",
           "size": 38949373,
-          "downloadCount": 49
+          "downloadCount": 50
         },
         {
           "name": "dsl-ax82u-build.log",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/386.03_1-gnuton0_alpha4/dsl-ax82u-build.log",
           "size": 24359385,
-          "downloadCount": 7
+          "downloadCount": 8
         },
         {
           "name": "DSL-AX82U_386.03_1-gnuton0_alpha4_cferom_pureubi.md5",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/386.03_1-gnuton0_alpha4/DSL-AX82U_386.03_1-gnuton0_alpha4_cferom_pureubi.md5",
           "size": 153,
-          "downloadCount": 6
+          "downloadCount": 7
         },
         {
           "name": "DSL-AX82U_386.03_1-gnuton0_alpha4_cferom_pureubi.w",
           "url": "https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/download/386.03_1-gnuton0_alpha4/DSL-AX82U_386.03_1-gnuton0_alpha4_cferom_pureubi.w",
           "size": 82706452,
-          "downloadCount": 17
+          "downloadCount": 18
         }
       ]
     },
