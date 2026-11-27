@@ -174,12 +174,17 @@ class ParticleWorld {
   private readonly ctx: CanvasRenderingContext2D;
   private readonly staticCanvas: HTMLCanvasElement;
   private readonly staticCtx: CanvasRenderingContext2D;
-  private readonly surface: SurfacePoint[];
-  private readonly meridians: SurfacePoint[][];
-  private readonly bands: OrbitBand[];
-  private readonly sprite: HTMLCanvasElement;
-  private readonly blueSprite: HTMLCanvasElement;
   private readonly motionQuery: MediaQueryList;
+  private readonly projected: ProjectedPoint = { x: 0, y: 0, z: 0 };
+
+  private surface: SurfacePoint[] = [];
+  private meridians: SurfacePoint[][] = [];
+  private bands: OrbitBand[] = [];
+  private sprite!: HTMLCanvasElement;
+  private blueSprite!: HTMLCanvasElement;
+  private geometryReady = false;
+  private staticReady = false;
+  private mobileLayout: boolean | null = null;
 
   private width = 0;
   private height = 0;
@@ -213,26 +218,6 @@ class ParticleWorld {
 
     this.staticCanvas = staticCanvas;
     this.staticCtx = staticCtx;
-
-    const random = mulberry32(SEED);
-    const rect = root.getBoundingClientRect();
-    const initialWidth = Math.max(1, rect.width);
-    const initialHeight = Math.max(1, rect.height);
-    const area = initialWidth * initialHeight;
-    const pointCount =
-      initialWidth < 769
-        ? clamp(Math.round(area / 750), 480, 760)
-        : clamp(Math.round(area / 750), 1000, 1500);
-
-    this.surface = createSurfacePoints(pointCount, random);
-    this.meridians = createMeridians(random);
-    this.bands = [
-      createOrbitBand(1.015, 0.18, -0.12, 0.94, random),
-      createOrbitBand(1.03, -0.22, 0.16, 1, random),
-      createOrbitBand(1.045, 0.3, 0.04, 1.06, random),
-    ];
-    this.sprite = createDotSprite([255, 255, 255]);
-    this.blueSprite = createDotSprite([170, 210, 255]);
 
     this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.reduced = this.motionQuery.matches;
@@ -356,16 +341,59 @@ class ParticleWorld {
     this.canvas.style.height = `${height}px`;
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    this.staticCanvas.width = this.canvas.width;
-    this.staticCanvas.height = this.canvas.height;
-    this.staticCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
     this.computeComposition();
-    this.buildStaticLayer();
+
+    // Geometry is seeded per layout, so crossing the mobile breakpoint must
+    // rebuild it with the smaller point budget. The static layer always needs
+    // a repaint after a size change.
+    const mobile = width < 769;
+    if (this.mobileLayout === null) {
+      this.mobileLayout = mobile;
+    } else if (this.mobileLayout !== mobile) {
+      this.mobileLayout = mobile;
+      this.geometryReady = false;
+    }
+    this.staticReady = false;
 
     if (!this.running) {
       if (this.isDark()) this.drawStaticFrame();
     }
+  }
+
+  // Build the seeded constellation lazily: the light theme never draws the
+  // canvas, so it should not pay for the points, sprites or static layer.
+  private ensureGeometry(): void {
+    if (this.geometryReady) return;
+
+    const random = mulberry32(SEED);
+    const area = this.width * this.height;
+    const pointCount =
+      this.width < 769
+        ? clamp(Math.round(area / 750), 480, 760)
+        : clamp(Math.round(area / 750), 1000, 1500);
+
+    this.surface = createSurfacePoints(pointCount, random);
+    this.meridians = createMeridians(random);
+    this.bands = [
+      createOrbitBand(1.015, 0.18, -0.12, 0.94, random),
+      createOrbitBand(1.03, -0.22, 0.16, 1, random),
+      createOrbitBand(1.045, 0.3, 0.04, 1.06, random),
+    ];
+    this.sprite = createDotSprite([255, 255, 255]);
+    this.blueSprite = createDotSprite([170, 210, 255]);
+    this.geometryReady = true;
+  }
+
+  private ensureStaticLayer(): void {
+    if (this.staticReady) return;
+
+    // Size the offscreen layer only when it is actually needed, so a
+    // light-theme visit never allocates a full-size backing store.
+    this.staticCanvas.width = this.canvas.width;
+    this.staticCanvas.height = this.canvas.height;
+    this.staticCtx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    this.buildStaticLayer();
+    this.staticReady = true;
   }
 
   private computeComposition(): void {
@@ -544,11 +572,11 @@ class ParticleWorld {
     const y1 = y * cosTilt - z1 * sinTilt;
     const z2 = y * sinTilt + z1 * cosTilt;
 
-    return {
-      x: this.centerX + x1 * this.radius,
-      y: this.centerY - y1 * this.radius,
-      z: z2,
-    };
+    // Reuse one object: each caller consumes x/y/z before the next projection.
+    this.projected.x = this.centerX + x1 * this.radius;
+    this.projected.y = this.centerY - y1 * this.radius;
+    this.projected.z = z2;
+    return this.projected;
   }
 
   private drawParticles(yaw: number): void {
@@ -652,6 +680,8 @@ class ParticleWorld {
 
   private draw(yaw: number): void {
     if (!this.width || !this.height) return;
+    this.ensureGeometry();
+    this.ensureStaticLayer();
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.ctx.drawImage(
       this.staticCanvas,

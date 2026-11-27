@@ -391,10 +391,12 @@ main {
 .button.gm-button-primary {
   border-color: transparent;
   background-color: var(--gm-accent-strong);
+  // Mixing the gradient toward black keeps every stop AA-compliant with
+  // white text; a white highlight pushed the 14px navbar label below 4.5:1.
   background-image: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--gm-accent-strong) 90%, white),
-    var(--gm-accent-strong)
+    var(--gm-accent-strong),
+    color-mix(in srgb, var(--gm-accent-strong) 94%, black)
   );
   color: var(--gm-on-accent);
   box-shadow:
@@ -406,7 +408,7 @@ main {
     border-color: transparent;
     background-image: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--gm-accent-strong) 80%, white),
+      color-mix(in srgb, var(--gm-accent-strong) 96%, white),
       color-mix(in srgb, var(--gm-accent-strong) 94%, black)
     );
     color: var(--gm-on-accent);
