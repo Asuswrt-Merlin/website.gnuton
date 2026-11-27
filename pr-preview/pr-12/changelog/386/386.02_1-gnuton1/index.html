@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v7.4.1"><meta name="description" content="Release notes for 386.02_1-gnuton1 (WiFi 5 · 386), published April 17, 2021."><meta name="author" content="GNUton"><meta name="robots" content="noindex"><meta name="theme-color" content="#05080e" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><script>
+      // Apply the theme before first paint to avoid a flash of the wrong theme.
+      // No stored choice: follow the OS `prefers-color-scheme` (light default).
+      (function () {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia(
+            '(prefers-color-scheme: dark)',
+          ).matches;
+          const theme =
+            stored === 'dark' || (!stored && prefersDark) ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+      })();
+    </script><!-- Inter, loaded async so it never blocks first paint --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,650;14..32,700;14..32,800&amp;display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,650;14..32,700;14..32,800&amp;display=swap" media="print" onload="this.setAttribute('media', 'all')"><!-- Canonical + Open Graph --><link rel="canonical" href="https://gnuton.asuswrt-merlin.net/pr-preview/pr-12/changelog/386/386.02_1-gnuton1/"><meta property="og:type" content="article"><meta property="og:site_name" content="GNUton's Merlin Builds"><meta property="og:title" content="386.02_1-gnuton1 release notes · GNUton's Merlin Builds"><meta property="og:description" content="Release notes for 386.02_1-gnuton1 (WiFi 5 · 386), published April 17, 2021."><meta property="og:url" content="https://gnuton.asuswrt-merlin.net/pr-preview/pr-12/changelog/386/386.02_1-gnuton1/"><meta property="og:image" content="https://gnuton.asuswrt-merlin.net/pr-preview/pr-12/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="GNUton's Merlin Builds — Merlin firmware for more ASUS routers"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="386.02_1-gnuton1 release notes · GNUton's Merlin Builds"><meta name="twitter:description" content="Release notes for 386.02_1-gnuton1 (WiFi 5 · 386), published April 17, 2021."><meta name="twitter:image" content="https://gnuton.asuswrt-merlin.net/pr-preview/pr-12/og-image.png"><!-- RSS feed for the guides --><link rel="alternate" type="application/rss+xml" title="GNUton's Merlin Builds — Guides" href="/pr-preview/pr-12/rss.xml"><link rel="icon" type="image/svg+xml" href="/pr-preview/pr-12/favicon.svg"><link rel="icon" href="/pr-preview/pr-12/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/pr-preview/pr-12/apple-touch-icon.png"><title>386.02_1-gnuton1 release notes · GNUton&#39;s Merlin Builds</title><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/pr-preview/pr-12/_astro/ClientRouter.astro_astro_type_script_index_0_lang.BDCjmQ8c.js"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"386.02_1-gnuton1 release notes","description":"Release notes for 386.02_1-gnuton1 (WiFi 5 · 386), published April 17, 2021.","datePublished":"2021-04-17T06:41:31.000Z","url":"https://gnuton.asuswrt-merlin.net/pr-preview/pr-12/changelog/386/386.02_1-gnuton1/","author":{"@type":"Organization","name":"GNUton's Merlin Builds","url":"https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton"}}</script><link rel="stylesheet" href="/pr-preview/pr-12/_astro/BaseLayout.CCjlauLH.css"></head><body><a class="gm-skip-link" href="#main-content">Skip to main content</a><header><nav class="navbar gm-navbar" aria-label="Main navigation"><div class="container"><div class="navbar-brand"><a class="navbar-item gm-brand" href="/pr-preview/pr-12/"><span class="gm-brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 14.5V8.5M12 14.5V5M18.5 14.5V8.5"></path><rect x="3" y="14.5" width="18" height="5.5" rx="2"></rect><circle cx="7" cy="17.2" r="0.9" fill="currentColor" stroke="none"></circle><circle cx="10" cy="17.2" r="0.9" fill="currentColor" stroke="none"></circle><path d="M16 16.2h2.5M16 18.2h2.5"></path></svg></span><span class="gm-brand-name">GNUton</span><span class="gm-brand-suffix">Merlin builds</span></a><button type="button" class="navbar-burger" aria-label="Open menu" aria-expanded="false" aria-controls="main-navbar"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button></div><div id="main-navbar" class="navbar-menu"><div class="navbar-end"><a class="navbar-item gm-nav-link" href="/pr-preview/pr-12/">Home</a><a class="navbar-item gm-nav-link" href="/pr-preview/pr-12/features/">Features</a><a class="navbar-item gm-nav-link" href="/pr-preview/pr-12/firmware/">Downloads</a><a class="navbar-item gm-nav-link is-active" href="/pr-preview/pr-12/changelog/" aria-current="page">Changelog</a><a class="navbar-item gm-nav-link" href="/pr-preview/pr-12/about/">About</a><a class="navbar-item gm-nav-link" href="/pr-preview/pr-12/guides/">Guides</a><a class="navbar-item gm-nav-link" href="/pr-preview/pr-12/support/">Help</a><details class="gm-nav-code"><summary class="navbar-item gm-nav-link">Code<span class="gm-nav-caret" aria-hidden="true">▾</span></summary><div class="gm-nav-code-menu"><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton" target="_blank" rel="noopener">3006 · WiFi 7</a><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton" target="_blank" rel="noopener">3004 · WiFi 6</a><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/tree/386.12_0-gnuton1" target="_blank" rel="noopener">386 · DSL-AC68U</a></div></details><div class="navbar-item"><button type="button" class="gm-theme-toggle" data-theme-toggle aria-label="Switch to light theme" title="Switch theme"><span class="gm-theme-icon gm-theme-icon-sun" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg></span><span class="gm-theme-icon gm-theme-icon-moon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span></button><script type="module">var e=document.documentElement,t=`theme`,n=()=>{try{return localStorage.getItem(t)}catch{return null}},r=()=>{let t=n(),r=window.matchMedia(`(prefers-color-scheme: dark)`).matches,i=t===`dark`||!t&&r?`dark`:`light`;e.setAttribute(`data-theme`,i),document.querySelector(`[data-theme-toggle]`)?.setAttribute(`aria-label`,i===`light`?`Switch to dark theme`:`Switch to light theme`)};document.addEventListener(`click`,n=>{let i=n.target;if(i instanceof Element&&i.closest(`[data-theme-toggle]`)){let n=e.getAttribute(`data-theme`)===`dark`?`light`:`dark`,i=()=>{e.setAttribute(`data-theme`,n);try{localStorage.setItem(t,n)}catch{}r()};document.startViewTransition?document.startViewTransition(i):i()}}),r(),document.addEventListener(`astro:page-load`,r);</script></div><div class="navbar-item"><a class="button gm-button-primary gm-nav-cta" href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases" target="_blank" rel="noopener">Download</a></div></div></div></div></nav></header><script type="module">var e=()=>{let e=document.querySelector(`.navbar-burger`),t=document.getElementById(`main-navbar`),n=e?.getAttribute(`aria-expanded`)===`true`;e?.setAttribute(`aria-expanded`,`false`),e?.setAttribute(`aria-label`,`Open menu`),e?.classList.remove(`is-active`),t?.classList.remove(`is-active`),n&&document.activeElement instanceof HTMLElement&&e?.focus()},t=e=>{document.querySelectorAll(`.gm-nav-code[open]`).forEach(t=>{e&&t.contains(e)||(t.open=!1)})};document.addEventListener(`click`,n=>{let r=n.target;if(!(r instanceof Element))return;let i=r.closest(`.navbar-burger`);if(i){let e=i.getAttribute(`aria-expanded`)===`true`,t=document.getElementById(`main-navbar`);i.setAttribute(`aria-expanded`,String(!e)),i.setAttribute(`aria-label`,e?`Open menu`:`Close menu`),i.classList.toggle(`is-active`,!e),t?.classList.toggle(`is-active`,!e)}else t(r),r.closest(`#main-navbar a`)?(t(),e()):r.closest(`.navbar`)||e()}),document.addEventListener(`keydown`,n=>{if(n.key!==`Escape`)return;let r=document.querySelector(`.gm-nav-code[open]`);e(),t(),r?.querySelector(`summary`)?.focus()});</script><aside class="gm-release-banner" data-release-banner data-release-tag="3006.102.9_1-gnuton1" aria-label="New firmware release"><div class="container gm-release-banner-inner"><p class="gm-release-banner-text"><span class="gm-release-banner-label">New release</span><span><strong>3006.102.9_1-gnuton1</strong> for WiFi 7 is available.</span></p><div class="gm-release-banner-actions"><a class="gm-release-banner-link" href="/pr-preview/pr-12/changelog/3006/3006.102.9_1-gnuton1/">Release notes <span aria-hidden="true">→</span></a><button type="button" class="gm-release-banner-dismiss" data-release-banner-dismiss aria-label="Dismiss the new release banner"><span aria-hidden="true">×</span></button></div></div></aside><script data-astro-rerun>
+      // Hide before paint when this visitor already dismissed this release.
+      try {
+        const banner = document.currentScript?.previousElementSibling;
+        if (
+          banner instanceof HTMLElement &&
+          banner.dataset.releaseTag === localStorage.getItem('gm-dismissed-release')
+        ) {
+          banner.hidden = true;
+        }
+      } catch (error) {}
+    </script><script type="module">var e=`gm-dismissed-release`,t=()=>{let t=document.querySelector(`[data-release-banner]`);if(!t)return;let n=null;try{n=localStorage.getItem(e)}catch{}t.hidden=n!==null&&n===t.dataset.releaseTag};document.addEventListener(`click`,t=>{let n=t.target;if(!(n instanceof Element))return;let r=n.closest(`[data-release-banner-dismiss]`);if(!r)return;let i=r.closest(`[data-release-banner]`),a=i?.dataset.releaseTag;if(i&&a){try{localStorage.setItem(e,a)}catch{}i.hidden=!0}}),document.addEventListener(`astro:page-load`,t),t();</script><div class="gm-preview-banner">Preview build — not the production site</div><main id="main-content"><section class="section gm-section"><div class="container"><nav class="gm-changelog-breadcrumb" aria-label="Breadcrumb"><a href="/pr-preview/pr-12/changelog/">Changelog</a><span aria-hidden="true">/</span><a href="/pr-preview/pr-12/changelog/#386">386</a><span aria-hidden="true">/</span><span aria-current="page">386.02_1-gnuton1</span></nav><header class="gm-changelog-release-head"><p class="gm-eyebrow mb-2">WiFi 5 · 386</p><h1 class="title is-1 mb-3">386.02_1-gnuton1</h1><p class="gm-changelog-release-meta"><span>Published <time datetime="2021-04-17T06:41:31.000Z">April 17, 2021</time></span><span class="gm-changelog-badge">Stable</span></p><p class="gm-changelog-release-source">Source: <a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton" target="_blank" rel="noopener">Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton</a>.</p></header><div class="gm-changelog-release-layout"><article class="gm-prose"><div><p>Changes from the latest stable gnuton build (386.01_2-gnuton1):</p>
+<ul>
+<li>Moved RT-AX88U router-sysdep to model-specific directory</li>
+<li>Add GT-AX11000 build profile</li>
+<li>Merge GT-AX11000 binary blobs from 386_41700</li>
+<li>Add GT-AX11000 SDK components</li>
+<li>libbcmcrypto: re-sync with 386_41700</li>
+<li>webui: added GT-AX11000 content</li>
+<li>SDK 4908: removed unused dongle firmware copies</li>
+<li>httpd: add GT-AX11000 support to sysinfo temperatures</li>
+<li>rc: add LED control support for GT-AX11000</li>
+<li>Disable cloudcheck on GT-AX11000 profile</li>
+<li>rc: move start of sshd near the end of the boot process</li>
+<li>Updated documentation</li>
+<li>openssl: update to 1.1.1j</li>
+<li>www: fix QoS ATM checkbox state not being saved</li>
+<li>Add jitterentropy-rngd daemon to HND models</li>
+<li>Updated documentation</li>
+<li>Use interval for clock &amp; boot time</li>
+<li>rc: remove SSH brute force protection option, as it is redundant</li>
+<li>Merge pull request #706 from jackyaz/patch-1</li>
+<li>rc: time_zone_x_mapping bug fix (#701)</li>
+<li>openvpn: updated to 2.5.1</li>
+<li>Add cake scheduler to all HND kernels</li>
+<li>iproute2-4.3: backported tc cake support from 14d2df887481dd2130c6ae5d023325262429ce3c</li>
+<li>kernel: backport matchall classifier filter to all 4.1 kernels</li>
+<li>iproute2-4.3: backported tc matchall filter from upstream</li>
+<li>rc: fix bad merge in qos.c from GPL_41700</li>
+<li>Merge pull request #709 from dave14305/patch-1</li>
+<li>rc: implement Cake QoS mode for HND routers</li>
+<li>www: implement Cake UI</li>
+<li>Updated documentation</li>
+<li>www: cleaned up QoS overhead presets, added conservative default profile</li>
+<li>Fix NetEase UU Game Accelerator model type</li>
+<li>iproute2-4.3: fix display of negative deficit and drop_next values (#710)</li>
+<li>Implement entware support for GT-AX11000</li>
+<li>iproute2: add v5.11.0 to the tree</li>
+<li>iproute2: reapply cake negative value output fixes to 5.11.0</li>
+<li>iproute2: re-apply BCM/Asus patches from iproute2-4.3.0 on top of 5.11.0; disable building unused components</li>
+<li>iproute2: build 5.11.0 instead of 4.3.0</li>
+<li>SDK 4908: remove shared blobs that are leftovers from a previous compile</li>
+<li>kernel41: Added skbedit and connmark support to tc</li>
+<li>rc: split Cake parameters and script into two separate files</li>
+<li>iproute2: re-re-apply negative values patch, overwritten by 2311706f04</li>
+<li>rc: fix cake qos script generation</li>
+<li>Merge with GPL 386_42095</li>
+<li>Merge 5.02p1 SDK and RT-AX86U router-sysdep from 386_42095</li>
+<li>Merge RT-AX86U binary blobs from 386_42095</li>
+<li>Add RT-AX68U binary blobs from 386_41947, and web pages</li>
+<li>Add RT-AX68U build profile</li>
+<li>rc: Add LED control support to RT-AX68U</li>
+<li>Add GT-AX11000 and RT-AX68U to copy-prebuilt and build-all scripts</li>
+<li>Add router-sysdep from 386_41947 for RT-AX68U</li>
+<li>Updated documentation</li>
+<li>Merge RT-AC68U binary blobs from 42095</li>
+<li>Merge RT-AC88U/RT-AC3100/RT-AC5300 binary blobs from 42095</li>
+<li>Merge RT-AC86U/GT-AC2900 binary blobs + SDK from 42095</li>
+<li>Merge RT-AX88U/GT-AX11000 binary blobs + SDK from 42095</li>
+<li>Merge RT-AX68U binary blobs from 42095</li>
+<li>Merge RT-AX56U/RT-AX58U binary blobs + SDK from 42095</li>
+<li>build: fix platform.mak for building HND models following 42095 merge</li>
+<li>webui: hide Cake on non-HND models; add popup help; fix storing of atm/ptm value</li>
+<li>build: remove FTP_SSL setting from build targets since it&#39;s alreaedy globally enabled in config_base</li>
+<li>Merge upstream code  into dsl-master</li>
+<li>webui: fix hiding WPA/WEP key by default (regression from 42095 merge)</li>
+<li>iproute2: fix confdir location in iproute2-5.11.0</li>
+<li>iproute2: fix building with xtables+ipset support</li>
+<li>kernel41: enable tc ematch and related matches</li>
+<li>iproute2: enable parallel building of iproute2-4.3/5.11</li>
+<li>webui: fix enabling cake while bandwidth set to Auto</li>
+<li>webui: remove Yandex status from router status page as we don&#39;t support it</li>
+<li>SDK 5.02p1: SDK5.02.675x: fix kernel modules dependencies</li>
+<li>Merge pull request #712 from VersusClyne/master</li>
+<li>webui: Reformat Cake description to match the other QoS description styles</li>
+<li>Revert &quot;Fix NetEase UU Game Accelerator model type&quot;</li>
+<li>Merge pull request #715 from paldier/revert-712-master</li>
+<li>qos: move all variables parameters into cake-qos.conf; add cake-qos.conf.add support; tweak file permissions</li>
+<li>bb: Be more aggressive on retries if ntp servers name resolution fail</li>
+<li>ntpd: fix the case where two replies received at once and first one</li>
+<li>rc: rename FLOWPRIO variables in cake config</li>
+<li>rc: always mount jffs2 partition regardless of jffs2_on setting</li>
+<li>webui: add qis files for GT-AC2900 and GT-AX11000</li>
+<li>rom: updated CA bundle to 20210309</li>
+<li>rc: webui: add cake rc_support attribute</li>
+<li>Updated documentation</li>
+<li>add .dummy file for wlcsm to make sure GT-AX11000 passing fw build</li>
+<li>Merge pull request #718 from sadoneli/master</li>
+<li>rc: fix pointer corruption in filter_setting()</li>
+<li>rc: rewritten dnsfilter server table management</li>
+<li>webui: QoS Classification page: add warning in Cake mode; harmonise qos type handling with nvram value</li>
+<li>rc: revert static DNS routes added with GPL 42095</li>
+<li>rc: make qos-start run in blocking mode</li>
+<li>httpd: fix openvpn/pptpd account list getting truncated after one entry</li>
+<li>webui: store local copies of online json files; add code to refresh them</li>
+<li>webui: remove OpenVPN server Windows FAQ as it&#39;s missing from the Asus website</li>
+<li>Merge remote-tracking branch &#39;upstream/master&#39; into dsl-master</li>
+<li>shared: match with rx/tx var types for backup_rx/backup_tx in netdev_calc()</li>
+<li>tools: exclude web files that cause the optimizing tool to crash and leave temp files in the /www directory</li>
+<li>httpd: fix ouiDB.json location for browser caching</li>
+<li>Updated documentation</li>
+<li>rc: Rearrange Cake variable positions</li>
+<li>rc: do not use dnsfilter_custom when querying the server table for an IPv6</li>
+<li>Merge pull request #725 from dave14305/patch-1</li>
+<li>Merge remote-tracking branch &#39;upstream/master&#39; into DSL_upstream_merge</li>
+<li>webui: fix display of connected IPSEC clients on VPNStatus page; added display of IKEv2 clients</li>
+<li>Fix tools/copy-prebuilt</li>
+<li>dsl-ac68u: Merged prebuilds from GPL 42095</li>
+<li>dsl-ax82u: Merged prebuilds from GPL 42095</li>
+<li>rc: make entries in passwd and shadow be in the same order</li>
+<li>openssl: update to 1.1.1k</li>
+<li>kernel: proper fix for wlan accumulating stats issue</li>
+<li>build: no longer explicitely disable NFCM</li>
+<li>webui: allow changing https LAN port while in AP mode</li>
+<li>webui: move main content down on index page when the disabled wifi warning banner is shown</li>
+<li>webui: Fix timezone detection (#729)</li>
+<li>webui: fix duplicate variable introduced with 73e5ec95e2</li>
+<li>Updated documentation</li>
+<li>Updated documentation</li>
+<li>Merge tag &#39;386.2&#39; into dsl-master</li>
+<li>Implement entware support for DSL-AX82U</li>
+<li>dsl-ax82u: Added missing bwdpi certificate from GPL 42095</li>
+<li>dsl: Use different spectrum binary for different builds</li>
+<li>dsl: Merged www from GPL 42095</li>
+</ul>
+</div></article><aside class="gm-changelog-release-aside"><div class="gm-notice"><strong>Before flashing.</strong> Check your exact model and hardware revision. Read the release notes and keep a recovery path available.</div><a class="button is-primary is-fullwidth" href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/tag/386.02_1-gnuton1" target="_blank" rel="noopener">Download from GitHub <span aria-hidden="true">↗</span></a><a class="button gm-button-outline is-fullwidth" href="/pr-preview/pr-12/changelog/">All releases</a><a class="button gm-button-outline is-fullwidth" href="/pr-preview/pr-12/firmware/#wifi-5">Supported models</a></aside></div><p class="mt-6"><a class="gm-changelog-back" href="/pr-preview/pr-12/changelog/"><span aria-hidden="true">←</span> Back to all releases</a></p></div></section></main><footer class="footer gm-footer"><div class="container"><div class="columns is-multiline"><div class="column is-4"><p class="title is-5 mb-2">GNUton&#39;s Merlin Builds</p><p class="mb-4">Merlin firmware for more ASUS routers.</p><p class="is-size-7">An independent community fork of Asuswrt-Merlin. ASUS and ROG are trademarks of ASUSTeK Computer Inc.</p></div><div class="column is-2"><p class="has-text-weight-semibold mb-3">Explore</p><ul><li class="mb-1"><a href="/pr-preview/pr-12/">Home</a></li><li class="mb-1"><a href="/pr-preview/pr-12/features/">Features</a></li><li class="mb-1"><a href="/pr-preview/pr-12/firmware/">Downloads</a></li><li class="mb-1"><a href="/pr-preview/pr-12/changelog/">Changelog</a></li><li class="mb-1"><a href="/pr-preview/pr-12/about/">About</a></li><li class="mb-1"><a href="/pr-preview/pr-12/guides/">Guides</a></li><li class="mb-1"><a href="/pr-preview/pr-12/support/">Help</a></li></ul></div><div class="column is-3"><p class="has-text-weight-semibold mb-3">Project</p><ul><li class="mb-1"><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases" target="_blank" rel="noopener">Latest releases</a></li><li class="mb-1"><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton" target="_blank" rel="noopener">Source code</a></li><li class="mb-1"><a href="/pr-preview/pr-12/support/#report-a-bug">Report a bug</a></li><li class="mb-1"><a href="https://github.com/RMerl/asuswrt-merlin.ng" target="_blank" rel="noopener">Upstream Merlin</a></li></ul></div><div class="column is-3"><p class="has-text-weight-semibold mb-3">Community</p><ul><li class="mb-1"><a href="https://discord.gg/pm7q6KFSzp" target="_blank" rel="noopener">Discord chat</a></li><li class="mb-1"><a href="https://www.snbforums.com/threads/gnutons-merlin-builds-for-dsl-router-386-1_2-released.70980/" target="_blank" rel="noopener">SNBForums thread</a></li><li class="mb-1"><a href="https://retro.pizza/@gnuton" target="_blank" rel="noopener">Mastodon</a></li><li class="mb-1"><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/www/DEV.md" target="_blank" rel="noopener">Developer notes</a></li></ul></div></div><hr><div class="gm-footer-bottom"><p class="is-size-7 mb-0">© 2026 GNUton&#39;s Merlin Builds. Project source is public.</p><p class="is-size-7 mb-0">Built with <a href="https://astro.build" target="_blank" rel="noopener">Astro</a> · Theme based on <a href="https://github.com/Domenico-Tenace-Open-Labs/astro-wellness" target="_blank" rel="noopener">Astro Wellness</a></p></div></div></footer></body></html>
