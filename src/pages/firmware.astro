@@ -33,13 +33,13 @@ import { withBase } from '../utils/url';
 
   <section class="section gm-section">
     <div class="container">
-      <div class="gm-notice">
+      <div class="gm-notice" data-reveal="fade">
         <strong>Not sure whether you have a v1 or v2?</strong> Enable SSH, then run
         <code>nvram get productid</code> on the router. The exact model and hardware
         revision decide which images are safe to flash.
       </div>
 
-      <nav class="gm-jump" aria-label="Jump to a WiFi generation" data-router-jump>
+      <nav class="gm-jump" aria-label="Jump to a WiFi generation" data-router-jump data-reveal="fade">
         <span class="gm-jump-label">Jump to</span>
         {
           firmwareBranches.map((branch) => (
@@ -50,7 +50,9 @@ import { withBase } from '../utils/url';
         }
       </nav>
 
-      <RouterSearch total={routers.length} />
+      <div data-reveal="fade">
+        <RouterSearch total={routers.length} />
+      </div>
     </div>
   </section>
 
@@ -65,7 +67,7 @@ import { withBase } from '../utils/url';
           data-branch-section={branch.id}
         >
           <div class="container">
-            <div class="gm-branch-head">
+            <div class="gm-branch-head" data-reveal="fade">
               <div>
                 <p class="gm-eyebrow mb-2">Supported models</p>
                 <h2 class="title is-2 mb-2">{branch.name}</h2>
@@ -85,15 +87,15 @@ import { withBase } from '../utils/url';
             </div>
 
             <div class="gm-router-grid">
-              {branchRouters.map((router) => (
-                <div data-router-item>
+              {branchRouters.map((router, rIndex) => (
+                <div data-router-item data-reveal style={`--gm-reveal-delay: ${(rIndex % 4) * 70}ms`}>
                   <RouterCard router={router} />
                 </div>
               ))}
             </div>
 
             {branch.experimental && (
-              <div class="gm-notice mt-5">
+              <div class="gm-notice mt-5" data-reveal="fade">
                 <strong>{branch.experimental.label} (experimental):</strong>{' '}
                 {branch.experimental.description}{' '}
                 <a href={branch.experimental.url} target="_blank" rel="noopener">
@@ -109,7 +111,7 @@ import { withBase } from '../utils/url';
 
   <section class="section gm-section">
     <div class="container">
-      <div class="gm-section-head">
+      <div class="gm-section-head" data-reveal="fade">
         <p class="gm-eyebrow mb-2">Release channels</p>
         <h2 class="title is-2">Stable, beta, or experimental</h2>
         <p class="subtitle is-6">
@@ -119,15 +121,15 @@ import { withBase } from '../utils/url';
 
       <div class="columns" style="--column-gap: 1.5rem">
         {
-          releaseChannels.map((channel) => (
-            <div class="column is-4">
+          releaseChannels.map((channel, index) => (
+            <div class="column is-4" data-reveal style={`--gm-reveal-delay: ${index * 100}ms`}>
               <ReleaseCard channel={channel} />
             </div>
           ))
         }
       </div>
 
-      <div class="gm-notice mt-6">
+      <div class="gm-notice mt-6" data-reveal="fade">
         <strong>AiMesh or Repeater?</strong> Standard images already support AiMesh, which is
         faster when both ends are ASUS routers. Repeater Mode is only available through the
         experimental WiFi 5 build listed above.

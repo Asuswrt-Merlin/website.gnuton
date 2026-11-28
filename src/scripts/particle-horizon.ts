@@ -1,9 +1,9 @@
-// Lightweight Canvas 2D particle horizon for the home hero.
+// Lightweight Canvas 2D particle globe used as the ambient page background.
 //
 // The scene is a seeded, orthographic globe: surface dots, a few dotted
 // meridians and three orbital bands. A static layer caches the body, haze and
 // rim so the animation only redraws moving dots. No third-party dependency and
-// no WebGL context are required.
+// no WebGL context are required. Both themes draw; only the palette changes.
 
 const WORLD_SELECTOR = '[data-particle-world]';
 const CANVAS_SELECTOR = '[data-particle-canvas]';
@@ -15,6 +15,84 @@ const ROTATION_SPEED = 0.025; // radians per second
 const GLOBE_TILT = -0.24;
 const SEED_YAW = 0.55;
 const SEED = 0x9e3779b9;
+
+interface WorldPalette {
+  dot: readonly [number, number, number];
+  accentDot: readonly [number, number, number];
+  composite: GlobalCompositeOperation;
+  haze: readonly [string, string, string];
+  body: readonly [string, string, string];
+  inner: readonly [string, string, string];
+  halo: readonly [string, string, string, string, string];
+  rim: readonly [string, string, string, string];
+  rimDust: readonly [string, string];
+}
+
+// The dark palette is the original night-side globe. The light palette is a
+// frosted "day" globe: pale body, deep-blue dots and a stronger blue rim so it
+// still reads on a white page.
+const PALETTES: Record<'dark' | 'light', WorldPalette> = {
+  dark: {
+    dot: [255, 255, 255],
+    accentDot: [170, 210, 255],
+    composite: 'lighter',
+    haze: [
+      'rgba(90, 150, 255, 0.1)',
+      'rgba(90, 150, 255, 0.035)',
+      'rgba(90, 150, 255, 0)',
+    ],
+    body: ['#0d1a2b', '#091321', '#060b14'],
+    inner: [
+      'rgba(127, 184, 255, 0)',
+      'rgba(127, 184, 255, 0.03)',
+      'rgba(127, 184, 255, 0.09)',
+    ],
+    halo: [
+      'rgba(127, 184, 255, 0)',
+      'rgba(127, 184, 255, 0.04)',
+      'rgba(190, 220, 255, 0.12)',
+      'rgba(190, 220, 255, 0.02)',
+      'rgba(127, 184, 255, 0)',
+    ],
+    rim: [
+      'rgba(180, 215, 255, 0.03)',
+      'rgba(200, 230, 255, 0.28)',
+      'rgba(235, 248, 255, 0.7)',
+      'rgba(255, 255, 255, 0.9)',
+    ],
+    rimDust: ['#dcecff', '#ffffff'],
+  },
+  light: {
+    dot: [29, 78, 216],
+    accentDot: [30, 64, 175],
+    composite: 'source-over',
+    haze: [
+      'rgba(29, 78, 216, 0.08)',
+      'rgba(29, 78, 216, 0.03)',
+      'rgba(29, 78, 216, 0)',
+    ],
+    body: ['#f8fbff', '#e8f1ff', '#d4e6ff'],
+    inner: [
+      'rgba(37, 99, 235, 0)',
+      'rgba(37, 99, 235, 0.035)',
+      'rgba(37, 99, 235, 0.09)',
+    ],
+    halo: [
+      'rgba(37, 99, 235, 0)',
+      'rgba(37, 99, 235, 0.035)',
+      'rgba(59, 130, 246, 0.12)',
+      'rgba(37, 99, 235, 0.02)',
+      'rgba(37, 99, 235, 0)',
+    ],
+    rim: [
+      'rgba(37, 99, 235, 0.04)',
+      'rgba(37, 99, 235, 0.26)',
+      'rgba(30, 64, 175, 0.58)',
+      'rgba(30, 64, 175, 0.82)',
+    ],
+    rimDust: ['#1d4ed8', '#1e40af'],
+  },
+};
 
 interface SurfacePoint {
   x: number;
@@ -199,6 +277,7 @@ class ParticleWorld {
   private readonly motionQuery: MediaQueryList;
   private readonly toggle: HTMLButtonElement | null;
   private readonly toggleLabel: HTMLElement | null;
+  private readonly ambient: boolean;
   private readonly projected: ProjectedPoint = { x: 0, y: 0, z: 0 };
 
   private surface: SurfacePoint[] = [];
@@ -206,6 +285,8 @@ class ParticleWorld {
   private bands: OrbitBand[] = [];
   private sprite!: HTMLCanvasElement;
   private blueSprite!: HTMLCanvasElement;
+  private palette: WorldPalette = PALETTES.dark;
+  private paletteKey: 'dark' | 'light' = 'dark';
   private geometryReady = false;
   private staticReady = false;
   private canvasSized = false;
@@ -249,6 +330,7 @@ class ParticleWorld {
     this.toggle = toggle;
     this.toggleLabel =
       toggle?.querySelector<HTMLElement>('[data-particle-motion-label]') ?? null;
+    this.ambient = root.dataset.particleAmbient === 'true';
     this.paused = readPaused();
 
     this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -258,6 +340,8 @@ class ParticleWorld {
       navigator as Navigator & { connection?: { saveData?: boolean } }
     ).connection;
     this.saveData = Boolean(connection?.saveData);
+    this.paletteKey = this.isDark() ? 'dark' : 'light';
+    this.palette = PALETTES[this.paletteKey];
 
     this.motionQuery.addEventListener('change', this.handleMotionChange);
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
@@ -323,7 +407,7 @@ class ParticleWorld {
   private updateToggle(): void {
     if (!this.toggle) return;
 
-    const available = this.isDark() && !this.reduced && !this.saveData;
+    const available = !this.ambient && !this.reduced && !this.saveData;
     this.toggle.hidden = !available;
     this.toggle.setAttribute('aria-pressed', String(this.paused));
     this.toggle.setAttribute(
@@ -354,8 +438,8 @@ class ParticleWorld {
   private queueInitialDraw(): void {
     const draw = () => {
       if (this.disposed) return;
-      if (this.reduced || this.saveData) {
-        if (this.isDark()) this.drawStaticFrame();
+      if (this.ambient || this.reduced || this.saveData) {
+        this.drawStaticFrame();
         return;
       }
       this.sync();
@@ -419,7 +503,7 @@ class ParticleWorld {
     this.staticReady = false;
 
     if (!this.running) {
-      if (this.isDark()) this.drawCurrentFrame();
+      this.drawCurrentFrame();
     }
   }
 
@@ -453,8 +537,8 @@ class ParticleWorld {
       createOrbitBand(1.03, -0.22, 0.16, 1, random),
       createOrbitBand(1.045, 0.3, 0.04, 1.06, random),
     ];
-    this.sprite = createDotSprite([255, 255, 255]);
-    this.blueSprite = createDotSprite([170, 210, 255]);
+    this.sprite = createDotSprite(this.palette.dot);
+    this.blueSprite = createDotSprite(this.palette.accentDot);
     this.geometryReady = true;
   }
 
@@ -488,6 +572,7 @@ class ParticleWorld {
     const { width, height, centerX, centerY, radius } = this;
     ctx.clearRect(0, 0, width, height);
 
+    const palette = this.palette;
     const haze = ctx.createRadialGradient(
       centerX,
       centerY - radius * 0.08,
@@ -496,9 +581,9 @@ class ParticleWorld {
       centerY - radius * 0.08,
       radius * 1.22,
     );
-    haze.addColorStop(0, 'rgba(90, 150, 255, 0.1)');
-    haze.addColorStop(0.5, 'rgba(90, 150, 255, 0.035)');
-    haze.addColorStop(1, 'rgba(90, 150, 255, 0)');
+    haze.addColorStop(0, palette.haze[0]);
+    haze.addColorStop(0.5, palette.haze[1]);
+    haze.addColorStop(1, palette.haze[2]);
     ctx.fillStyle = haze;
     ctx.fillRect(0, 0, width, height);
 
@@ -513,9 +598,9 @@ class ParticleWorld {
       centerX - radius * 0.6,
       centerY + radius * 0.7,
     );
-    body.addColorStop(0, '#0d1a2b');
-    body.addColorStop(0.45, '#091321');
-    body.addColorStop(1, '#060b14');
+    body.addColorStop(0, palette.body[0]);
+    body.addColorStop(0.45, palette.body[1]);
+    body.addColorStop(1, palette.body[2]);
     ctx.fillStyle = body;
     ctx.fillRect(
       centerX - radius,
@@ -532,9 +617,9 @@ class ParticleWorld {
       centerY,
       radius,
     );
-    inner.addColorStop(0, 'rgba(127, 184, 255, 0)');
-    inner.addColorStop(0.8, 'rgba(127, 184, 255, 0.03)');
-    inner.addColorStop(1, 'rgba(127, 184, 255, 0.09)');
+    inner.addColorStop(0, palette.inner[0]);
+    inner.addColorStop(0.8, palette.inner[1]);
+    inner.addColorStop(1, palette.inner[2]);
     ctx.fillStyle = inner;
     ctx.fillRect(
       centerX - radius,
@@ -552,11 +637,11 @@ class ParticleWorld {
       centerY,
       radius * 1.16,
     );
-    halo.addColorStop(0, 'rgba(127, 184, 255, 0)');
-    halo.addColorStop(0.45, 'rgba(127, 184, 255, 0.04)');
-    halo.addColorStop(0.68, 'rgba(190, 220, 255, 0.12)');
-    halo.addColorStop(0.8, 'rgba(190, 220, 255, 0.02)');
-    halo.addColorStop(1, 'rgba(127, 184, 255, 0)');
+    halo.addColorStop(0, palette.halo[0]);
+    halo.addColorStop(0.45, palette.halo[1]);
+    halo.addColorStop(0.68, palette.halo[2]);
+    halo.addColorStop(0.8, palette.halo[3]);
+    halo.addColorStop(1, palette.halo[4]);
     ctx.fillStyle = halo;
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius * 1.16, 0, TAU);
@@ -568,10 +653,10 @@ class ParticleWorld {
       centerX + radius,
       centerY + radius * 0.15,
     );
-    rim.addColorStop(0, 'rgba(180, 215, 255, 0.03)');
-    rim.addColorStop(0.45, 'rgba(200, 230, 255, 0.28)');
-    rim.addColorStop(0.72, 'rgba(235, 248, 255, 0.7)');
-    rim.addColorStop(1, 'rgba(255, 255, 255, 0.9)');
+    rim.addColorStop(0, palette.rim[0]);
+    rim.addColorStop(0.45, palette.rim[1]);
+    rim.addColorStop(0.72, palette.rim[2]);
+    rim.addColorStop(1, palette.rim[3]);
     ctx.strokeStyle = rim;
     ctx.lineWidth = 1.35;
     ctx.beginPath();
@@ -595,7 +680,7 @@ class ParticleWorld {
     ];
 
     ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalCompositeOperation = this.palette.composite;
 
     for (const [scale, clusters, strength] of bands) {
       const bandRadius = radius * scale;
@@ -614,7 +699,7 @@ class ParticleWorld {
           const offset = (dot - (dotCount - 1) / 2) * (1.2 + random() * 1.4);
           const size = 0.8 + random() * 1.4;
           ctx.globalAlpha = strength * (0.55 + random() * 0.45);
-          ctx.fillStyle = random() < 0.22 ? '#dcecff' : '#ffffff';
+          ctx.fillStyle = random() < 0.22 ? this.palette.rimDust[0] : this.palette.rimDust[1];
           ctx.beginPath();
           ctx.arc(
             baseX + tangentX * offset,
@@ -660,7 +745,7 @@ class ParticleWorld {
     const cosTilt = Math.cos(GLOBE_TILT);
     const sinTilt = Math.sin(GLOBE_TILT);
 
-    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalCompositeOperation = this.palette.composite;
 
     for (const point of this.surface) {
       const projected = this.project(
@@ -772,10 +857,24 @@ class ParticleWorld {
     this.markReady();
   }
 
+  // Re-bake the sprites and the static body when the theme flips. The point
+  // geometry itself is independent of colour.
+  private refreshPalette(): boolean {
+    const key = this.isDark() ? 'dark' : 'light';
+    if (key === this.paletteKey) return false;
+
+    this.paletteKey = key;
+    this.palette = PALETTES[key];
+    this.sprite = createDotSprite(this.palette.dot);
+    this.blueSprite = createDotSprite(this.palette.accentDot);
+    this.staticReady = false;
+    return true;
+  }
+
   private markReady(): void {
     if (this.ready) return;
     this.ready = true;
-    if (this.isDark()) this.root.classList.add('is-ready');
+    this.root.classList.add('is-ready');
   }
 
   private clearReady(): void {
@@ -786,24 +885,31 @@ class ParticleWorld {
 
   private sync(): void {
     if (this.disposed) return;
+    const paletteChanged = this.refreshPalette();
     this.updateToggle();
 
-    const active = this.isDark() && this.visible && !document.hidden;
+    const active = this.visible && !document.hidden;
     if (!active) {
       this.stop();
       this.clearReady();
       return;
     }
 
+    if (this.ambient) {
+      this.stop();
+      if (paletteChanged || !this.ready) this.drawStaticFrame();
+      return;
+    }
+
     if (this.reduced || this.saveData) {
       this.stop();
-      this.drawStaticFrame();
+      if (paletteChanged || !this.ready) this.drawStaticFrame();
       return;
     }
 
     if (this.paused) {
       this.stop();
-      if (!this.ready) this.drawCurrentFrame();
+      if (paletteChanged || !this.ready) this.drawCurrentFrame();
       return;
     }
 
@@ -812,8 +918,8 @@ class ParticleWorld {
 
   private start(): void {
     if (this.running || this.disposed) return;
-    if (!this.isDark() || !this.visible || document.hidden) return;
-    if (this.reduced || this.saveData) {
+    if (!this.visible || document.hidden) return;
+    if (this.ambient || this.reduced || this.saveData) {
       this.drawStaticFrame();
       return;
     }

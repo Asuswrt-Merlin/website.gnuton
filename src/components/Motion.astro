@@ -1,0 +1,181 @@
+---
+// Global motion controller: scroll reveals, count-up numbers, and the ambient globe.
+---
+
+<script>
+  type MotionWindow = Window & {
+    __gmMotionInit?: boolean;
+    __gmRevealObserver?: IntersectionObserver;
+    __gmCounterObserver?: IntersectionObserver;
+    __gmWorldScroll?: () => void;
+    __gmWorldResize?: () => void;
+    __gmWorldRaf?: number;
+  };
+
+  const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function parseCounter(el: HTMLElement) {
+    if (el.dataset.counterReady === 'true') return null;
+    const finalText = (el.textContent ?? '').trim();
+    const match = finalText.match(/^([^\d-]*)(-?\d+(?:[.,]\d+)?)([^\d]*)$/);
+    if (!match) return null;
+    const [, prefix, numeric, suffix] = match;
+    const normalized = numeric.replace(/,/g, '');
+    const target = Number(normalized);
+    if (!Number.isFinite(target)) return null;
+    const decimals = normalized.includes('.') ? (normalized.split('.')[1]?.length ?? 0) : 0;
+    return { finalText, prefix, suffix, target, decimals };
+  }
+
+  function animateCounter(el: HTMLElement, index: number) {
+    const parsed = parseCounter(el);
+    if (!parsed) return;
+    el.dataset.counterReady = 'true';
+
+    const { finalText, prefix, suffix, target, decimals } = parsed;
+    if (target === 0) {
+      el.textContent = finalText;
+      return;
+    }
+
+    const duration = 1200;
+    const start = performance.now() + index * 70;
+    const from = 0;
+
+    const frame = (now: number) => {
+      const elapsed = Math.max(0, now - start);
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = from + (target - from) * eased;
+      const formatted = decimals > 0 ? value.toFixed(decimals) : Math.round(value).toString();
+      el.textContent = `${prefix}${formatted}${suffix}`;
+      if (progress < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        el.textContent = finalText;
+      }
+    };
+
+    el.textContent = `${prefix}${(0).toFixed(decimals)}${suffix}`;
+    requestAnimationFrame(frame);
+  }
+
+  function updateWorldProgress() {
+    const win = window as MotionWindow;
+    win.__gmWorldRaf = undefined;
+    const world = document.querySelector<HTMLElement>('.gm-particle-world');
+    if (!world) return;
+    // The globe settles behind the page over roughly the first screenful.
+    const maxScroll = Math.max(window.innerHeight * 0.8, 1);
+    const progress = reduceMotion()
+      ? 0
+      : Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+    world.style.setProperty('--gm-world-progress', progress.toFixed(4));
+  }
+
+  function initWorldScroll() {
+    const win = window as MotionWindow;
+    if (win.__gmWorldScroll) {
+      window.removeEventListener('scroll', win.__gmWorldScroll);
+      win.__gmWorldScroll = undefined;
+    }
+    if (win.__gmWorldResize) {
+      window.removeEventListener('resize', win.__gmWorldResize);
+      win.__gmWorldResize = undefined;
+    }
+    if (win.__gmWorldRaf) {
+      cancelAnimationFrame(win.__gmWorldRaf);
+      win.__gmWorldRaf = undefined;
+    }
+
+    const world = document.querySelector<HTMLElement>('.gm-particle-world');
+    if (!world) return;
+
+    const onScroll = () => {
+      if (win.__gmWorldRaf) return;
+      win.__gmWorldRaf = requestAnimationFrame(updateWorldProgress);
+    };
+
+    win.__gmWorldScroll = onScroll;
+    win.__gmWorldResize = onScroll;
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateWorldProgress();
+  }
+
+  function initMotion() {
+    const win = window as MotionWindow;
+    const reduced = reduceMotion();
+    const root = document.documentElement;
+
+    root.classList.toggle('gm-reveal-ready', !reduced);
+    root.classList.toggle('gm-hero-ready', !reduced);
+
+    win.__gmRevealObserver?.disconnect();
+    win.__gmCounterObserver?.disconnect();
+
+    initWorldScroll();
+
+    if (reduced) {
+      document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
+        el.classList.add('is-revealed');
+      });
+      document.querySelectorAll<HTMLElement>('[data-counter]').forEach((el) => {
+        el.dataset.counterReady = 'true';
+      });
+      return;
+    }
+
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          el.classList.add('is-revealed');
+          revealObserver.unobserve(el);
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+    );
+    win.__gmRevealObserver = revealObserver;
+
+    document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
+      if (el.classList.contains('is-revealed')) return;
+      revealObserver.observe(el);
+    });
+
+    let counterIndex = 0;
+    const counterObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          counterObserver.unobserve(el);
+          animateCounter(el, counterIndex++);
+        });
+      },
+      { threshold: 0.35 },
+    );
+    win.__gmCounterObserver = counterObserver;
+
+    document.querySelectorAll<HTMLElement>('[data-counter]').forEach((el) => {
+      if (el.dataset.counterReady === 'true') return;
+      const final = el.dataset.counterFinal;
+      if (final) el.textContent = final;
+      else el.dataset.counterFinal = (el.textContent ?? '').trim();
+      counterObserver.observe(el);
+    });
+  }
+
+  const win = window as MotionWindow;
+  if (!win.__gmMotionInit) {
+    win.__gmMotionInit = true;
+    document.addEventListener('astro:after-swap', () => {
+      if (!reduceMotion()) {
+        document.documentElement.classList.add('gm-reveal-ready', 'gm-hero-ready');
+      }
+    });
+    document.addEventListener('astro:page-load', initMotion);
+  }
+  initMotion();
+</script>

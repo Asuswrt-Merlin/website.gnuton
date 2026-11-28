@@ -6,7 +6,6 @@ import FirmwareModal from '../components/FirmwareModal.astro';
 import GitHubStats from '../components/GitHubStats.astro';
 import LatestGuides from '../components/LatestGuides.astro';
 import PageHero from '../components/PageHero.astro';
-import ParticleHorizon from '../components/ParticleHorizon.astro';
 import RouterCard from '../components/RouterCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { setupSteps, values } from '../data/project';
@@ -46,8 +45,6 @@ const stats = [
     subtitle="GNUton's builds extend Asuswrt-Merlin to WiFi 7, WiFi 6 and WiFi 5 routers — supported by ASUS and RMerlin, built in the cloud with a public build pipeline."
     world
   >
-    <ParticleHorizon slot="background" />
-
     <div class="buttons mt-5">
       <a class="button gm-button-key is-medium" href={site.releases} target="_blank" rel="noopener">
         Download firmware
@@ -98,9 +95,9 @@ const stats = [
     <div class="container">
       <div class="gm-stats">
         {
-          stats.map((stat) => (
-            <div>
-              <span class="gm-stat-number">{stat.value}</span>
+          stats.map((stat, index) => (
+            <div data-reveal="scale" style={`--gm-reveal-delay: ${index * 80}ms`}>
+              <span class="gm-stat-number" data-counter data-counter-final={stat.value}>{stat.value}</span>
               <span class="gm-stat-label">{stat.label}</span>
             </div>
           ))
@@ -111,7 +108,7 @@ const stats = [
 
   <section class="section gm-section gm-section-alt">
     <div class="container">
-      <div class="gm-section-head">
+      <div class="gm-section-head" data-reveal="fade">
         <p class="gm-eyebrow mb-2">Downloads</p>
         <h2 class="title is-2">Choose your firmware</h2>
         <p class="subtitle is-6">
@@ -121,8 +118,8 @@ const stats = [
 
       <div class="columns" style="--column-gap: 1.5rem">
         {
-          firmwareBranches.map((branch) => (
-            <div class="column is-4">
+          firmwareBranches.map((branch, index) => (
+            <div class="column is-4" data-reveal style={`--gm-reveal-delay: ${index * 100}ms`}>
               <BranchCard
                 branch={branch}
                 modelCount={routersForBranch(branch.version).length}
@@ -139,7 +136,7 @@ const stats = [
 
   <section class="section gm-section">
     <div class="container">
-      <div class="gm-section-head">
+      <div class="gm-section-head" data-reveal="fade">
         <p class="gm-eyebrow mb-2">Hardware</p>
         <h2 class="title is-2">Supported routers</h2>
         <p class="subtitle is-6">
@@ -148,10 +145,14 @@ const stats = [
       </div>
 
       <div class="gm-router-grid">
-        {featuredRouters.map((router) => <RouterCard router={router} />)}
+        {featuredRouters.map((router, index) => (
+          <div data-reveal style={`--gm-reveal-delay: ${(index % 4) * 90}ms`}>
+            <RouterCard router={router} />
+          </div>
+        ))}
       </div>
 
-      <div class="has-text-centered mt-6">
+      <div class="has-text-centered mt-6" data-reveal="fade">
         <a class="button is-medium gm-button-outline" href={withBase('/firmware')}>
           See all {routers.length} supported builds
         </a>
@@ -161,7 +162,7 @@ const stats = [
 
   <section class="section gm-section gm-section-alt">
     <div class="container">
-      <div class="gm-section-head">
+      <div class="gm-section-head" data-reveal="fade">
         <p class="gm-eyebrow mb-2">Why GNUton's builds</p>
         <h2 class="title is-2">Upstream features, more hardware</h2>
         <p class="subtitle is-6">
@@ -172,7 +173,7 @@ const stats = [
       <div class="columns">
         {
           values.map((value, index) => (
-            <div class="column is-4">
+            <div class="column is-4" data-reveal style={`--gm-reveal-delay: ${index * 100}ms`}>
               <FeatureCard
                 number={String(index + 1).padStart(2, '0')}
                 title={value.title}
@@ -183,7 +184,7 @@ const stats = [
         }
       </div>
 
-      <div class="has-text-centered mt-6">
+      <div class="has-text-centered mt-6" data-reveal="fade">
         <a class="button is-medium gm-button-outline" href={withBase('/features')}>
           See the feature list
         </a>
@@ -193,7 +194,7 @@ const stats = [
 
   <section class="section gm-section">
     <div class="container">
-      <div class="gm-section-head">
+      <div class="gm-section-head" data-reveal="fade">
         <p class="gm-eyebrow mb-2">Before you flash</p>
         <h2 class="title is-2">Three steps, no guessing</h2>
       </div>
@@ -201,7 +202,7 @@ const stats = [
       <div class="columns">
         {
           setupSteps.map((step, index) => (
-            <div class="column is-4">
+            <div class="column is-4" data-reveal style={`--gm-reveal-delay: ${index * 100}ms`}>
               <div class="gm-step">
                 <span class="gm-step-number">{String(index + 1).padStart(2, '0')}</span>
                 <h3 class="title is-5 mb-2">{step.title}</h3>
@@ -217,7 +218,7 @@ const stats = [
         }
       </div>
 
-      <div class="gm-notice mt-6">
+      <div class="gm-notice mt-6" data-reveal="fade">
         <strong>Firmware changes carry risk.</strong> Read the release notes, keep a recovery path,
         and never flash a build from a different model or WiFi generation. The project cannot
         guarantee every flash succeeds.

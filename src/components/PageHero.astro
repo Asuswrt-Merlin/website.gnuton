@@ -4,35 +4,43 @@ interface Props {
   title: string;
   subtitle?: string;
   compact?: boolean;
-  /** Use the full-height particle-horizon layout. Pair with the background slot. */
+  /** Use the full-height particle-horizon layout on the home page. */
   world?: boolean;
 }
 
 const { eyebrow, title, subtitle, compact = false, world = false } = Astro.props;
-const hasBackground = Astro.slots.has('background');
-const isWorld = world && hasBackground;
+const isWorld = world;
 ---
 
 <section class:list={['hero', 'gm-hero', { 'is-medium': !compact, 'gm-hero--world': isWorld }]}>
-  {hasBackground && <slot name="background" />}
   <div class:list={['hero-body', { 'gm-hero-body': isWorld }]}>
     <div class="container">
       <div class:list={['columns is-vcentered', { 'is-centered': compact }]}>
         <div class:list={['column', compact ? 'is-two-thirds has-text-centered' : 'is-three-fifths']}>
-          {eyebrow && <p class="gm-eyebrow mb-3">{eyebrow}</p>}
-          <h1 class:list={['gm-display', 'mb-4']}>{title}</h1>
+          {eyebrow && <p class="gm-eyebrow mb-3" data-hero-reveal style="--gm-hero-delay: 40ms">{eyebrow}</p>}
+          <h1 class:list={['gm-display', 'mb-4']} data-hero-reveal style="--gm-hero-delay: 120ms">{title}</h1>
           {subtitle && (
-            <p class:list={['subtitle is-5', { 'mx-auto': compact }]}>{subtitle}</p>
+            <p
+              class:list={['subtitle is-5', { 'mx-auto': compact }]}
+              data-hero-reveal
+              style="--gm-hero-delay: 200ms"
+            >
+              {subtitle}
+            </p>
           )}
           {Astro.slots.has('default') && (
-            <div class:list={['gm-hero-lead', { 'mx-auto': compact }]}>
+            <div
+              class:list={['gm-hero-lead', { 'mx-auto': compact }]}
+              data-hero-reveal
+              style="--gm-hero-delay: 280ms"
+            >
               <slot />
             </div>
           )}
         </div>
         {
           !compact && (
-            <div class="column is-two-fifths">
+            <div class="column is-two-fifths" data-hero-reveal="media" style="--gm-hero-delay: 220ms">
               <slot name="aside" />
             </div>
           )

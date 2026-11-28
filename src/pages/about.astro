@@ -68,7 +68,7 @@ import { withBase } from '../utils/url';
 
   <section class="section gm-section gm-section-alt">
     <div class="container">
-      <div class="gm-section-head">
+      <div class="gm-section-head" data-reveal="fade">
         <p class="gm-eyebrow mb-2">How the project works</p>
         <h2 class="title is-2">What stays constant</h2>
       </div>
@@ -76,7 +76,7 @@ import { withBase } from '../utils/url';
       <div class="columns">
         {
           values.map((value, index) => (
-            <div class="column is-4">
+            <div class="column is-4" data-reveal style={`--gm-reveal-delay: ${index * 100}ms`}>
               <FeatureCard
                 number={String(index + 1).padStart(2, '0')}
                 title={value.title}
@@ -91,7 +91,7 @@ import { withBase } from '../utils/url';
 
   <section class="section gm-section">
     <div class="container">
-      <div class="gm-section-head">
+      <div class="gm-section-head" data-reveal="fade">
         <p class="gm-eyebrow mb-2">Standing on shoulders</p>
         <h2 class="title is-2">Thanks to</h2>
         <p class="subtitle is-6">This project only exists because other people share their work.</p>
@@ -99,8 +99,8 @@ import { withBase } from '../utils/url';
 
       <div class="columns is-multiline">
         {
-          credits.map((credit) => (
-            <div class="column is-4">
+          credits.map((credit, index) => (
+            <div class="column is-4" data-reveal style={`--gm-reveal-delay: ${(index % 3) * 90}ms`}>
               <div class="box gm-card">
                 <div class="gm-credit-head mb-4">
                   <span class="gm-avatar mr-4" aria-hidden="true">{credit.initials}</span>
@@ -123,7 +123,7 @@ import { withBase } from '../utils/url';
 
   <section class="section gm-section gm-section-alt">
     <div class="container">
-      <div class="gm-section-head">
+      <div class="gm-section-head" data-reveal="fade">
         <p class="gm-eyebrow mb-2">Get involved</p>
         <h2 class="title is-2">How you can help</h2>
         <p class="subtitle is-6">
@@ -133,10 +133,10 @@ import { withBase } from '../utils/url';
 
       <div class="columns is-multiline">
         {
-          helpWays.map((way) => {
+          helpWays.map((way, index) => {
             const external = /^https?:\/\//.test(way.href);
             return (
-              <div class="column is-3">
+              <div class="column is-3" data-reveal style={`--gm-reveal-delay: ${(index % 4) * 80}ms`}>
                 <div class="box gm-card gm-help-card">
                   <h3 class="title is-6">{way.title}</h3>
                   <p class="mb-4">{way.description}</p>
