@@ -71,6 +71,25 @@ const stats = [
           />
         </div>
         <p class="gm-hero-caption">GT-BE98 · supported WiFi 7 model</p>
+        <button
+          type="button"
+          class="gm-motion-toggle"
+          data-particle-motion-toggle
+          aria-pressed="false"
+          aria-label="Pause background animation"
+          hidden
+        >
+          <span class="gm-motion-toggle-icon" aria-hidden="true">
+            <svg class="gm-motion-toggle-pause" viewBox="0 0 16 16" fill="currentColor">
+              <rect x="4" y="3" width="3" height="10" rx="1"></rect>
+              <rect x="9" y="3" width="3" height="10" rx="1"></rect>
+            </svg>
+            <svg class="gm-motion-toggle-play" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M5 3.5v9a.75.75 0 0 0 1.14.64l7-4.5a.75.75 0 0 0 0-1.28l-7-4.5A.75.75 0 0 0 5 3.5Z"></path>
+            </svg>
+          </span>
+          <span data-particle-motion-label>Pause motion</span>
+        </button>
       </div>
     </Fragment>
   </PageHero>

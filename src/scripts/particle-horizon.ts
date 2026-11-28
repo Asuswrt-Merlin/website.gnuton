@@ -7,6 +7,9 @@
 
 const WORLD_SELECTOR = '[data-particle-world]';
 const CANVAS_SELECTOR = '[data-particle-canvas]';
+const STATIC_CANVAS_SELECTOR = '[data-particle-static]';
+const MOTION_TOGGLE_SELECTOR = '[data-particle-motion-toggle]';
+const MOTION_STORAGE_KEY = 'gm-particle-motion';
 const TAU = Math.PI * 2;
 const ROTATION_SPEED = 0.025; // radians per second
 const GLOBE_TILT = -0.24;
@@ -36,7 +39,10 @@ interface ProjectedPoint {
 interface ParticleWorldOptions {
   root: HTMLElement;
   canvas: HTMLCanvasElement;
+  staticCanvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+  staticCtx: CanvasRenderingContext2D;
+  toggle: HTMLButtonElement | null;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -53,6 +59,22 @@ function mulberry32(seed: number): () => number {
     value = (value + Math.imul(value ^ (value >>> 7), 61 | value)) ^ value;
     return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+function readPaused(): boolean {
+  try {
+    return localStorage.getItem(MOTION_STORAGE_KEY) === 'paused';
+  } catch {
+    return false;
+  }
+}
+
+function writePaused(paused: boolean): void {
+  try {
+    localStorage.setItem(MOTION_STORAGE_KEY, paused ? 'paused' : 'playing');
+  } catch {
+    // The in-page control still works for the current session.
+  }
 }
 
 function createDotSprite(color: readonly [number, number, number]): HTMLCanvasElement {
@@ -175,6 +197,8 @@ class ParticleWorld {
   private readonly staticCanvas: HTMLCanvasElement;
   private readonly staticCtx: CanvasRenderingContext2D;
   private readonly motionQuery: MediaQueryList;
+  private readonly toggle: HTMLButtonElement | null;
+  private readonly toggleLabel: HTMLElement | null;
   private readonly projected: ProjectedPoint = { x: 0, y: 0, z: 0 };
 
   private surface: SurfacePoint[] = [];
@@ -184,6 +208,7 @@ class ParticleWorld {
   private blueSprite!: HTMLCanvasElement;
   private geometryReady = false;
   private staticReady = false;
+  private canvasSized = false;
   private mobileLayout: boolean | null = null;
 
   private width = 0;
@@ -200,6 +225,7 @@ class ParticleWorld {
   private ready = false;
   private visible = true;
   private disposed = false;
+  private paused: boolean;
   private reduced: boolean;
   private saveData: boolean;
 
@@ -207,17 +233,23 @@ class ParticleWorld {
   private resizeObserver?: ResizeObserver;
   private intersectionObserver?: IntersectionObserver;
 
-  constructor({ root, canvas, ctx }: ParticleWorldOptions) {
+  constructor({
+    root,
+    canvas,
+    staticCanvas,
+    ctx,
+    staticCtx,
+    toggle,
+  }: ParticleWorldOptions) {
     this.root = root;
     this.canvas = canvas;
-    this.ctx = ctx;
-
-    const staticCanvas = document.createElement('canvas');
-    const staticCtx = staticCanvas.getContext('2d');
-    if (!staticCtx) throw new Error('Canvas 2D is not available');
-
     this.staticCanvas = staticCanvas;
     this.staticCtx = staticCtx;
+    this.ctx = ctx;
+    this.toggle = toggle;
+    this.toggleLabel =
+      toggle?.querySelector<HTMLElement>('[data-particle-motion-label]') ?? null;
+    this.paused = readPaused();
 
     this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.reduced = this.motionQuery.matches;
@@ -250,7 +282,10 @@ class ParticleWorld {
       attributeFilter: ['data-theme'],
     });
 
+    this.toggle?.addEventListener('click', this.handleToggle);
+
     this.resize();
+    this.updateToggle();
     this.queueInitialDraw();
   }
 
@@ -270,6 +305,36 @@ class ParticleWorld {
   private readonly handlePageShow = (): void => {
     this.sync();
   };
+
+  private readonly handleToggle = (): void => {
+    this.paused = !this.paused;
+    writePaused(this.paused);
+    this.updateToggle();
+
+    if (this.paused) {
+      this.stop();
+      if (!this.ready) this.drawCurrentFrame();
+      return;
+    }
+
+    this.sync();
+  };
+
+  private updateToggle(): void {
+    if (!this.toggle) return;
+
+    const available = this.isDark() && !this.reduced && !this.saveData;
+    this.toggle.hidden = !available;
+    this.toggle.setAttribute('aria-pressed', String(this.paused));
+    this.toggle.setAttribute(
+      'aria-label',
+      this.paused ? 'Play background animation' : 'Pause background animation',
+    );
+
+    if (this.toggleLabel) {
+      this.toggleLabel.textContent = this.paused ? 'Play motion' : 'Pause motion';
+    }
+  }
 
   private readonly frame = (now: number): void => {
     if (!this.running || this.disposed) return;
@@ -335,11 +400,9 @@ class ParticleWorld {
     this.height = height;
     this.dpr = dpr;
 
-    this.canvas.width = Math.max(1, Math.round(width * dpr));
-    this.canvas.height = Math.max(1, Math.round(height * dpr));
-    this.canvas.style.width = `${width}px`;
-    this.canvas.style.height = `${height}px`;
-    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Defer the backing-store allocation until the dark canvas actually
+    // draws, so a light-theme visit never allocates a full-size canvas.
+    this.canvasSized = false;
 
     this.computeComposition();
 
@@ -356,8 +419,19 @@ class ParticleWorld {
     this.staticReady = false;
 
     if (!this.running) {
-      if (this.isDark()) this.drawStaticFrame();
+      if (this.isDark()) this.drawCurrentFrame();
     }
+  }
+
+  private ensureCanvasSize(): void {
+    if (this.canvasSized) return;
+
+    this.canvas.width = Math.max(1, Math.round(this.width * this.dpr));
+    this.canvas.height = Math.max(1, Math.round(this.height * this.dpr));
+    this.canvas.style.width = `${this.width}px`;
+    this.canvas.style.height = `${this.height}px`;
+    this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    this.canvasSized = true;
   }
 
   // Build the seeded constellation lazily: the light theme never draws the
@@ -680,17 +754,17 @@ class ParticleWorld {
 
   private draw(yaw: number): void {
     if (!this.width || !this.height) return;
+
+    this.ensureCanvasSize();
     this.ensureGeometry();
     this.ensureStaticLayer();
     this.ctx.clearRect(0, 0, this.width, this.height);
-    this.ctx.drawImage(
-      this.staticCanvas,
-      0,
-      0,
-      this.width,
-      this.height,
-    );
     this.drawParticles(yaw);
+  }
+
+  private drawCurrentFrame(): void {
+    this.draw(this.yaw);
+    this.markReady();
   }
 
   private drawStaticFrame(): void {
@@ -712,6 +786,7 @@ class ParticleWorld {
 
   private sync(): void {
     if (this.disposed) return;
+    this.updateToggle();
 
     const active = this.isDark() && this.visible && !document.hidden;
     if (!active) {
@@ -726,6 +801,12 @@ class ParticleWorld {
       return;
     }
 
+    if (this.paused) {
+      this.stop();
+      if (!this.ready) this.drawCurrentFrame();
+      return;
+    }
+
     this.start();
   }
 
@@ -734,6 +815,10 @@ class ParticleWorld {
     if (!this.isDark() || !this.visible || document.hidden) return;
     if (this.reduced || this.saveData) {
       this.drawStaticFrame();
+      return;
+    }
+    if (this.paused) {
+      this.drawCurrentFrame();
       return;
     }
 
@@ -765,25 +850,43 @@ class ParticleWorld {
     this.resizeObserver?.disconnect();
     this.intersectionObserver?.disconnect();
     this.motionQuery.removeEventListener('change', this.handleMotionChange);
+    this.toggle?.removeEventListener('click', this.handleToggle);
     document.removeEventListener('visibilitychange', this.handleVisibilityChange);
     window.removeEventListener('pagehide', this.handlePageHide);
     window.removeEventListener('pageshow', this.handlePageShow);
     this.root.classList.remove('is-ready');
+    if (this.toggle) this.toggle.hidden = true;
   }
 }
 
 function createParticleWorld(root: HTMLElement): ParticleWorld | null {
   const canvas = root.querySelector<HTMLCanvasElement>(CANVAS_SELECTOR);
-  if (!canvas) return null;
-
-  const ctx = canvas.getContext('2d', { alpha: true });
-  if (!ctx) {
+  const staticCanvas = root.querySelector<HTMLCanvasElement>(
+    STATIC_CANVAS_SELECTOR,
+  );
+  if (!canvas || !staticCanvas) {
     root.classList.add('is-fallback');
     return null;
   }
 
+  const ctx = canvas.getContext('2d', { alpha: true });
+  const staticCtx = staticCanvas.getContext('2d');
+  if (!ctx || !staticCtx) {
+    root.classList.add('is-fallback');
+    return null;
+  }
+
+  const toggle = document.querySelector<HTMLButtonElement>(MOTION_TOGGLE_SELECTOR);
+
   try {
-    return new ParticleWorld({ root, canvas, ctx });
+    return new ParticleWorld({
+      root,
+      canvas,
+      staticCanvas,
+      ctx,
+      staticCtx,
+      toggle,
+    });
   } catch {
     root.classList.add('is-fallback');
     return null;

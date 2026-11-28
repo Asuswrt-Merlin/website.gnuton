@@ -657,6 +657,72 @@ main {
   text-transform: uppercase;
 }
 
+.gm-motion-toggle {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.7rem;
+  min-height: 1.5rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--gm-border);
+  border-radius: 999px;
+  background-color: transparent;
+  color: var(--gm-muted);
+  font-family: var(--gm-font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &:hover,
+  &:focus {
+    border-color: var(--gm-accent);
+    color: var(--gm-accent);
+  }
+
+  svg {
+    display: block;
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+
+  .gm-motion-toggle-play {
+    display: none;
+  }
+
+  &[aria-pressed='true'] {
+    color: var(--gm-accent);
+
+    .gm-motion-toggle-pause {
+      display: none;
+    }
+
+    .gm-motion-toggle-play {
+      display: block;
+    }
+  }
+}
+
+[data-theme='light'] .gm-motion-toggle {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-motion-toggle {
+    display: none;
+  }
+}
+
 /* -------------------------- Particle horizon --------------------------- */
 
 .gm-particle-world {
@@ -676,6 +742,16 @@ main {
   transition: opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+// The static body/rim is its own layer, so the animation only clears and
+// repaints the transparent particle canvas on top.
+.gm-particle-canvas--static {
+  z-index: 0;
+}
+
+.gm-particle-canvas--dynamic {
+  z-index: 1;
+}
+
 .gm-particle-world.is-ready .gm-particle-canvas {
   opacity: 1;
 }
@@ -689,7 +765,7 @@ main {
 .gm-particle-scrim {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   background:
     linear-gradient(
       90deg,
@@ -703,7 +779,7 @@ main {
 .gm-particle-grain {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 3;
   opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
   background-size: 160px 160px;
@@ -2169,6 +2245,10 @@ html {
 
     > summary {
       width: 100%;
+      // The summary is the .navbar-item, whose padding is outside the width
+      // unless the box model is explicit. Without this the mobile menu grows
+      // by the 1.5rem horizontal padding and causes horizontal overflow.
+      box-sizing: border-box;
     }
   }
 
