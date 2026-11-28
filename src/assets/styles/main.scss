@@ -232,7 +232,6 @@ main {
   overflow: hidden;
   opacity: calc(var(--gm-world-opacity) - var(--gm-world-progress) * 0.16);
   filter: blur(calc(var(--gm-world-progress) * 2px));
-  transition: opacity 0.2s linear;
 }
 
 [data-theme='light'] .gm-world-bg {
@@ -508,7 +507,11 @@ body > :not(.gm-world-bg):not(script):not(style) {
   background:
     radial-gradient(900px circle at 82% -10%, var(--gm-accent-soft), transparent 55%),
     radial-gradient(700px circle at 8% 115%, var(--gm-accent-soft), transparent 50%),
-    linear-gradient(160deg, var(--gm-ink-soft) 0%, var(--gm-ink) 100%);
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--gm-ink-soft) 84%, transparent) 0%,
+      color-mix(in srgb, var(--gm-ink) 76%, transparent) 100%
+    );
   border-bottom: 1px solid var(--gm-border);
   overflow: hidden;
 
