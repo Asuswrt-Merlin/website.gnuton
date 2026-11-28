@@ -6,6 +6,7 @@ import FirmwareModal from '../components/FirmwareModal.astro';
 import GitHubStats from '../components/GitHubStats.astro';
 import LatestGuides from '../components/LatestGuides.astro';
 import PageHero from '../components/PageHero.astro';
+import ParticleHorizon from '../components/ParticleHorizon.astro';
 import RouterCard from '../components/RouterCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { setupSteps, values } from '../data/project';
@@ -43,9 +44,12 @@ const stats = [
     eyebrow="Official Asuswrt-Merlin fork"
     title="Merlin firmware for more ASUS routers."
     subtitle="GNUton's builds extend Asuswrt-Merlin to WiFi 7, WiFi 6 and WiFi 5 routers — supported by ASUS and RMerlin, built in the cloud with a public build pipeline."
+    world
   >
+    <ParticleHorizon slot="background" />
+
     <div class="buttons mt-5">
-      <a class="button is-primary is-medium" href={site.releases} target="_blank" rel="noopener">
+      <a class="button gm-button-key is-medium" href={site.releases} target="_blank" rel="noopener">
         Download firmware
       </a>
       <a class="button is-medium gm-button-outline" href={withBase('/firmware')}>
@@ -54,16 +58,38 @@ const stats = [
     </div>
 
     <Fragment slot="aside">
-      <div class="gm-hero-media">
-        <span class="gm-hero-tag">WiFi 7</span>
-        <img
-          src={withBase('/images/routers/gt-be98.png')}
-          alt="ASUS ROG Rapture GT-BE98 router"
-          width="400"
-          height="340"
-          decoding="async"
-        />
-        <p class="gm-hero-caption">ROG Rapture GT-BE98 · supported WiFi 7 model</p>
+      <div class="gm-hero-product">
+        <div class="gm-hero-product-frame">
+          <span class="gm-hero-chip">WiFi 7</span>
+          <img
+            src={withBase('/images/routers/gt-be98.png')}
+            alt="ASUS ROG Rapture GT-BE98 router"
+            width="900"
+            height="638"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </div>
+        <p class="gm-hero-caption">GT-BE98 · supported WiFi 7 model</p>
+        <button
+          type="button"
+          class="gm-motion-toggle"
+          data-particle-motion-toggle
+          aria-pressed="false"
+          aria-label="Pause background animation"
+          hidden
+        >
+          <span class="gm-motion-toggle-icon" aria-hidden="true">
+            <svg class="gm-motion-toggle-pause" viewBox="0 0 16 16" fill="currentColor">
+              <rect x="4" y="3" width="3" height="10" rx="1"></rect>
+              <rect x="9" y="3" width="3" height="10" rx="1"></rect>
+            </svg>
+            <svg class="gm-motion-toggle-play" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M5 3.5v9a.75.75 0 0 0 1.14.64l7-4.5a.75.75 0 0 0 0-1.28l-7-4.5A.75.75 0 0 0 5 3.5Z"></path>
+            </svg>
+          </span>
+          <span data-particle-motion-label>Pause motion</span>
+        </button>
       </div>
     </Fragment>
   </PageHero>

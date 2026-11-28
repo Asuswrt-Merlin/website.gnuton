@@ -33,7 +33,7 @@ const pageTitle = title === site.name ? title : `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = absoluteUrl('/og-image.png', Astro.site);
 const fontUrl =
-  'https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap';
+  'https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,650;14..32,700;14..32,800&display=swap';
 ---
 
 <!doctype html>
@@ -45,7 +45,7 @@ const fontUrl =
     <meta name="description" content={description} />
     <meta name="author" content={site.author} />
     {noindex || isPreview ? <meta name="robots" content="noindex" /> : null}
-    <meta name="theme-color" content="#0e1216" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#05080e" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 
     <script is:inline>

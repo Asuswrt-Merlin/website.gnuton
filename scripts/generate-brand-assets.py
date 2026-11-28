@@ -23,11 +23,11 @@ OUT_ICO = ROOT / "public/favicon.ico"
 FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 FONT_REGULAR = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
-INK = (11, 16, 22)
-INK_SOFT = (18, 25, 33)
-TEXT = (244, 247, 249)
-MUTED = (154, 167, 176)
-ACCENT = (255, 107, 53)
+INK = (5, 8, 14)
+INK_SOFT = (10, 17, 28)
+TEXT = (238, 244, 251)
+MUTED = (154, 169, 186)
+ACCENT = (127, 184, 255)
 
 
 def font(path: str, size: int) -> ImageFont.FreeTypeFont:
@@ -55,7 +55,7 @@ def router_icon(size: int) -> Image.Image:
     draw = ImageDraw.Draw(canvas)
     s = size * scale
     radius = int(s * 0.22)
-    draw.rounded_rectangle((0, 0, s - 1, s - 1), radius=radius, fill=(14, 18, 22, 255))
+    draw.rounded_rectangle((0, 0, s - 1, s - 1), radius=radius, fill=(*INK, 255))
 
     def m(value: float) -> int:
         return int(s * value)
