@@ -1,5 +1,5 @@
 ---
-// Global motion controller: scroll reveals, count-up numbers, and world background.
+// Global motion controller: scroll reveals, count-up numbers, and the ambient globe.
 ---
 
 <script>
@@ -8,6 +8,7 @@
     __gmRevealObserver?: IntersectionObserver;
     __gmCounterObserver?: IntersectionObserver;
     __gmWorldScroll?: () => void;
+    __gmWorldResize?: () => void;
     __gmWorldRaf?: number;
   };
 
@@ -62,11 +63,13 @@
   function updateWorldProgress() {
     const win = window as MotionWindow;
     win.__gmWorldRaf = undefined;
-    const world = document.querySelector<HTMLElement>('.gm-world-bg');
+    const world = document.querySelector<HTMLElement>('.gm-particle-world');
     if (!world) return;
-    const reduced = reduceMotion();
-    const maxScroll = Math.max(window.innerHeight * 0.9, 1);
-    const progress = reduced ? 1 : Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+    // The globe settles behind the page over roughly the first screenful.
+    const maxScroll = Math.max(window.innerHeight * 0.8, 1);
+    const progress = reduceMotion()
+      ? 0
+      : Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
     world.style.setProperty('--gm-world-progress', progress.toFixed(4));
   }
 
@@ -76,12 +79,16 @@
       window.removeEventListener('scroll', win.__gmWorldScroll);
       win.__gmWorldScroll = undefined;
     }
+    if (win.__gmWorldResize) {
+      window.removeEventListener('resize', win.__gmWorldResize);
+      win.__gmWorldResize = undefined;
+    }
     if (win.__gmWorldRaf) {
       cancelAnimationFrame(win.__gmWorldRaf);
       win.__gmWorldRaf = undefined;
     }
 
-    const world = document.querySelector<HTMLElement>('.gm-world-bg');
+    const world = document.querySelector<HTMLElement>('.gm-particle-world');
     if (!world) return;
 
     const onScroll = () => {
@@ -90,7 +97,9 @@
     };
 
     win.__gmWorldScroll = onScroll;
+    win.__gmWorldResize = onScroll;
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
     updateWorldProgress();
   }
 

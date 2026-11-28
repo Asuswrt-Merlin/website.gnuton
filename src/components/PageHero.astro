@@ -4,17 +4,15 @@ interface Props {
   title: string;
   subtitle?: string;
   compact?: boolean;
-  /** Use the full-height particle-horizon layout. Pair with the background slot. */
+  /** Use the full-height particle-horizon layout on the home page. */
   world?: boolean;
 }
 
 const { eyebrow, title, subtitle, compact = false, world = false } = Astro.props;
-const hasBackground = Astro.slots.has('background');
-const isWorld = world && hasBackground;
+const isWorld = world;
 ---
 
 <section class:list={['hero', 'gm-hero', { 'is-medium': !compact, 'gm-hero--world': isWorld }]}>
-  {hasBackground && <slot name="background" />}
   <div class:list={['hero-body', { 'gm-hero-body': isWorld }]}>
     <div class="container">
       <div class:list={['columns is-vcentered', { 'is-centered': compact }]}>

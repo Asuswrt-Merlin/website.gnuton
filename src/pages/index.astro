@@ -6,7 +6,6 @@ import FirmwareModal from '../components/FirmwareModal.astro';
 import GitHubStats from '../components/GitHubStats.astro';
 import LatestGuides from '../components/LatestGuides.astro';
 import PageHero from '../components/PageHero.astro';
-import ParticleHorizon from '../components/ParticleHorizon.astro';
 import RouterCard from '../components/RouterCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { setupSteps, values } from '../data/project';
@@ -46,8 +45,6 @@ const stats = [
     subtitle="GNUton's builds extend Asuswrt-Merlin to WiFi 7, WiFi 6 and WiFi 5 routers — supported by ASUS and RMerlin, built in the cloud with a public build pipeline."
     world
   >
-    <ParticleHorizon slot="background" />
-
     <div class="buttons mt-5">
       <a class="button gm-button-key is-medium" href={site.releases} target="_blank" rel="noopener">
         Download firmware

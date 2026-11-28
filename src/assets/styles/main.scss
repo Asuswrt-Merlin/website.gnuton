@@ -211,8 +211,11 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--gm-ink);
+  // The fixed particle globe paints above the html background, so the body
+  // must not cover it with an opaque layer.
+  background-color: transparent;
   color: var(--gm-text);
+  isolation: isolate;
 }
 
 main {
@@ -226,120 +229,25 @@ main {
   min-width: 0;
 }
 
-/* ---------------------------- World background -------------------------- */
+/* --------------------------- Ambient world ----------------------------- */
 
-.gm-world-bg {
-  --gm-world-progress: 0;
-  --gm-world-opacity: 0.3;
-  --gm-world-stroke: rgba(255, 107, 53, 0.22);
-  --gm-world-stroke-strong: rgba(255, 107, 53, 0.34);
-  --gm-world-stroke-faint: rgba(255, 107, 53, 0.14);
-  --gm-world-node: rgba(255, 107, 53, 0.55);
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-  opacity: calc(var(--gm-world-opacity) - var(--gm-world-progress) * 0.16);
-  filter: blur(calc(var(--gm-world-progress) * 2px));
+// The particle globe is a fixed, site-wide backdrop. These tokens keep the
+// surfaces above it translucent enough to read the depth without sacrificing
+// contrast.
+:root {
+  --gm-glass-surface: color-mix(in srgb, var(--gm-ink-raised) 78%, transparent);
+  --gm-glass-surface-soft: color-mix(in srgb, var(--gm-ink-soft) 64%, transparent);
+  --gm-glass-tint: color-mix(in srgb, var(--gm-ink-soft) 58%, transparent);
+  --gm-glass-blur: 14px;
 }
 
-[data-theme='light'] .gm-world-bg {
-  --gm-world-opacity: 0.38;
-  --gm-world-stroke: rgba(194, 65, 12, 0.24);
-  --gm-world-stroke-strong: rgba(194, 65, 12, 0.38);
-  --gm-world-stroke-faint: rgba(194, 65, 12, 0.14);
-  --gm-world-node: rgba(194, 65, 12, 0.5);
-}
-
-.gm-world-glow {
-  position: absolute;
-  top: 8vh;
-  right: -10vw;
-  width: min(52rem, 75vw);
-  height: min(52rem, 75vw);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 107, 53, 0.12) 0%, rgba(255, 107, 53, 0) 68%);
-  transform: translate3d(calc(var(--gm-world-progress) * 6vw), calc(var(--gm-world-progress) * 4vh), 0)
-    scale(calc(1.1 - var(--gm-world-progress) * 0.2));
-}
-
-[data-theme='light'] .gm-world-glow {
-  background: radial-gradient(circle, rgba(194, 65, 12, 0.1) 0%, rgba(194, 65, 12, 0) 68%);
-}
-
-.gm-world-svg {
-  position: absolute;
-  top: 50%;
-  right: -6vw;
-  width: min(52rem, 72vw);
-  height: auto;
-  color: var(--gm-world-stroke);
-  transform-origin: center;
-  transform: translate3d(calc(var(--gm-world-progress) * 8vw), calc(-50% + var(--gm-world-progress) * 10vh), 0)
-    scale(calc(1.18 - var(--gm-world-progress) * 0.42));
-  will-change: transform;
-}
-
-.gm-world-spin {
-  transform-origin: 300px 300px;
-  animation: gm-world-spin 80s linear infinite;
-}
-
-@keyframes gm-world-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.gm-world-stroke {
-  stroke: var(--gm-world-stroke);
-  stroke-width: 1.2;
-}
-
-.gm-world-stroke--strong {
-  stroke: var(--gm-world-stroke-strong);
-  stroke-width: 1.6;
-}
-
-.gm-world-stroke--faint {
-  stroke: var(--gm-world-stroke-faint);
-  stroke-width: 1;
-}
-
-.gm-world-node {
-  fill: var(--gm-world-node);
-}
-
-.gm-world-node--accent {
-  fill: var(--gm-accent);
-  opacity: 0.85;
-}
-
-body > :not(.gm-world-bg):not(script):not(style) {
-  position: relative;
-  z-index: 1;
-}
-
-.gm-navbar {
-  z-index: 30;
+html {
+  background-color: var(--gm-ink);
 }
 
 @media screen and (max-width: 768px) {
-  .gm-world-svg {
-    right: -20vw;
-    width: min(34rem, 115vw);
-    top: 45%;
-  }
-
-  .gm-world-glow {
-    right: -25vw;
-    top: 4vh;
-    width: min(32rem, 110vw);
-    height: min(32rem, 110vw);
+  :root {
+    --gm-glass-blur: 10px;
   }
 }
 
@@ -611,9 +519,9 @@ body > :not(.gm-world-bg):not(script):not(style) {
   }
 }
 
-// The home hero replaces the decorative stripes with a particle horizon. The
-// layout class is prop-driven from PageHero so other pages keep the standard
-// hero untouched.
+// The home hero is intentionally translucent: the fixed particle globe shows
+// through the surface and sits behind the copy, CTAs and router. The layout
+// class is prop-driven from PageHero so other pages keep the standard hero.
 .gm-hero--world {
   background:
     radial-gradient(
@@ -622,24 +530,28 @@ body > :not(.gm-world-bg):not(script):not(style) {
       transparent 62%
     ),
     radial-gradient(900px circle at 82% -10%, var(--gm-accent-soft), transparent 55%),
-    linear-gradient(180deg, var(--gm-ink) 0%, var(--gm-ink-soft) 60%, var(--gm-ink) 100%);
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--gm-ink) 72%, transparent) 0%,
+      color-mix(in srgb, var(--gm-ink-soft) 36%, transparent) 58%,
+      transparent 100%
+    );
 
+  // The stripe texture becomes the readability scrim for the hero copy.
   &::before {
-    display: none;
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--gm-ink) 96%, transparent) 0%,
+        color-mix(in srgb, var(--gm-ink) 72%, transparent) 34%,
+        transparent 64%
+      ),
+      linear-gradient(
+        0deg,
+        color-mix(in srgb, var(--gm-ink) 38%, transparent) 0%,
+        transparent 20%
+      );
   }
-}
-
-// Light theme has no canvas, so the horizon glow and the product shadow carry
-// the composition on their own.
-[data-theme='light'] .gm-hero--world {
-  background:
-    radial-gradient(
-      720px circle at 78% 116%,
-      var(--gm-world-horizon),
-      transparent 62%
-    ),
-    radial-gradient(900px circle at 82% -10%, var(--gm-accent-soft), transparent 55%),
-    linear-gradient(180deg, var(--gm-ink) 0%, var(--gm-ink-soft) 58%, var(--gm-ink) 100%);
 }
 
 .gm-hero-body {
@@ -841,10 +753,6 @@ body > :not(.gm-world-bg):not(script):not(style) {
   }
 }
 
-[data-theme='light'] .gm-motion-toggle {
-  display: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .gm-motion-toggle {
     display: none;
@@ -853,12 +761,23 @@ body > :not(.gm-world-bg):not(script):not(style) {
 
 /* -------------------------- Particle horizon --------------------------- */
 
+// Fixed backdrop, painted behind all page content. The Motion controller
+// updates --gm-world-progress from scroll position: at the top the globe is
+// crisp and prominent; after one screenful it has receded behind the glass
+// surfaces.
 .gm-particle-world {
-  position: absolute;
+  --gm-world-progress: 0;
+  position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   overflow: hidden;
   pointer-events: none;
+  opacity: calc(1 - var(--gm-world-progress) * 0.62);
+  transform: translate3d(0, calc(var(--gm-world-progress) * 2.5vh), 0)
+    scale(calc(1 - var(--gm-world-progress) * 0.06));
+  transform-origin: 80% 100%;
+  filter: blur(calc(var(--gm-world-progress) * 1.6px));
+  will-change: transform, opacity;
 }
 
 .gm-particle-canvas {
@@ -884,24 +803,11 @@ body > :not(.gm-world-bg):not(script):not(style) {
   opacity: 1;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .gm-particle-canvas {
-    transition: none;
-  }
-}
-
-.gm-particle-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background:
-    linear-gradient(
-      90deg,
-      var(--gm-ink) 0%,
-      color-mix(in srgb, var(--gm-ink) 94%, transparent) 24%,
-      transparent 58%
-    ),
-    linear-gradient(0deg, var(--gm-ink) 0%, transparent 32%);
+// Interior pages keep the globe as a faint ambient layer rather than the
+// full-strength home hero composition.
+.gm-particle-world--ambient {
+  opacity: calc(0.52 - var(--gm-world-progress) * 0.3);
+  filter: blur(calc(1px + var(--gm-world-progress) * 1.4px));
 }
 
 .gm-particle-grain {
@@ -915,9 +821,44 @@ body > :not(.gm-world-bg):not(script):not(style) {
   pointer-events: none;
 }
 
-[data-theme='light'] .gm-particle-world {
-  visibility: hidden;
-  opacity: 0;
+@media screen and (max-width: 768px) {
+  .gm-particle-world {
+    transform-origin: 62% 100%;
+  }
+
+  // On phones the globe sits directly under the copy, so use a vertical
+  // scrim to keep the text clean and let the world emerge near the product.
+  .gm-hero--world::before {
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--gm-ink) 88%, transparent) 0%,
+        color-mix(in srgb, var(--gm-ink) 72%, transparent) 48%,
+        transparent 78%
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--gm-ink) 86%, transparent) 0%,
+        color-mix(in srgb, var(--gm-ink) 40%, transparent) 70%,
+        transparent 100%
+      );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-particle-world {
+    opacity: 0.58;
+    transform: none;
+    filter: none;
+  }
+
+  .gm-particle-world--ambient {
+    opacity: 0.4;
+  }
+
+  .gm-particle-canvas {
+    transition: none;
+  }
 }
 
 /* ------------------------------ Sections ------------------------------ */
@@ -931,7 +872,7 @@ body > :not(.gm-world-bg):not(script):not(style) {
 }
 
 .gm-section-alt {
-  background-color: var(--gm-ink-soft);
+  background-color: var(--gm-glass-tint);
   border-top: 1px solid var(--gm-border);
   border-bottom: 1px solid var(--gm-border);
 }
@@ -950,10 +891,12 @@ body > :not(.gm-world-bg):not(script):not(style) {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: var(--gm-ink-raised);
+  background-color: var(--gm-glass-surface);
   border: 1px solid var(--gm-border);
   border-radius: 0.75rem;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(var(--gm-glass-blur)) saturate(1.06);
+  -webkit-backdrop-filter: blur(var(--gm-glass-blur)) saturate(1.06);
   overflow: hidden;
 
   &::before {
@@ -1087,7 +1030,7 @@ body > :not(.gm-world-bg):not(script):not(style) {
   padding: 1.5rem;
   background:
     radial-gradient(circle at 50% 62%, var(--gm-accent-soft), transparent 68%),
-    var(--gm-ink-soft);
+    color-mix(in srgb, var(--gm-ink-soft) 54%, transparent);
   border-bottom: 1px solid var(--gm-border);
   overflow: hidden;
 
@@ -1589,8 +1532,10 @@ html:has(dialog.gm-firmware-dialog[open]) {
   height: 100%;
   padding: 1.5rem 1.5rem 1.5rem 1.75rem;
   border-left: 2px solid var(--gm-accent);
-  background-color: var(--gm-ink-soft);
+  background-color: var(--gm-glass-surface-soft);
   border-radius: 0 0.5rem 0.5rem 0;
+  backdrop-filter: blur(var(--gm-glass-blur)) saturate(1.05);
+  -webkit-backdrop-filter: blur(var(--gm-glass-blur)) saturate(1.05);
 }
 
 .gm-step-number {
@@ -1620,8 +1565,10 @@ html:has(dialog.gm-firmware-dialog[open]) {
   border: 1px solid var(--gm-border);
   border-left: 3px solid var(--gm-accent);
   border-radius: 0.5rem;
-  background-color: var(--gm-ink-soft);
+  background-color: var(--gm-glass-surface-soft);
   color: var(--gm-muted);
+  backdrop-filter: blur(var(--gm-glass-blur)) saturate(1.05);
+  -webkit-backdrop-filter: blur(var(--gm-glass-blur)) saturate(1.05);
 
   strong {
     color: var(--gm-text);
@@ -1683,7 +1630,9 @@ html:has(dialog.gm-firmware-dialog[open]) {
   padding: 1.25rem 1.5rem;
   border: 1px solid var(--gm-border);
   border-radius: 0.75rem;
-  background-color: var(--gm-ink-soft);
+  background-color: var(--gm-glass-surface-soft);
+  backdrop-filter: blur(var(--gm-glass-blur)) saturate(1.05);
+  -webkit-backdrop-filter: blur(var(--gm-glass-blur)) saturate(1.05);
 }
 
 .gm-router-search-label {
@@ -1886,11 +1835,17 @@ html:has(dialog.gm-firmware-dialog[open]) {
   position: relative;
   background:
     radial-gradient(700px circle at 85% 10%, var(--gm-accent-soft), transparent 60%),
-    linear-gradient(150deg, var(--gm-ink-raised) 0%, var(--gm-ink-soft) 100%);
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--gm-ink-raised) 74%, transparent) 0%,
+      color-mix(in srgb, var(--gm-ink-soft) 62%, transparent) 100%
+    );
   border: 1px solid var(--gm-border);
   border-radius: 1rem;
   padding: 3.5rem 1.5rem;
   overflow: hidden;
+  backdrop-filter: blur(var(--gm-glass-blur)) saturate(1.06);
+  -webkit-backdrop-filter: blur(var(--gm-glass-blur)) saturate(1.06);
 }
 
 .gm-cta-text {
@@ -2420,8 +2375,11 @@ html {
   inset: -20% -10% auto auto;
   width: min(42rem, 70vw);
   height: min(42rem, 70vw);
-  background:
-    radial-gradient(circle, rgba(255, 107, 53, 0.16) 0, rgba(255, 107, 53, 0) 68%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--gm-accent) 16%, transparent) 0,
+    transparent 68%
+  );
   opacity: 0.7;
   pointer-events: none;
   transform: translate3d(0, 0, 0);

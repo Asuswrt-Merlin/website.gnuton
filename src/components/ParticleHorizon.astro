@@ -1,8 +1,20 @@
 ---
-// Decorative particle horizon for the home hero. The renderer is deliberately
-// tiny (Canvas 2D, no dependencies) and only runs on the dark theme.
+// Decorative particle globe used as the site-wide ambient background. The
+// renderer is a tiny Canvas 2D scene (no dependencies) with a light and a dark
+// palette; scroll progress is applied by Motion.astro.
+interface Props {
+  /** Interior pages use a quieter version of the globe. */
+  ambient?: boolean;
+}
+
+const { ambient = false } = Astro.props;
 ---
-<div class="gm-particle-world" data-particle-world aria-hidden="true">
+<div
+  class:list={['gm-particle-world', { 'gm-particle-world--ambient': ambient }]}
+  data-particle-world
+  data-particle-ambient={ambient ? 'true' : undefined}
+  aria-hidden="true"
+>
   <canvas
     class="gm-particle-canvas gm-particle-canvas--static"
     data-particle-static
@@ -11,7 +23,6 @@
     class="gm-particle-canvas gm-particle-canvas--dynamic"
     data-particle-canvas
   ></canvas>
-  <span class="gm-particle-scrim"></span>
   <span class="gm-particle-grain"></span>
 </div>
 

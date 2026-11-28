@@ -3,10 +3,10 @@ import { ClientRouter } from 'astro:transitions';
 import Footer from '../components/Footer.astro';
 import Motion from '../components/Motion.astro';
 import NavBar from '../components/NavBar.astro';
+import ParticleHorizon from '../components/ParticleHorizon.astro';
 import ReleaseBanner from '../components/ReleaseBanner.astro';
-import WorldBackground from '../components/WorldBackground.astro';
 import { site } from '../data/site';
-import { absoluteUrl, withBase } from '../utils/url';
+import { absoluteUrl, withBase, withoutBase } from '../utils/url';
 import '../assets/styles/main.scss';
 
 interface Props {
@@ -29,6 +29,7 @@ const {
 } = Astro.props;
 
 const isPreview = import.meta.env.PUBLIC_IS_PREVIEW === 'true';
+const isHome = withoutBase(Astro.url.pathname) === '/';
 const pageTitle = title === site.name ? title : `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = absoluteUrl('/og-image.png', Astro.site);
@@ -114,7 +115,7 @@ const fontUrl =
   </head>
   <body>
     <a class="gm-skip-link" href="#main-content">Skip to main content</a>
-    <WorldBackground />
+    <ParticleHorizon ambient={!isHome} />
     <NavBar />
     <ReleaseBanner />
     {
