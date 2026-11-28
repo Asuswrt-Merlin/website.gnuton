@@ -1,0 +1,42 @@
+---
+// Decorative fixed background: a slowly spinning wireframe world.
+// Visual prominence is controlled by scroll progress CSS variables.
+---
+
+<div class="gm-world-bg" aria-hidden="true">
+  <div class="gm-world-glow"></div>
+  <svg
+    class="gm-world-svg"
+    viewBox="0 0 600 600"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    focusable="false"
+  >
+    <g class="gm-world-spin">
+      <circle cx="300" cy="300" r="210" class="gm-world-stroke gm-world-stroke--strong" />
+      <circle cx="300" cy="300" r="209.5" class="gm-world-stroke gm-world-stroke--faint" />
+
+      <ellipse cx="300" cy="300" rx="210" ry="70" class="gm-world-stroke" />
+      <ellipse cx="300" cy="300" rx="210" ry="130" class="gm-world-stroke gm-world-stroke--faint" />
+      <ellipse cx="300" cy="300" rx="210" ry="175" class="gm-world-stroke gm-world-stroke--faint" />
+      <ellipse cx="300" cy="300" rx="70" ry="210" class="gm-world-stroke" />
+      <ellipse cx="300" cy="300" rx="130" ry="210" class="gm-world-stroke gm-world-stroke--faint" />
+      <ellipse cx="300" cy="300" rx="175" ry="210" class="gm-world-stroke gm-world-stroke--faint" />
+
+      <path d="M90 300H510" class="gm-world-stroke" />
+      <path d="M300 90V510" class="gm-world-stroke gm-world-stroke--faint" />
+      <path d="M122 190C185 220 240 235 300 235C360 235 415 220 478 190" class="gm-world-stroke gm-world-stroke--faint" />
+      <path d="M122 410C185 380 240 365 300 365C360 365 415 380 478 410" class="gm-world-stroke gm-world-stroke--faint" />
+
+      <g class="gm-world-nodes">
+        <circle cx="300" cy="90" r="4" class="gm-world-node" />
+        <circle cx="430" cy="170" r="3.5" class="gm-world-node" />
+        <circle cx="470" cy="300" r="4" class="gm-world-node gm-world-node--accent" />
+        <circle cx="390" cy="405" r="3.5" class="gm-world-node" />
+        <circle cx="210" cy="430" r="4" class="gm-world-node gm-world-node--accent" />
+        <circle cx="135" cy="320" r="3.5" class="gm-world-node" />
+        <circle cx="175" cy="185" r="3.5" class="gm-world-node" />
+      </g>
+    </g>
+  </svg>
+</div>

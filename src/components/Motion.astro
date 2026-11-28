@@ -1,6 +1,5 @@
 ---
-// Global motion controller: scroll reveals and count-up numbers.
-// Progressive enhancement: content stays visible without JS/reduced motion.
+// Global motion controller: scroll reveals, count-up numbers, and world background.
 ---
 
 <script>
@@ -8,6 +7,8 @@
     __gmMotionInit?: boolean;
     __gmRevealObserver?: IntersectionObserver;
     __gmCounterObserver?: IntersectionObserver;
+    __gmWorldScroll?: () => void;
+    __gmWorldRaf?: number;
   };
 
   const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -58,6 +59,41 @@
     requestAnimationFrame(frame);
   }
 
+  function updateWorldProgress() {
+    const win = window as MotionWindow;
+    win.__gmWorldRaf = undefined;
+    const world = document.querySelector<HTMLElement>('.gm-world-bg');
+    if (!world) return;
+    const reduced = reduceMotion();
+    const maxScroll = Math.max(window.innerHeight * 0.9, 1);
+    const progress = reduced ? 1 : Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+    world.style.setProperty('--gm-world-progress', progress.toFixed(4));
+  }
+
+  function initWorldScroll() {
+    const win = window as MotionWindow;
+    if (win.__gmWorldScroll) {
+      window.removeEventListener('scroll', win.__gmWorldScroll);
+      win.__gmWorldScroll = undefined;
+    }
+    if (win.__gmWorldRaf) {
+      cancelAnimationFrame(win.__gmWorldRaf);
+      win.__gmWorldRaf = undefined;
+    }
+
+    const world = document.querySelector<HTMLElement>('.gm-world-bg');
+    if (!world) return;
+
+    const onScroll = () => {
+      if (win.__gmWorldRaf) return;
+      win.__gmWorldRaf = requestAnimationFrame(updateWorldProgress);
+    };
+
+    win.__gmWorldScroll = onScroll;
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateWorldProgress();
+  }
+
   function initMotion() {
     const win = window as MotionWindow;
     const reduced = reduceMotion();
@@ -68,6 +104,8 @@
 
     win.__gmRevealObserver?.disconnect();
     win.__gmCounterObserver?.disconnect();
+
+    initWorldScroll();
 
     if (reduced) {
       document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
@@ -113,7 +151,6 @@
 
     document.querySelectorAll<HTMLElement>('[data-counter]').forEach((el) => {
       if (el.dataset.counterReady === 'true') return;
-      // Reset text if navigating back to a cached DOM state where counter ran.
       const final = el.dataset.counterFinal;
       if (final) el.textContent = final;
       else el.dataset.counterFinal = (el.textContent ?? '').trim();

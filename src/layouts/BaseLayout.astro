@@ -4,6 +4,7 @@ import Footer from '../components/Footer.astro';
 import Motion from '../components/Motion.astro';
 import NavBar from '../components/NavBar.astro';
 import ReleaseBanner from '../components/ReleaseBanner.astro';
+import WorldBackground from '../components/WorldBackground.astro';
 import { site } from '../data/site';
 import { absoluteUrl, withBase } from '../utils/url';
 import '../assets/styles/main.scss';
@@ -113,6 +114,7 @@ const fontUrl =
   </head>
   <body>
     <a class="gm-skip-link" href="#main-content">Skip to main content</a>
+    <WorldBackground />
     <NavBar />
     <ReleaseBanner />
     {

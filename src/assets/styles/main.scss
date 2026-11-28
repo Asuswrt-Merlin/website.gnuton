@@ -216,6 +216,124 @@ main {
   min-width: 0;
 }
 
+/* ---------------------------- World background -------------------------- */
+
+.gm-world-bg {
+  --gm-world-progress: 0;
+  --gm-world-opacity: 0.3;
+  --gm-world-stroke: rgba(255, 107, 53, 0.22);
+  --gm-world-stroke-strong: rgba(255, 107, 53, 0.34);
+  --gm-world-stroke-faint: rgba(255, 107, 53, 0.14);
+  --gm-world-node: rgba(255, 107, 53, 0.55);
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: calc(var(--gm-world-opacity) - var(--gm-world-progress) * 0.16);
+  filter: blur(calc(var(--gm-world-progress) * 2px));
+  transition: opacity 0.2s linear;
+}
+
+[data-theme='light'] .gm-world-bg {
+  --gm-world-opacity: 0.38;
+  --gm-world-stroke: rgba(194, 65, 12, 0.24);
+  --gm-world-stroke-strong: rgba(194, 65, 12, 0.38);
+  --gm-world-stroke-faint: rgba(194, 65, 12, 0.14);
+  --gm-world-node: rgba(194, 65, 12, 0.5);
+}
+
+.gm-world-glow {
+  position: absolute;
+  top: 8vh;
+  right: -10vw;
+  width: min(52rem, 75vw);
+  height: min(52rem, 75vw);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 107, 53, 0.12) 0%, rgba(255, 107, 53, 0) 68%);
+  transform: translate3d(calc(var(--gm-world-progress) * 6vw), calc(var(--gm-world-progress) * 4vh), 0)
+    scale(calc(1.1 - var(--gm-world-progress) * 0.2));
+}
+
+[data-theme='light'] .gm-world-glow {
+  background: radial-gradient(circle, rgba(194, 65, 12, 0.1) 0%, rgba(194, 65, 12, 0) 68%);
+}
+
+.gm-world-svg {
+  position: absolute;
+  top: 50%;
+  right: -6vw;
+  width: min(52rem, 72vw);
+  height: auto;
+  color: var(--gm-world-stroke);
+  transform-origin: center;
+  transform: translate3d(calc(var(--gm-world-progress) * 8vw), calc(-50% + var(--gm-world-progress) * 10vh), 0)
+    scale(calc(1.18 - var(--gm-world-progress) * 0.42));
+  will-change: transform;
+}
+
+.gm-world-spin {
+  transform-origin: 300px 300px;
+  animation: gm-world-spin 80s linear infinite;
+}
+
+@keyframes gm-world-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.gm-world-stroke {
+  stroke: var(--gm-world-stroke);
+  stroke-width: 1.2;
+}
+
+.gm-world-stroke--strong {
+  stroke: var(--gm-world-stroke-strong);
+  stroke-width: 1.6;
+}
+
+.gm-world-stroke--faint {
+  stroke: var(--gm-world-stroke-faint);
+  stroke-width: 1;
+}
+
+.gm-world-node {
+  fill: var(--gm-world-node);
+}
+
+.gm-world-node--accent {
+  fill: var(--gm-accent);
+  opacity: 0.85;
+}
+
+body > :not(.gm-world-bg):not(script):not(style) {
+  position: relative;
+  z-index: 1;
+}
+
+.gm-navbar {
+  z-index: 30;
+}
+
+@media screen and (max-width: 768px) {
+  .gm-world-svg {
+    right: -20vw;
+    width: min(34rem, 115vw);
+    top: 45%;
+  }
+
+  .gm-world-glow {
+    right: -25vw;
+    top: 4vh;
+    width: min(32rem, 110vw);
+    height: min(32rem, 110vw);
+  }
+}
+
 /* ------------------------------- Navbar ------------------------------- */
 
 .gm-navbar {
