@@ -1,0 +1,538 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="Astro v7.4.1"><meta name="description" content="Release notes for 386.00_0-gnuton0_alpha8 (WiFi 5 · 386), published December 23, 2020."><meta name="author" content="GNUton"><meta name="robots" content="noindex"><meta name="theme-color" content="#05080e" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><script>
+      // Apply the theme before first paint to avoid a flash of the wrong theme.
+      // No stored choice: follow the OS `prefers-color-scheme` (light default).
+      (function () {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia(
+            '(prefers-color-scheme: dark)',
+          ).matches;
+          const theme =
+            stored === 'dark' || (!stored && prefersDark) ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+      })();
+    </script><!-- Inter, loaded async so it never blocks first paint --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,650;14..32,700;14..32,800&amp;display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,650;14..32,700;14..32,800&amp;display=swap" media="print" onload="this.setAttribute('media', 'all')"><!-- Canonical + Open Graph --><link rel="canonical" href="https://gnuton.asuswrt-merlin.net/pr-preview/pr-14/changelog/386/386.00_0-gnuton0_alpha8/"><meta property="og:type" content="article"><meta property="og:site_name" content="GNUton's Merlin Builds"><meta property="og:title" content="386.00_0-gnuton0_alpha8 release notes · GNUton's Merlin Builds"><meta property="og:description" content="Release notes for 386.00_0-gnuton0_alpha8 (WiFi 5 · 386), published December 23, 2020."><meta property="og:url" content="https://gnuton.asuswrt-merlin.net/pr-preview/pr-14/changelog/386/386.00_0-gnuton0_alpha8/"><meta property="og:image" content="https://gnuton.asuswrt-merlin.net/pr-preview/pr-14/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="GNUton's Merlin Builds — Merlin firmware for more ASUS routers"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="386.00_0-gnuton0_alpha8 release notes · GNUton's Merlin Builds"><meta name="twitter:description" content="Release notes for 386.00_0-gnuton0_alpha8 (WiFi 5 · 386), published December 23, 2020."><meta name="twitter:image" content="https://gnuton.asuswrt-merlin.net/pr-preview/pr-14/og-image.png"><!-- RSS feed for the guides --><link rel="alternate" type="application/rss+xml" title="GNUton's Merlin Builds — Guides" href="/pr-preview/pr-14/rss.xml"><link rel="icon" type="image/svg+xml" href="/pr-preview/pr-14/favicon.svg"><link rel="icon" href="/pr-preview/pr-14/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/pr-preview/pr-14/apple-touch-icon.png"><title>386.00_0-gnuton0_alpha8 release notes · GNUton&#39;s Merlin Builds</title><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/pr-preview/pr-14/_astro/ClientRouter.astro_astro_type_script_index_0_lang.BDCjmQ8c.js"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"386.00_0-gnuton0_alpha8 release notes","description":"Release notes for 386.00_0-gnuton0_alpha8 (WiFi 5 · 386), published December 23, 2020.","datePublished":"2020-12-23T21:08:23.000Z","url":"https://gnuton.asuswrt-merlin.net/pr-preview/pr-14/changelog/386/386.00_0-gnuton0_alpha8/","author":{"@type":"Organization","name":"GNUton's Merlin Builds","url":"https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton"}}</script><link rel="stylesheet" href="/pr-preview/pr-14/_astro/BaseLayout.kUwMDsu0.css"></head><body><a class="gm-skip-link" href="#main-content">Skip to main content</a><header><nav class="navbar gm-navbar" aria-label="Main navigation"><div class="container"><div class="navbar-brand"><a class="navbar-item gm-brand" href="/pr-preview/pr-14/"><span class="gm-brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5.5 14.5V8.5M12 14.5V5M18.5 14.5V8.5"></path><rect x="3" y="14.5" width="18" height="5.5" rx="2"></rect><circle cx="7" cy="17.2" r="0.9" fill="currentColor" stroke="none"></circle><circle cx="10" cy="17.2" r="0.9" fill="currentColor" stroke="none"></circle><path d="M16 16.2h2.5M16 18.2h2.5"></path></svg></span><span class="gm-brand-name">GNUton</span><span class="gm-brand-suffix">Merlin builds</span></a><button type="button" class="navbar-burger" aria-label="Open menu" aria-expanded="false" aria-controls="main-navbar"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button></div><div id="main-navbar" class="navbar-menu"><div class="navbar-end"><a class="navbar-item gm-nav-link" href="/pr-preview/pr-14/">Home</a><a class="navbar-item gm-nav-link" href="/pr-preview/pr-14/features/">Features</a><a class="navbar-item gm-nav-link" href="/pr-preview/pr-14/firmware/">Downloads</a><a class="navbar-item gm-nav-link is-active" href="/pr-preview/pr-14/changelog/" aria-current="page">Changelog</a><a class="navbar-item gm-nav-link" href="/pr-preview/pr-14/about/">About</a><a class="navbar-item gm-nav-link" href="/pr-preview/pr-14/guides/">Guides</a><a class="navbar-item gm-nav-link" href="/pr-preview/pr-14/support/">Help</a><details class="gm-nav-code"><summary class="navbar-item gm-nav-link">Code<span class="gm-nav-caret" aria-hidden="true">▾</span></summary><div class="gm-nav-code-menu"><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3006.gnuton" target="_blank" rel="noopener">3006 · WiFi 7</a><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton" target="_blank" rel="noopener">3004 · WiFi 6</a><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/tree/386.12_0-gnuton1" target="_blank" rel="noopener">386 · DSL-AC68U</a></div></details><div class="navbar-item"><button type="button" class="gm-theme-toggle" data-theme-toggle aria-label="Switch to light theme" title="Switch theme"><span class="gm-theme-icon gm-theme-icon-sun" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg></span><span class="gm-theme-icon gm-theme-icon-moon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span></button><script type="module">var e=document.documentElement,t=`theme`,n=()=>{try{return localStorage.getItem(t)}catch{return null}},r=()=>{let t=n(),r=window.matchMedia(`(prefers-color-scheme: dark)`).matches,i=t===`dark`||!t&&r?`dark`:`light`;e.setAttribute(`data-theme`,i),document.querySelector(`[data-theme-toggle]`)?.setAttribute(`aria-label`,i===`light`?`Switch to dark theme`:`Switch to light theme`)};document.addEventListener(`click`,n=>{let i=n.target;if(i instanceof Element&&i.closest(`[data-theme-toggle]`)){let n=e.getAttribute(`data-theme`)===`dark`?`light`:`dark`,i=()=>{e.setAttribute(`data-theme`,n);try{localStorage.setItem(t,n)}catch{}r()};document.startViewTransition?document.startViewTransition(i):i()}}),r(),document.addEventListener(`astro:page-load`,r);</script></div><div class="navbar-item"><a class="button gm-button-primary gm-nav-cta" href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases" target="_blank" rel="noopener">Download</a></div></div></div></div></nav></header><script type="module">var e=()=>{let e=document.querySelector(`.navbar-burger`),t=document.getElementById(`main-navbar`),n=e?.getAttribute(`aria-expanded`)===`true`;e?.setAttribute(`aria-expanded`,`false`),e?.setAttribute(`aria-label`,`Open menu`),e?.classList.remove(`is-active`),t?.classList.remove(`is-active`),n&&document.activeElement instanceof HTMLElement&&e?.focus()},t=e=>{document.querySelectorAll(`.gm-nav-code[open]`).forEach(t=>{e&&t.contains(e)||(t.open=!1)})};document.addEventListener(`click`,n=>{let r=n.target;if(!(r instanceof Element))return;let i=r.closest(`.navbar-burger`);if(i){let e=i.getAttribute(`aria-expanded`)===`true`,t=document.getElementById(`main-navbar`);i.setAttribute(`aria-expanded`,String(!e)),i.setAttribute(`aria-label`,e?`Open menu`:`Close menu`),i.classList.toggle(`is-active`,!e),t?.classList.toggle(`is-active`,!e)}else t(r),r.closest(`#main-navbar a`)?(t(),e()):r.closest(`.navbar`)||e()}),document.addEventListener(`keydown`,n=>{if(n.key!==`Escape`)return;let r=document.querySelector(`.gm-nav-code[open]`);e(),t(),r?.querySelector(`summary`)?.focus()});</script><aside class="gm-release-banner" data-release-banner data-release-tag="3006.102.9_1-gnuton1" aria-label="New firmware release"><div class="container gm-release-banner-inner"><p class="gm-release-banner-text"><span class="gm-release-banner-label">New release</span><span><strong>3006.102.9_1-gnuton1</strong> for WiFi 7 is available.</span></p><div class="gm-release-banner-actions"><a class="gm-release-banner-link" href="/pr-preview/pr-14/changelog/3006/3006.102.9_1-gnuton1/">Release notes <span aria-hidden="true">→</span></a><button type="button" class="gm-release-banner-dismiss" data-release-banner-dismiss aria-label="Dismiss the new release banner"><span aria-hidden="true">×</span></button></div></div></aside><script data-astro-rerun>
+      // Hide before paint when this visitor already dismissed this release.
+      try {
+        const banner = document.currentScript?.previousElementSibling;
+        if (
+          banner instanceof HTMLElement &&
+          banner.dataset.releaseTag === localStorage.getItem('gm-dismissed-release')
+        ) {
+          banner.hidden = true;
+        }
+      } catch (error) {}
+    </script><script type="module">var e=`gm-dismissed-release`,t=()=>{let t=document.querySelector(`[data-release-banner]`);if(!t)return;let n=null;try{n=localStorage.getItem(e)}catch{}t.hidden=n!==null&&n===t.dataset.releaseTag};document.addEventListener(`click`,t=>{let n=t.target;if(!(n instanceof Element))return;let r=n.closest(`[data-release-banner-dismiss]`);if(!r)return;let i=r.closest(`[data-release-banner]`),a=i?.dataset.releaseTag;if(i&&a){try{localStorage.setItem(e,a)}catch{}i.hidden=!0}}),document.addEventListener(`astro:page-load`,t),t();</script><div class="gm-preview-banner">Preview build — not the production site</div><main id="main-content"><section class="section gm-section"><div class="container"><nav class="gm-changelog-breadcrumb" aria-label="Breadcrumb"><a href="/pr-preview/pr-14/changelog/">Changelog</a><span aria-hidden="true">/</span><a href="/pr-preview/pr-14/changelog/#386">386</a><span aria-hidden="true">/</span><span aria-current="page">386.00_0-gnuton0_alpha8</span></nav><header class="gm-changelog-release-head"><p class="gm-eyebrow mb-2">WiFi 5 · 386</p><h1 class="title is-1 mb-3">386.00_0-gnuton0_alpha8</h1><p class="gm-changelog-release-meta"><span>Published <time datetime="2020-12-23T21:08:23.000Z">December 23, 2020</time></span><span class="gm-changelog-badge gm-changelog-badge--pre">Pre-release</span></p><p class="gm-changelog-release-source">Source: <a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton" target="_blank" rel="noopener">Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton</a>.</p></header><div class="gm-changelog-release-layout"><article class="gm-prose"><div><p>Changes from the latest stable gnuton build (384.17_0-gnuton1):</p>
+<ul>
+<li>build: Added circleci config file</li>
+<li>build: updated tools/copy-prebuilt to support DSL-AC68U target</li>
+<li>build: fixed tools/copy-prebuilt script which was copying release/src/router/tuxera/ in the wrong dir</li>
+<li>Merged DSL-AC68U GPL 384.56087 prebuilds</li>
+<li>build: added DSL-AC68U configuration to src-rt make target</li>
+<li>build: fixed build when DUALWAN and DSL are enabled</li>
+<li>Cleaning up remov some &#39;false&#39; files</li>
+<li>Merged asuswrt 384.56087 GPL to release/src/router/shared/sysdeps/</li>
+<li>Import release/src/router/shared/prebuild/DSL-AC68U/ from GPL asuswrt 384.56087</li>
+<li>create release for each tag type</li>
+<li>tools/copy-prebuilt copies DSL-N55U GPL router/www/sysdep files since they are needed by DSL-AC68U and maybe other DSL variants in the future</li>
+<li>ExtendedNo var is set during compilation when a commit is tagged</li>
+<li>Imported src/router/www/sysdep/DSL-N55U/www/ files from GPL 384.56087 since they are needed by DSL variants</li>
+<li>Merged latest upstream Merlin code</li>
+<li>Sanitize CIRCLE_TAG to be used as EXTEND_NO</li>
+<li>feature: Added let&#39;s encrypt to src-rt/target.mak for DSL-AC68U</li>
+<li>Rename CI workflow and ignore master</li>
+<li>Merging new changes imported from RT-AC88U branch</li>
+<li>Merge remote-tracking branch &#39;upstream/mainline&#39; into dsl-ac68u</li>
+<li>spectrum: imported app for DSL routers from DSL-AC68U GPL 384.56087</li>
+<li>httpd: upstream web.c reverted back since RT GPL is ahead of DSL one</li>
+<li>httpd: Added back get_dnsprivacy_presets</li>
+<li>webui: banner logo link set to gnuton&#39;s github</li>
+<li>webui: enabled firmware update checks for gnuton&#39;s builds</li>
+<li>fwupdate: FIX new firmwares with alphabetically bigger extendedno are not correcly detected</li>
+<li>Merged asus merlin code</li>
+<li>Merge upstream tag &#39;384.14-beta1-mainline&#39; into dsl-ac68u</li>
+<li>buildfix: httpd/web.c has been checked out from tags/384.13-beta1-mainline</li>
+<li>buildfix: set_fw_path.cgi not available for DSL-AC68U as for RT</li>
+<li>buildfix: do not threat warning as errors for router</li>
+<li>dsl-ac68u: Prebuild imported from GPL_DSL-AC68U_3.0.0.4.384.81140</li>
+<li>Merged RMerl 384.14-beta2-mainline</li>
+<li>buildfix: Backported rc/prebuild/DSL-AC68U/tcode_brcm.o from RT-AC86U since wl_disband5grp symbol was required for building</li>
+<li>Merged in GPL_DSL-AC68U_3.0.0.4.384.81727-g7c23ae8 prebuilds</li>
+<li>Merge tag &#39;384.14-beta3-mainline&#39; into 384.14_beta3</li>
+<li>Merge tag &#39;384.14-mainline&#39; into 384.14</li>
+<li>getdns: provide explicit path to OpenSSL 1.1.1 (fixes regression fom GPL 81044 merge)</li>
+<li>rc: fail wanduck (and possibly other services) failing to start due to ate_mode check</li>
+<li>rstats: revert some of the 384_81044 changes in an attempt to resolve the traffic spikes</li>
+<li>rc: log if router is in manufacturing mode at wanduck launch</li>
+<li>Updated documentation</li>
+<li>rc: fix bad GPL merge</li>
+<li>rc: remove no longer required kludge for STP on HND models</li>
+<li>build: re-add cifs.ko module (lost with GPL 81044 merge)</li>
+<li>webui: hide _0 extendno from firmware versions returned by cfg_sync</li>
+<li>Updated documentation</li>
+<li>Merge tag &#39;384.14_2-mainline&#39; into dsl-ac68u-384.14_2-mainline</li>
+<li>dsl-ac68u: build: fix - picks latest previous tag in case of releases</li>
+<li>Merge tag &#39;384.15-mainline&#39; into dsl-ac68u-384.15</li>
+<li>Merge tag &#39;384.16-mainline&#39; into dsl-ac68u-384.16</li>
+<li>Merge tag &#39;384.17-mainline&#39; into dsl-ac68u-384.17</li>
+<li>curl: fix build recipe when generating configure</li>
+<li>getdns: fix building under Ubuntu 20.04 LTS</li>
+<li>libgpg-error: fix building with gawk 5.0 (backport from upstream)</li>
+<li>Merge pull request #1 from RMerl/master</li>
+<li>Release amtm 3.1.7</li>
+<li>Merge pull request #509 from decoderman/master</li>
+<li>Updated documentation</li>
+<li>dropbear: Fix ssh client connection with Chacha20-Poly1305</li>
+<li>Updated documentation</li>
+<li>Merge GPL + SDK 384_81846 (RT-AC86U)</li>
+<li>Merge RT-AC86U binary blobs from 384_81846</li>
+<li>webui: updates to the QoS Stats page.</li>
+<li>Merge RT-AC68U SDK + binary blobs from 385_20490 (identical code to 384_81846)</li>
+<li>Merge RT-AC5300 binary blobs from 384_81844</li>
+<li>Merge RT-AC3100 SDK + binary blobs from 385_20490</li>
+<li>ahs: add binary collections to ahs/asd/libasc</li>
+<li>rc: update pw_dec() call in openvpn code to the new definition</li>
+<li>webui: optimize draw_conntrack_table() by removing code related to unsupported tQoS mode; fix tQoS default category labeling&quot;</li>
+<li>webui: fix JS syntax error from upstream&#39;s Wireless Log page</li>
+<li>Updated documentation</li>
+<li>webui: harmonize dhcp_staticlist length with upstream</li>
+<li>Fix Privacy disclosure Wiki link in README</li>
+<li>httpd: rework gencert.sh script responsible for generating web certificate</li>
+<li>cfg_mnt: update gencfgcert to match updated openssl.cnf config file</li>
+<li>rc: copy stored cert.crt when starting httpds</li>
+<li>httpd: re-implement persistent certificate storage (lost in commit cdfc71fd209c30d3cb0977ecedf71744d3492d8c)</li>
+<li>Disable AHS and ASD on all supported models</li>
+<li>webui: remove validator.hostname() to match upstream (and replace one existing use with validator.host_name())</li>
+<li>Merge pull request #525 from borzaka/patch-1</li>
+<li>dropbear: Fix ChaCha20 on 32-bit platforms</li>
+<li>busybox: updated a few options to match upstream settings</li>
+<li>openvpn: revert 81846 change which broke setting ovpn server state to RUNNING</li>
+<li>Update updown-client.sh</li>
+<li>Merge RT-AC88U binary blobs from 385_20457 (and two missing RT-AC3100 blobs from 20490)</li>
+<li>Merge pull request #530 from Xentrk/master</li>
+<li>ssl: update root certificates to June 3rd 2020</li>
+<li>Updated documentation</li>
+<li>Revert &quot;Merge RT-AC88U binary blobs from 385_20457 (and two missing RT-AC3100 blobs from 20490)&quot;</li>
+<li>flac: properly provide libogg path (fixes building on some environment)</li>
+<li>openvpn: remove obsolete configure options that no longer exist</li>
+<li>build: parallelize rc and wget building</li>
+<li>www: updated OUI database</li>
+<li>Updated documentation</li>
+<li>webui: fix sorting by DNS field on DHCP reservation table</li>
+<li>Merged GPL + SDK 384_81918 (minus lighttpd changes) for RT-AC86U</li>
+<li>httpd: don&#39;t rely on nvram and nvram-stored cert for saving, we already do so at generation time</li>
+<li>rc: add kludge to watchdog for pre-384_81918 SDK 6.37 binary blobs</li>
+<li>Updated documentation</li>
+<li>Updated documentation</li>
+<li>shared: added missing shared blobs for RT-AC3100</li>
+<li>dropbear: update to 2020.79</li>
+<li>Merged RT-AC5300 binary blobs from 384_81902</li>
+<li>lighttpd: merge updated components + code from 384_819xx</li>
+<li>Removed obsolete LE lighttpd instance</li>
+<li>openvpn: store empty field instead of 0.0.0.0 in policy rules</li>
+<li>Updated documentation</li>
+<li>nano: updated to 4.9.3</li>
+<li>Updated documentation</li>
+<li>Updated documentation</li>
+<li>Merged RT-AC88U binary blobs from 384_81919</li>
+<li>rc: revert RT-AC88U kludge in watchdog</li>
+<li>rc: eliminate log spam occuring every four seconds while testing RTK switch status</li>
+<li>rom: hardcode wget timeout value in firmware update check scripts</li>
+<li>dropbear: update to 2020.80</li>
+<li>dropbear: use common random source for ltm</li>
+<li>vpnc: add static routing and def. gateway control</li>
+<li>Revert &quot;vpnc: add static routing and def. gateway control&quot;</li>
+<li>Updated documentation</li>
+<li>Updated documentation</li>
+<li>Revert &quot;Revert &quot;vpnc: add static routing and def. gateway control&quot;&quot;</li>
+<li>Updated documentation</li>
+<li>httpd: www: implement notification on low jffs space</li>
+<li>Updated documentation</li>
+<li>build: fix processor count for parallel building</li>
+<li>build: enable parallel building for curl</li>
+<li>build: enable parallel kernel building for SDK6/SDK7 models</li>
+<li>other: fix am_get_webui_page() returning new mount point before matching existing file</li>
+<li>other: optimize am_get_webui_page loop</li>
+<li>Merge pull request #558 from dave14305/patch-1</li>
+<li>webui: fixed typo on low JFFS notification</li>
+<li>openssl11: also prioritize chacha20 for bcm675x models which lack AES acceleration</li>
+<li>Merged GPL + binary blobs 384_81981 for RT-AC5300</li>
+<li>bwdpi: merged bwdpi components from 385_20630 firmware image for RT-AC68U</li>
+<li>rc: httpd: harmonize httpd/vsftpd cert storage handling with upstream</li>
+<li>Merged GPL + SDK 384_81992 from RT-AC86U</li>
+<li>httpd: only save certificate if self-generated</li>
+<li>webui: update cert info display to be in-line with httpd/rc changes from 7917e3bae5</li>
+<li>Updated documentation</li>
+<li>openssl11: also prioritize chacha20 for bcm675x models which lack AES acceleration</li>
+<li>rom: fix duplicate CA bundle, and keep the updated one</li>
+<li>httpd: don&#39;t set tlscrypt nvram when parsing tls-crypt from an imported ovpn, this is only used by Asus.</li>
+<li>libvpn: implement copy_ovpn_key()</li>
+<li>rc: improve handling of clock-sensitive services on first WAN up.</li>
+<li>Updated documentation</li>
+<li>openvpn: Major implementation rewrite/refactor</li>
+<li>webui: OpenVPN client fixes</li>
+<li>openvpn: Major implementation rewrite/refactor</li>
+<li>webui: OpenVPN client fixes</li>
+<li>libvpn: fixed log message on OpenVPN start</li>
+<li>libvpn: remove some no longer used defines</li>
+<li>webui: warn user when enabling user/pass auth for an OpenVPN client without providing both</li>
+<li>openvpn: skip DNS redirection for clients using an empty source instead of 0.0.0.0 (the old way of denoting &quot;any&quot;)</li>
+<li>shared: fixed bad ipt_account() merge</li>
+<li>webui: report openvpn client error code 7 as a config error, not key/cert</li>
+<li>openvpn: set nvram errno if there is a config error preventing start</li>
+<li>fix typo</li>
+<li>openvpn: second stage of rewrite/refactor; harmonize master with mainline code</li>
+<li>webui: fix incorrect input field validated when applying an OpenVPN client configuration</li>
+<li>libovpn: don&#39;t allow duplicate-cn while in non-exclusive config-dir mode</li>
+<li>libovpn: also reapply DNS and QOS firewall rules when re-applying firewall rules</li>
+<li>rc: ensure that if openvpn client failed to start, that the instance gets set into an error state</li>
+<li>rc: let openvpn down event handler update dnsmasq/resolv config</li>
+<li>libovpn: remove unused (and inaccurate) constants</li>
+<li>shared: remove vpn_debug nvram (no longer used)</li>
+<li>Updated documentation</li>
+<li>Merge pull request #568 from maghuro/patch-2</li>
+<li>openvpn: remove duplicate line</li>
+<li>webui: fix check for userauth being enabled on OpenVPN client page; separate check/focus for both fields</li>
+<li>dropbear: libtommath: enable fixed cutoffs as size-optimization</li>
+<li>dnsmasq: update to 2.82 (2.82-34-gb309cca-openssl)</li>
+<li>openvpn: third stage - replacement of up/down handlers with libovpn functions, and fixes.</li>
+<li>Updated documentation</li>
+<li>rc: fix bad merge in ovpn.c</li>
+<li>rc: use the correct WAN interface when setting up OPEN_NAT rules (fixes #573)</li>
+<li>webui: hide SSHD WAN access option while not in router mode</li>
+<li>nvram: re-sync with 81992</li>
+<li>Updated documentation</li>
+<li>webui: display appropriate warning message if jffs partition fails to mount instead of a low space warning</li>
+<li>shared: rstats: removed a few unused nvram to regain some space</li>
+<li>Increased curl timeouts amtm FW</li>
+<li>Update vpnrouting.sh</li>
+<li>Update vpnrouting.sh</li>
+<li>Update vpnrouting.sh</li>
+<li>libovpn: fix policy client validation for CIDR-validated sources</li>
+<li>Merge pull request #576 from decoderman/master</li>
+<li>Merge pull request #577 from Xentrk/master</li>
+<li>getdns: listeners reply returned wireformat</li>
+<li>Updated documentation</li>
+<li>openvpn: remove broken (and redundant) log entry from vpnrouting&#39;s start.</li>
+<li>webui: fix minor typo on Sysinfo page</li>
+<li>webui: hide &quot;show password&quot; box for all models but RT-AC68U, all others now use encrypted storage</li>
+<li>Updated documentation</li>
+<li>bump revision to 384.19 final</li>
+<li>rc: make DH check compatible with OpenSSL 1.1</li>
+<li>httpd: no longer look for openssl11 usertool when building certs</li>
+<li>Prepare platform for 386 merge; merge 386_39179 + binary blobs (RT-AC86U)</li>
+<li>build: fixed a few missing prebuilt locations</li>
+<li>Merge RT-AC68U binary blobs + SDK from 386_39179</li>
+<li>build: update copy-prebuilt for new collection layout</li>
+<li>build: add script used to setup prebuild/* structures</li>
+<li>build: update build-all and publish scripts</li>
+<li>rc: migrate ddns_ipcheck to ddns_realip_x to match upstream</li>
+<li>rc: rom: move firmware update server URL into the script; don&#39;t build firmware check code unless enabled</li>
+<li>Updated documentation</li>
+<li>rc: libovpn: move OpenVPN SSL-related code from rc to libovpn</li>
+<li>openssl11: remove last references to openssl11 userspace tool</li>
+<li>build: disable conn_diag for all models</li>
+<li>bwdpi: fix Makefile</li>
+<li>nfs: include stdint.h in nfs-utils to fix build issue on HND-AX</li>
+<li>Merge 5.02axhnd SDK</li>
+<li>libml: libnfnetlink: drop our versions, and reuse those from Asus</li>
+<li>webui: add Wifi Radar page to RT-AX88U</li>
+<li>webui: use show_ethherstate_hnd() for all HND models (including RT-AX88U)</li>
+<li>httpd: merge AX changes to our wl_*_array() functions</li>
+<li>libmnl: fix random build failures</li>
+<li>webui: add missing images for the WiFi Radar page</li>
+<li>HNDAX: add Entware support</li>
+<li>kernel41-ax: Make xt_match_recent built-in instead of a module (to match with other platforms)</li>
+<li>kernel41-ax: update ipset kernel components to 6.32</li>
+<li>kernel41-ax: update ipset kernel compatibility header</li>
+<li>kernel41-ax: fix nested structure references in xt_set</li>
+<li>webui: expose NAT type setting for RT-AX88U</li>
+<li>kernel41-ax: sync config options with 4.1.27 (HND AC)</li>
+<li>kernel41-ax: add the TEE netfilter target</li>
+<li>webui: fix broken Wifi Radar image for the RT-AX88U</li>
+<li>kernel41-ax: silence log spam about ct_time_p-&gt;intv</li>
+<li>kernel41-ax: add NFSv2 and V3 client support</li>
+<li>axhnd: kernel41-ax: reenable tmpfs</li>
+<li>kernel41-ax: patch xfrm to allow 32-bit strongswan under 64-bit kernel</li>
+<li>kernel41-ax: iptables: fix handling IPCMv6 reject --with-tcp-reset</li>
+<li>Add build profiles for AX models</li>
+<li>build-ax: Fix compilation with glibc 2.25+</li>
+<li>webui: add Netool-aware pages to the RT-AX88U</li>
+<li>kernel41-ax: improve sack handling and resource usage</li>
+<li>kernel41-ax: tcp: refine memory limit test in tcp_fragment()</li>
+<li>faketc: fix wlcsm and nvram lib location on axhnd</li>
+<li>build: strip executables added with the new SDK (hostapd/wpa_supplicant/iw)</li>
+<li>Merge HND5.02-675x SDK from 384_8137; cleaned up, removed unneeded files</li>
+<li>SDK-6750: add missing dhd firmware and nvram data for RT-AX58U&#39;s 5GHz radio</li>
+<li>build: re-create HND impl symlink after make clean for 6750 SDK</li>
+<li>kernel-6750: adjusted AM-specific options</li>
+<li>kernel41-6750: update ipset kernel components to 6.32</li>
+<li>kernel41-6750: update ipset kernel compatibility header</li>
+<li>kernel41-6750: fix nested structure references in xt_set</li>
+<li>build: set PREBUILT_* in common.mak for 6570, as somehow the router/Makefile instance does not propagate when building bcmdrivers modules</li>
+<li>other: add armv7 ldconfig for RT-AX58U</li>
+<li>kernel41-6750: add kernel options that are requested on a rebuild</li>
+<li>SDK-6750: cleaned up visualization app, added working bins</li>
+<li>SDK-6750: add Entware support</li>
+<li>SDK-4908: SDK cleanups</li>
+<li>SDK-4908: fix epi_ttcp Makefile to use the prebuilt binary</li>
+<li>kernel41-6750: move blog logging to debug level, and rate limit it</li>
+<li>SDK-6750: Merge RT-AX56U binary objects; added RT-AX56U build profile</li>
+<li>kernel41-6750: added AM-specific options to 47622 kernel profile</li>
+<li>SDK-6750: move RT-AX58U router-sysdep to model-specific folder, and copy appropriate model content to router-sysdep at build time</li>
+<li>SDK-6750: create binary collection for hostTools/addvtoken (which is model-specific)</li>
+<li>SDK-4908: create binary collection for hostTools/addvtoken</li>
+<li>SDK-6750: replace a few binary blobs with specific RT-AX56U builds</li>
+<li>kernel41-6750: add kernel options that are requested on a rebuild for 47622 kernel</li>
+<li>httpd: revised CPU info retrieval for Tools page</li>
+<li>httpd: added clock report for RT-AX456U</li>
+<li>libnl: also remove static libraries from cli</li>
+<li>SDK-6750: re-add spudd/pdc (bcmspu) and cryptodev (unused) to the source tree</li>
+<li>SDK-6750: do not use prebuilt bcm_usb, use the GPL source code to build it ourselves</li>
+<li>httpd: fix retrieval of WAN QoS stats on RT-AX58U</li>
+<li>shared: don&#39;t prioritize AES-256-CBC over AES-128-CBC on bcm675x devices without AES acceleration</li>
+<li>build: enable parallel kernel building on AX models</li>
+<li>build: remove redundant targets from AX build recipes</li>
+<li>build: parallelize libnl, hostapd and wpa_supplicant-2.7</li>
+<li>SDK-4908: harmonize with ax.384 branch</li>
+<li>SDK-6750: harmonize with ax.384 branch</li>
+<li>Merge RT-AX88U binary blobs + SDK from 386_39179</li>
+<li>build: update RT-AX88U build profile</li>
+<li>webui: harmonize sysdep content with ax.384 branch</li>
+<li>rc: implement led control for RT-AX56U/RT-AX58U/RT-AX88U</li>
+<li>openssl11: use armv8 when compiling for RT-AX88U</li>
+<li>bwdpi: reorganize prebuilt collections; add 6750 prebuild objects</li>
+<li>build: fix a few components in copy-prebuilt</li>
+<li>Merge RT-AC5300 binary blobs + SDK7.14 from 386_39179</li>
+<li>Add missing AX prebuilts</li>
+<li>Updated documentation</li>
+<li>webui: format merlin version string on new AiMesh dashboard</li>
+<li>busybox: harmonize settings with upsteram, adding a few applets</li>
+<li>shared: suppress logging of failed modprobes</li>
+<li>webui: fix displaying available update version string</li>
+<li>rom: retrieve release notes from Asus server if AiMesh node is on Asus stock FW</li>
+<li>tools: Added scripts to build firmware locally inside docker</li>
+<li>openvpn: update to 2.5.0-beta3</li>
+<li>openvpn: replace setenv_unsigned() calls with setenv_long_long() in Asuswrt&#39;s patches</li>
+<li>libovpn: update config file generation for OpenVPN 2.5 (both local and exported client config)</li>
+<li>openvpn: re-enable iproute2 support for kernel 2.6.36; remove defines for route and ifconfig, they&#39;re no longer used</li>
+<li>webui: libovpn: httpd: remove option to enable/disable NCP</li>
+<li>webui: remove 2.4 required warnings from OpenVPN Server page</li>
+<li>webui: limit max data-ciphers length to 127 chars, as per the OpenVPN documentation</li>
+<li>libovpn: webui: only use the old --cipher setting in p2p mode; remove non-CBC ciphers (p2p requires CBC)</li>
+<li>httpd: libovpn: www: Add stub/stub-v2 compression support to OpeNVPN client</li>
+<li>httpd: libovpn: webui: implement tls-crypt-v2 client support</li>
+<li>webui: replaced dropdown menus with radio buttons for OpenVPN settings with only two options</li>
+<li>webui: report OpenVPN server config errors as such, not as cert errors</li>
+<li>webui: move some OpenVPN client setting notes to the field column, to match the server page</li>
+<li>Updated documentation</li>
+<li>Make VPN policy routing mode work without webui client rules</li>
+<li>Merge pull request #602 from mgziminsky/patch-1</li>
+<li>www: remove temp file accidentally committed</li>
+<li>webui: use QoS settings as limiters for traffic meters (was lost in GPL merge)</li>
+<li>webui: fix mistyped var name on OpenVPN server page</li>
+<li>openvpn: try to use CHACHA20-POLY1305 (if supported by the remote end) on routers without AES acceleration</li>
+<li>rstats: fix ifname check</li>
+<li>webui: label hostname as optional on DHCP static leases; reduce max static leases to 64 to better handle the hardcoded max length of 2500 bytes</li>
+<li>wlceventd: fix prebuilt location</li>
+<li>libovpn: masquerade all client outbound traffic regardless of source subnet</li>
+<li>openssl: update to 1.1.1h</li>
+<li>Merge remote-tracking branch &#39;upstream/master&#39; into upstream_master</li>
+<li>chore(ci): added newer setup toolchain step in CI config</li>
+<li>fix</li>
+<li>Fix</li>
+<li>fix</li>
+<li>fix</li>
+<li>openssl: sync 1.1.1h leftovers, cosmetics</li>
+<li>fix</li>
+<li>Revert &quot;fix&quot;</li>
+<li>Merge remote-tracking branch &#39;upstream/master&#39; into upstream_master</li>
+<li>updated start build script</li>
+<li>Revert &quot;updated start build script&quot;</li>
+<li>start docker will start ubuntu 20_04 image</li>
+<li>fix</li>
+<li>Merge remote-tracking branch &#39;origin/upstream_master&#39; into upstream_master</li>
+<li>fix</li>
+<li>build: remove RT-AC56U, RT-AC87U and RT-AC3200 build profiles</li>
+<li>Remove binary blobs and other model-specific components for RT-AC56U, RT-AC87U and RT-AC3200/SDK 7.x</li>
+<li>Remove Quantenna components</li>
+<li>ipset: move ipset_arm to ipset-6, remove leftovers from old MIPS ipset</li>
+<li>webui: integrated DOT presets into the address input field</li>
+<li>rom: updated DoT server list</li>
+<li>openvpn: On global stop/start events, only apply killswitch for clients set to automatically connect</li>
+<li>Updated documentation</li>
+<li>nano: updated to 5.2 (closes #610)</li>
+<li>curl: update to 7.72.0</li>
+<li>zlib: updated to 1.2.11</li>
+<li>zlib: fix building newer libz.a</li>
+<li>lz4: Updated to 1.9.2</li>
+<li>Remove unused ra_SingleSKU from the repo</li>
+<li>Remove unused jffsfilegen from the repo</li>
+<li>Remove unused linux-ntfs-2.0.0 from the repo</li>
+<li>Remove unused GeoIP-1.6.2 from the repo</li>
+<li>e2fsprogs: updated to 1.45.6</li>
+<li>lz4: fix version library used on install</li>
+<li>lz4: fix building/installing on HND platform</li>
+<li>rc: fix debug output for PPP event</li>
+<li>rom: include trailing 0 to the IPv6 addresses of Cleanbrowsing Family (closes #580)</li>
+<li>rc: fix crash if missing unit argument to wan_if service notification (closes #611)</li>
+<li>lz4: remove staging from build process</li>
+<li>httpd: re-harmonize with 386_39179 GPL</li>
+<li>shared: re-harmonize with 386_39179 GPL</li>
+<li>rc: remove blobs accidentally commited with 33878629af8f8fde0d0b7c82757e57c64ceb8b5c</li>
+<li>rc: re-harmonize with 386_39179 GPL</li>
+<li>hostapd: clean up openssl path</li>
+<li>faketc: disable faketc</li>
+<li>webui: hide scheduler and overhead parameters when QoS set to Adaptive</li>
+<li>webui: re-implement QoS overhead as an inline dropdown menu</li>
+<li>webui: fix location of DoT preset button</li>
+<li>Updated documentation</li>
+<li>nano: add missing files</li>
+<li>e2fsprogs: add missing files</li>
+<li>lz4: add missing files</li>
+<li>shared: rc: move killall_tk_period_wait() to libshared</li>
+<li>libovpn: moved stop/start functions from rc to libovpn</li>
+<li>openvpn: update to 2.5.0-rc3</li>
+<li>openvpn: replace iproute2 with netlink for pre-HND models (should now be fixed with OpenVPN 2.5.0 RC 3)</li>
+<li>rc: fix DHCP renewal failure related to bwdpi firewall rules</li>
+<li>Updated documentation</li>
+<li>httpd: import the obsolete &quot;cipher&quot; parameter in the Custom OpenVPN section instead of in nvram</li>
+<li>Fix convert_subnet_mask_to_cidr for masks with</li>
+<li>Merge pull request #625 from mgziminsky/patch-1</li>
+<li>webui: increased number of addons mount points to 20</li>
+<li>openvpn: update to 2.5.0 final</li>
+<li>Merge GPL 386_40577 + 5.02axhnd SDK (RT-AX88U)</li>
+<li>Copy RT-AX88U prebuild from 386_40577</li>
+<li>Merge SDK 6.37 + RT-AC68U binary blobs (from 386_40577)</li>
+<li>shared: fix compiling bit_count() on older toolchains</li>
+<li>rc: harmonize ssh key location and management code with upstream</li>
+<li>Merge HND5.02 + RT-AC86U binary blobs (from 386_40577)</li>
+<li>Updated documentation</li>
+<li>Merge SDK 7.14 + RT-AC88U, RT-AC3100 and RT-AC5300 binary blobs (from 386_40577)</li>
+<li>Merge SDK 5.02axhnd-670x and RT-AX56U/RT-AX58U binary blobs (from 386_40577)</li>
+<li>asd: Fix building, and enable ASD daemon for test purposes</li>
+<li>miniupnpd: merged AuraSync and GeforceNow code from upstream</li>
+<li>webui: stop processing more filters once connection is excluded</li>
+<li>Merge SDK 5.02p1 (RT-AX86U)</li>
+<li>Add RT-AX86U binary blobs (from 386_40577)</li>
+<li>SDK 5.02p1: ensure that TOP_PLATFORM ends up using router-sysdep rather than router</li>
+<li>Add RT-AX86U build profile</li>
+<li>kernel41-62118: adjusted AM-specific options</li>
+<li>kernel41-62118: add kernel options that are requested on a rebuild</li>
+<li>kernel41-62118: move blog logging to debug level, and rate limit it</li>
+<li>www: build: add missing RT-AX86U pages; Fix using prebuilt binary blobs</li>
+<li>SDK 5.02p1: remove duplicate build recipes</li>
+<li>build: add preliminary RT-AX86U support to copy-prebuilt</li>
+<li>visualization: Add visualization app for RT-AX86U; fix missing menu entry for RT-AX56U and RT-AX58U</li>
+<li>Merge remote-tracking branch &#39;upstream/master&#39; into upstream_master</li>
+<li>webui: add multigig Ethernet support to Sysinfo page</li>
+<li>asd: Disable for now, current prebuilt components aren&#39;t working yet</li>
+<li>dhd: add missing dhd usertool for RT-AX56U/RT-AX58U</li>
+<li>build: add RT-AX86U to build-all script</li>
+<li>dropbear: updated to 2020.81</li>
+<li>e2fsprogs: revert ext4 metadata_csum and 64bit features to previous behaviour for backward compatibility</li>
+<li>swmdk: install init.d/* scripts on AX models</li>
+<li>SDK 5.02-670x: Cleanup apps</li>
+<li>Disabled FRS_LIVE_UPDATE, CLOUDCHECK and CONNDIAG in build profiles</li>
+<li>Updated documentation</li>
+<li>Merge remote-tracking branch &#39;upstream/master&#39; into upstream_master</li>
+<li>dsl-ac68u: added new target to target.mak</li>
+<li>dsl-ac68u: create symlink for prebuilds</li>
+<li>dsl-ac68u: importing TC-FW prebuild from GPL 386_39648</li>
+<li>webui: add page class to WAN page (to match upstream)</li>
+<li>shared: remove duplicate wan_mtu variable</li>
+<li>SDK 5.01p1: Implement Entware support</li>
+<li>webui: fix model label rendering on USB app page</li>
+<li>webui: move captcha enable switch to the login password section</li>
+<li>rc: implement LED control on RT-AX86U</li>
+<li>miniupnpd: fix enabling Aurasync</li>
+<li>miniupnpd: remove debug function not available yet in 386_40577</li>
+<li>Enable GeForce Now support on RT-AX86U</li>
+<li>libovpn: allow multiple routes per client to be defined in client-specific rules (closes #636)</li>
+<li>dsl-ac68u: Imported prebuilds from DSL-AC68U GPL 386.39648</li>
+<li>dsl-ac68u: DSL-AC68U is configured to use JFFS_NVRAM but symbols are stored in a different object file</li>
+<li>dsl-ac68u: fixed upstream typo</li>
+<li>dsl-ac68u: MobileDevMode_restart symbol not available</li>
+<li>dsl-ac68u: get_rtinfo symbol is not available in the DSL-AC68U prebuilds</li>
+<li>dsl-ac68u: AMAS=y switches on ACCOUNT_BINDING and that&#39;s not good for this router model since  do_get_eptoken_cgi is not available in the prebuilds</li>
+<li>dsl-ac68u: improve circleci file for debugging</li>
+<li>dsl-ac68u: defined different ld_library to get libmpc.so.2</li>
+<li>dsl-ac68u: some router/ apps fail to compile because of &#39;error: ISO C99 requires whitespace after the macro name&#39; - THIS REQUIRES A REAL FIX</li>
+<li>dsl-ac68u: Imported www files from DSL-AC68U GPL 386.39648</li>
+<li>dsl-ac68u: Imported wl/sysdeps/DSL-AC68U/clm/src/wlc_clm_data.c from DSL-AC68U GPL 386.39648</li>
+<li>webui: only validate wan_mtu value if it&#39;s not empty</li>
+<li>ipset: switch to ipset 7.6 included upstream (used by TCPLUGIN)</li>
+<li>Merge pull request #634 from dave14305/patch-1</li>
+<li>kernel41: icmp: randomize the global rate limiter</li>
+<li>rc: remove temporary file accidentally committed</li>
+<li>dsl-ac68u: Makes bwdpi app work again</li>
+<li>Updated documentation</li>
+<li>Merge GPL 386_40996 (from RT-AC68U)</li>
+<li>Merge 386_40996 binary blobs for RT-AC68U</li>
+<li>Merge 386_40996 binary blobs for RT-AC88U/3100/5300</li>
+<li>rc: implement codel support in GeForce QOS</li>
+<li>rc: retrieve MTU from instanced nvram for QOS quantum, and also handle null values</li>
+<li>shared: define default instanced wan MTU nvram</li>
+<li>rc: add codel support to rog_qos</li>
+<li>Merge 386_40996 SDK + binary blobs for RT-AC86U</li>
+<li>dsl-ac68u: Imported dsl_drv_tool from DSL-AC68U GPL 386.39648</li>
+<li>rc: fix typo in qos.c code</li>
+<li>build: enable ASD for models with updated executables</li>
+<li>Merge binary blobs + components for GT-AC2900 (from GPL 386_41035)</li>
+<li>httpd: webui: implement GeForce Now QoS support on Classification page; display qsched options on QoS settings page</li>
+<li>rc: implement LED control on GT-AC2900</li>
+<li>SDK5.02: store model-specific hnd_extra prebuilts for RT-AC86U and GT-AC2900</li>
+<li>Merge with GPL 386_41035 (from GT-AC2900)</li>
+<li>build: add GT-AC2900 to copy-prebuilt</li>
+<li>Remove an old 27MB large mipsel crud file</li>
+<li>rc: fix typo in qos.c code</li>
+<li>build: add GT-AC2900 to build-all; start HND models first as they take longer to build; add configurable git branch per model</li>
+<li>rc: rework new firmware check task based on Asus&#39; newer code</li>
+<li>Updated documentation</li>
+<li>Merge GPL 386_40996 (from RT-AC68U)</li>
+<li>Merge 386_40996 binary blobs for RT-AC68U</li>
+<li>Merge 386_40996 binary blobs for RT-AC88U/3100/5300</li>
+<li>rc: add codel support to rog_qos</li>
+<li>Merge 386_40996 SDK + binary blobs for RT-AC86U</li>
+<li>build: enable ASD for models with updated executables</li>
+<li>Merge binary blobs + components for GT-AC2900 (from GPL 386_41035)</li>
+<li>httpd: webui: implement GeForce Now QoS support on Classification page; display qsched options on QoS settings page</li>
+<li>rc: implement LED control on GT-AC2900</li>
+<li>SDK5.02: store model-specific hnd_extra prebuilts for RT-AC86U and GT-AC2900</li>
+<li>Merge with GPL 386_41035 (from GT-AC2900)</li>
+<li>build: add GT-AC2900 to copy-prebuilt</li>
+<li>build: add GT-AC2900 to build-all; start HND models first as they take longer to build; add configurable git branch per model</li>
+<li>httpd: support interface argument when launching Ookla speedtest</li>
+<li>webui: allow selecting interface to use on speedtest if any OVPN client is connected</li>
+<li>Merge RT-AX56U prebuilts for 386_41035</li>
+<li>Merge RT-AX58U prebuilts for 386_41035</li>
+<li>Merge RT-AX88U prebuilts for 386_41035</li>
+<li>Merge RT-AX86U prebuilts for 386_41035</li>
+<li>webui: fix hiding interface selector on speedtest if only WAN is available</li>
+<li>Fix handling of router-sysdep for RT-AX88U</li>
+<li>build: improve RT-AX86U handling in copy-prebuilt</li>
+<li>build: set all branches to master in build-all script</li>
+<li>Updated documentation</li>
+<li>kernel41-62118: update ipset to 6.32; fix nested structure references in xt_set</li>
+<li>kernel41-62218: build ipset as modules instead of built-in (6.32 fails to properly build when built-in)</li>
+<li>aimesh: update header file missed from GPL 41035</li>
+<li>libovpn: properly clear remote IP address when stopping client</li>
+<li>dsl-ac68u: Only use DSL-AC68U GPL 386.39648. Removed all symlinks to other prebuilds</li>
+<li>dsl-ac68u: Imported arpstorm prebuilt from /src/router/networkmap/prebuild/arm since missing in DSL-AC68U GPL</li>
+<li>Merge remote-tracking branch &#39;upstream/master&#39; into upstream_master+DSL_386_39648</li>
+<li>dsl-ac68u: Disable ASD since it could be the problem related to jffs2_script nvram key unset</li>
+<li>dsl-ac68u: fixed copy-prebuilt</li>
+<li>dsl-ac68u: imported prebuilt/wl from DSL-AC68U GPL 386_39648</li>
+<li>dsl-ac68u: Do not use DSL-AC68U libletsencrypt prebuild since it looks to not work correctly. Falling back to .so in arm dir as other models</li>
+<li>dsl-ac68u: fix &#39;hour_monitor: dpi engine doesn&#39;t exist&#39; in the logs. The problem is RTCONFIG_BCMSMP is defined for DSL-AC68U but instead of checking /dev/detector it use the new /dev/idp which is not right</li>
+<li>dsl-ac68u: fix - do not use Parental Control V3 for DSL-AC68U</li>
+<li>Revert &quot;dsl-ac68u: Do not use DSL-AC68U libletsencrypt prebuild since it looks to not work correctly. Falling back to .so in arm dir as other models&quot;</li>
+<li>webui: logo is now linked to gnuton&#39;s github</li>
+<li>webui: hardcoded firmware url in the code, better than storing in the nvram which is already running low</li>
+<li>webui: Updated webs scripts to get firmware info from gnuton&#39;s github</li>
+<li>Revert &quot;dsl-ac68u: imported prebuilt/wl from DSL-AC68U GPL 386_39648&quot;</li>
+<li>tools: do not copy elease/src-rt-6.x.4708/wl/exe/prebuilt/ for DSL-AC68U</li>
+<li>sysinfo: fix - calculates the used nvram by getting only the vars stored in the nvram itself and not in jffs partition</li>
+</ul>
+</div></article><aside class="gm-changelog-release-aside"><div class="gm-notice"><strong>Before flashing.</strong> Check your exact model and hardware revision. Read the release notes and keep a recovery path available.</div><a class="button is-primary is-fullwidth" href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases/tag/386.00_0-gnuton0_alpha8" target="_blank" rel="noopener">Download from GitHub <span aria-hidden="true">↗</span></a><a class="button gm-button-outline is-fullwidth" href="/pr-preview/pr-14/changelog/">All releases</a><a class="button gm-button-outline is-fullwidth" href="/pr-preview/pr-14/firmware/#wifi-5">Supported models</a></aside></div><p class="mt-6"><a class="gm-changelog-back" href="/pr-preview/pr-14/changelog/"><span aria-hidden="true">←</span> Back to all releases</a></p></div></section></main><footer class="footer gm-footer"><div class="container"><div class="columns is-multiline"><div class="column is-4"><p class="title is-5 mb-2">GNUton&#39;s Merlin Builds</p><p class="mb-4">Merlin firmware for more ASUS routers.</p><p class="is-size-7">An independent community fork of Asuswrt-Merlin. ASUS and ROG are trademarks of ASUSTeK Computer Inc.</p></div><div class="column is-2"><p class="has-text-weight-semibold mb-3">Explore</p><ul><li class="mb-1"><a href="/pr-preview/pr-14/">Home</a></li><li class="mb-1"><a href="/pr-preview/pr-14/features/">Features</a></li><li class="mb-1"><a href="/pr-preview/pr-14/firmware/">Downloads</a></li><li class="mb-1"><a href="/pr-preview/pr-14/changelog/">Changelog</a></li><li class="mb-1"><a href="/pr-preview/pr-14/about/">About</a></li><li class="mb-1"><a href="/pr-preview/pr-14/guides/">Guides</a></li><li class="mb-1"><a href="/pr-preview/pr-14/support/">Help</a></li></ul></div><div class="column is-3"><p class="has-text-weight-semibold mb-3">Project</p><ul><li class="mb-1"><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/releases" target="_blank" rel="noopener">Latest releases</a></li><li class="mb-1"><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton" target="_blank" rel="noopener">Source code</a></li><li class="mb-1"><a href="/pr-preview/pr-14/support/#report-a-bug">Report a bug</a></li><li class="mb-1"><a href="https://github.com/RMerl/asuswrt-merlin.ng" target="_blank" rel="noopener">Upstream Merlin</a></li></ul></div><div class="column is-3"><p class="has-text-weight-semibold mb-3">Community</p><ul><li class="mb-1"><a href="https://discord.gg/pm7q6KFSzp" target="_blank" rel="noopener">Discord chat</a></li><li class="mb-1"><a href="https://www.snbforums.com/threads/gnutons-merlin-builds-for-dsl-router-386-1_2-released.70980/" target="_blank" rel="noopener">SNBForums thread</a></li><li class="mb-1"><a href="https://retro.pizza/@gnuton" target="_blank" rel="noopener">Mastodon</a></li><li class="mb-1"><a href="https://github.com/Asuswrt-Merlin/asuswrt-merlin.ng-3004.gnuton/blob/master/www/DEV.md" target="_blank" rel="noopener">Developer notes</a></li></ul></div></div><hr><div class="gm-footer-bottom"><p class="is-size-7 mb-0">© 2026 GNUton&#39;s Merlin Builds. Project source is public.</p><p class="is-size-7 mb-0">Built with <a href="https://astro.build" target="_blank" rel="noopener">Astro</a> · Theme based on <a href="https://github.com/Domenico-Tenace-Open-Labs/astro-wellness" target="_blank" rel="noopener">Astro Wellness</a></p></div></div></footer><script type="module">var e=()=>window.matchMedia(`(prefers-reduced-motion: reduce)`).matches;function t(e){if(e.dataset.counterReady===`true`)return null;let t=(e.textContent??``).trim(),n=t.match(/^([^\d-]*)(-?\d+(?:[.,]\d+)?)([^\d]*)$/);if(!n)return null;let[,r,i,a]=n,o=i.replace(/,/g,``),s=Number(o);return Number.isFinite(s)?{finalText:t,prefix:r,suffix:a,target:s,decimals:o.includes(`.`)?o.split(`.`)[1]?.length??0:0}:null}function n(e,n){let r=t(e);if(!r)return;e.dataset.counterReady=`true`;let{finalText:i,prefix:a,suffix:o,target:s,decimals:c}=r;if(s===0){e.textContent=i;return}let l=performance.now()+n*70,u=t=>{let n=Math.max(0,t-l),r=Math.min(n/1200,1),d=1-(1-r)**3,f=0+(s-0)*d,p=c>0?f.toFixed(c):Math.round(f).toString();e.textContent=`${a}${p}${o}`,r<1?requestAnimationFrame(u):e.textContent=i};e.textContent=`${a}${0 .toFixed(c)}${o}`,requestAnimationFrame(u)}function r(){let t=window,r=e(),i=document.documentElement;if(i.classList.toggle(`gm-reveal-ready`,!r),i.classList.toggle(`gm-hero-ready`,!r),t.__gmRevealObserver?.disconnect(),t.__gmCounterObserver?.disconnect(),r){document.querySelectorAll(`[data-reveal]`).forEach(e=>{e.classList.add(`is-revealed`)}),document.querySelectorAll(`[data-counter]`).forEach(e=>{e.dataset.counterReady=`true`});return}let a=new IntersectionObserver(e=>{e.forEach(e=>{if(!e.isIntersecting)return;let t=e.target;t.classList.add(`is-revealed`),a.unobserve(t)})},{threshold:.15,rootMargin:`0px 0px -8% 0px`});t.__gmRevealObserver=a,document.querySelectorAll(`[data-reveal]`).forEach(e=>{e.classList.contains(`is-revealed`)||a.observe(e)});let o=0,s=new IntersectionObserver(e=>{e.forEach(e=>{if(!e.isIntersecting)return;let t=e.target;s.unobserve(t),n(t,o++)})},{threshold:.35});t.__gmCounterObserver=s,document.querySelectorAll(`[data-counter]`).forEach(e=>{if(e.dataset.counterReady===`true`)return;let t=e.dataset.counterFinal;t?e.textContent=t:e.dataset.counterFinal=(e.textContent??``).trim(),s.observe(e)})}var i=window;i.__gmMotionInit||(i.__gmMotionInit=!0,document.addEventListener(`astro:after-swap`,()=>{e()||document.documentElement.classList.add(`gm-reveal-ready`,`gm-hero-ready`)}),document.addEventListener(`astro:page-load`,r)),r();</script></body></html>
