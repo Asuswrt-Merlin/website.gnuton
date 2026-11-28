@@ -1,0 +1,135 @@
+---
+// Global motion controller: scroll reveals and count-up numbers.
+// Progressive enhancement: content stays visible without JS/reduced motion.
+---
+
+<script>
+  type MotionWindow = Window & {
+    __gmMotionInit?: boolean;
+    __gmRevealObserver?: IntersectionObserver;
+    __gmCounterObserver?: IntersectionObserver;
+  };
+
+  const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function parseCounter(el: HTMLElement) {
+    if (el.dataset.counterReady === 'true') return null;
+    const finalText = (el.textContent ?? '').trim();
+    const match = finalText.match(/^([^\d-]*)(-?\d+(?:[.,]\d+)?)([^\d]*)$/);
+    if (!match) return null;
+    const [, prefix, numeric, suffix] = match;
+    const normalized = numeric.replace(/,/g, '');
+    const target = Number(normalized);
+    if (!Number.isFinite(target)) return null;
+    const decimals = normalized.includes('.') ? (normalized.split('.')[1]?.length ?? 0) : 0;
+    return { finalText, prefix, suffix, target, decimals };
+  }
+
+  function animateCounter(el: HTMLElement, index: number) {
+    const parsed = parseCounter(el);
+    if (!parsed) return;
+    el.dataset.counterReady = 'true';
+
+    const { finalText, prefix, suffix, target, decimals } = parsed;
+    if (target === 0) {
+      el.textContent = finalText;
+      return;
+    }
+
+    const duration = 1200;
+    const start = performance.now() + index * 70;
+    const from = 0;
+
+    const frame = (now: number) => {
+      const elapsed = Math.max(0, now - start);
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = from + (target - from) * eased;
+      const formatted = decimals > 0 ? value.toFixed(decimals) : Math.round(value).toString();
+      el.textContent = `${prefix}${formatted}${suffix}`;
+      if (progress < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        el.textContent = finalText;
+      }
+    };
+
+    el.textContent = `${prefix}${(0).toFixed(decimals)}${suffix}`;
+    requestAnimationFrame(frame);
+  }
+
+  function initMotion() {
+    const win = window as MotionWindow;
+    const reduced = reduceMotion();
+    const root = document.documentElement;
+
+    root.classList.toggle('gm-reveal-ready', !reduced);
+    root.classList.toggle('gm-hero-ready', !reduced);
+
+    win.__gmRevealObserver?.disconnect();
+    win.__gmCounterObserver?.disconnect();
+
+    if (reduced) {
+      document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
+        el.classList.add('is-revealed');
+      });
+      document.querySelectorAll<HTMLElement>('[data-counter]').forEach((el) => {
+        el.dataset.counterReady = 'true';
+      });
+      return;
+    }
+
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          el.classList.add('is-revealed');
+          revealObserver.unobserve(el);
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+    );
+    win.__gmRevealObserver = revealObserver;
+
+    document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
+      if (el.classList.contains('is-revealed')) return;
+      revealObserver.observe(el);
+    });
+
+    let counterIndex = 0;
+    const counterObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          counterObserver.unobserve(el);
+          animateCounter(el, counterIndex++);
+        });
+      },
+      { threshold: 0.35 },
+    );
+    win.__gmCounterObserver = counterObserver;
+
+    document.querySelectorAll<HTMLElement>('[data-counter]').forEach((el) => {
+      if (el.dataset.counterReady === 'true') return;
+      // Reset text if navigating back to a cached DOM state where counter ran.
+      const final = el.dataset.counterFinal;
+      if (final) el.textContent = final;
+      else el.dataset.counterFinal = (el.textContent ?? '').trim();
+      counterObserver.observe(el);
+    });
+  }
+
+  const win = window as MotionWindow;
+  if (!win.__gmMotionInit) {
+    win.__gmMotionInit = true;
+    document.addEventListener('astro:after-swap', () => {
+      if (!reduceMotion()) {
+        document.documentElement.classList.add('gm-reveal-ready', 'gm-hero-ready');
+      }
+    });
+    document.addEventListener('astro:page-load', initMotion);
+  }
+  initMotion();
+</script>

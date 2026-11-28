@@ -26,8 +26,8 @@ const posts = (await getCollection('guides')).sort(
       {
         posts.length > 0 ? (
           <div class="columns is-multiline">
-            {posts.map((post) => (
-              <div class="column is-4">
+            {posts.map((post, index) => (
+              <div class="column is-4" data-reveal style={`--gm-reveal-delay: ${(index % 3) * 90}ms`}>
                 <GuideCard
                   title={post.data.title}
                   description={post.data.description}

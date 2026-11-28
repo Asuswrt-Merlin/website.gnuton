@@ -21,7 +21,7 @@ const firstReleaseLabel =
 
 <section class="section gm-section" aria-labelledby="github-stats-title">
   <div class="container">
-    <div class="gm-section-head">
+    <div class="gm-section-head" data-reveal="fade">
       <p class="gm-eyebrow mb-2">On GitHub</p>
       <h2 class="title is-2" id="github-stats-title">Built in public, downloaded by the community</h2>
       <p class="subtitle is-6">
@@ -32,9 +32,14 @@ const firstReleaseLabel =
 
     <div class="gm-stats">
       {
-        tiles.map((tile) => (
-          <div>
-            <span class="gm-stat-number" title={formatNumber(tile.value)} data-github-stat>
+        tiles.map((tile, index) => (
+          <div data-reveal="scale" style={`--gm-reveal-delay: ${index * 80}ms`}>
+            <span
+              class="gm-stat-number"
+              title={formatNumber(tile.value)}
+              data-counter
+              data-counter-final={compactNumber(tile.value)}
+            >
               {compactNumber(tile.value)}
             </span>
             <span class="gm-stat-label">{tile.label}</span>
@@ -45,65 +50,10 @@ const firstReleaseLabel =
 
     {
       firstRelease && firstReleaseLabel && (
-        <p class="gm-stat-reference">
+        <p class="gm-stat-reference" data-reveal="fade">
           First release: <time datetime={firstRelease.toISOString()}>{firstReleaseLabel}</time>
         </p>
       )
     }
   </div>
 </section>
-
-<script>
-  // Count up from zero when the section is first shown. The server-rendered
-  // values stay in place without JS and for visitors who prefer reduced motion.
-  const DURATION = 1200;
-  const STAGGER = 75;
-
-  function animateCounters() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const counters = document.querySelectorAll<HTMLElement>('[data-github-stat]');
-
-    counters.forEach((counter, index) => {
-      if (counter.dataset.animated === 'true') return;
-      counter.dataset.animated = 'true';
-
-      const finalText = (counter.textContent ?? '').trim();
-      const match = finalText.match(/^(\d+(?:\.\d+)?)([kM]?)$/);
-      if (!match) return;
-
-      const target = Number(match[1]);
-      if (!Number.isFinite(target) || target === 0) return;
-
-      const suffix = match[2];
-      const decimals = match[1].includes('.') ? 1 : 0;
-      const start = performance.now() + index * STAGGER;
-
-      const frame = (now: number) => {
-        const elapsed = Math.max(0, now - start);
-        const progress = Math.min(elapsed / DURATION, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        counter.textContent = `${(target * eased).toFixed(decimals)}${suffix}`;
-
-        if (progress < 1) {
-          requestAnimationFrame(frame);
-        } else {
-          counter.textContent = finalText;
-        }
-      };
-
-      counter.textContent = `0${suffix}`;
-      requestAnimationFrame(frame);
-    });
-  }
-
-  // Keep a single listener when Astro re-runs this script after a client-side
-  // navigation; the new counters are animated by the immediate call below.
-  const state = window as Window & { __githubStatsAnimation?: boolean };
-  if (!state.__githubStatsAnimation) {
-    state.__githubStatsAnimation = true;
-    document.addEventListener('astro:page-load', animateCounters);
-  }
-
-  animateCounters();
-</script>

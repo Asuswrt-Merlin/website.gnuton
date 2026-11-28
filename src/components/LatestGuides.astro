@@ -12,7 +12,7 @@ const posts = (await getCollection('guides'))
 
 <section class="section gm-section">
   <div class="container">
-    <div class="gm-section-head">
+    <div class="gm-section-head" data-reveal="fade">
       <p class="gm-eyebrow mb-2">From the guides</p>
       <h2 class="title is-2">Latest field notes</h2>
       <p class="subtitle is-6">Installation, model revisions and firmware generations — explained without the guesswork.</p>
@@ -21,8 +21,8 @@ const posts = (await getCollection('guides'))
     {
       posts.length > 0 ? (
         <div class="columns">
-          {posts.map((post) => (
-            <div class="column is-4">
+          {posts.map((post, index) => (
+            <div class="column is-4" data-reveal style={`--gm-reveal-delay: ${index * 100}ms`}>
               <GuideCard
                 title={post.data.title}
                 description={post.data.description}
@@ -39,7 +39,7 @@ const posts = (await getCollection('guides'))
       )
     }
 
-    <div class="has-text-centered mt-6">
+    <div class="has-text-centered mt-6" data-reveal="fade">
       <a class="button is-medium gm-button-outline" href={withBase('/guides')}>All guides</a>
     </div>
   </div>

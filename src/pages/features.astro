@@ -27,7 +27,7 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
 
   <section class="section gm-section">
     <div class="container">
-      <div class="gm-section-head">
+      <div class="gm-section-head" data-reveal="fade">
         <p class="gm-eyebrow mb-2">Upstream Merlin</p>
         <h2 class="title is-2">Added or enhanced by Asuswrt-Merlin</h2>
         <p class="subtitle is-6">
@@ -37,7 +37,7 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
         </p>
       </div>
 
-      <div class="gm-notice mb-6">
+      <div class="gm-notice mb-6" data-reveal="fade">
         <strong>Where these features come from:</strong> this section and the “Merlin first” list
         below are upstream Asuswrt-Merlin features. GNUton's builds compile them for additional
         routers; they do not replace them with a separate feature set.
@@ -48,8 +48,8 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
 
       <div class="columns is-multiline">
         {
-          upstreamGroups.map((group) => (
-            <div class="column is-6">
+          upstreamGroups.map((group, index) => (
+            <div class="column is-6" data-reveal style={`--gm-reveal-delay: ${(index % 2) * 100}ms`}>
               <div class="box gm-card gm-feature-card">
                 <h3 class="title is-4">{group.title}</h3>
                 <p class="mb-3">{group.description}</p>
@@ -78,7 +78,7 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
 
   <section class="section gm-section gm-section-alt">
     <div class="container">
-      <div class="gm-section-head">
+      <div class="gm-section-head" data-reveal="fade">
         <p class="gm-eyebrow mb-2">Upstream history</p>
         <h2 class="title is-2">Merlin first, stock ASUS later</h2>
         <p class="subtitle is-6">
@@ -87,7 +87,7 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
         </p>
       </div>
 
-      <ul class="gm-check-list gm-feature-list content">
+      <ul class="gm-check-list gm-feature-list content" data-reveal="fade">
         {upstreamFirsts.map((feature) => <li>{feature}</li>)}
       </ul>
     </div>
@@ -95,7 +95,7 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
 
   <section class="section gm-section">
     <div class="container">
-      <div class="gm-section-head">
+      <div class="gm-section-head" data-reveal="fade">
         <p class="gm-eyebrow mb-2">GNUton extras</p>
         <h2 class="title is-2">Beyond upstream: model-specific additions</h2>
         <p class="subtitle is-6">
@@ -106,8 +106,8 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
 
       <div class="columns is-multiline">
         {
-          modelFeatures.map((feature) => (
-            <div class="column is-6">
+          modelFeatures.map((feature, index) => (
+            <div class="column is-6" data-reveal style={`--gm-reveal-delay: ${(index % 2) * 100}ms`}>
               <div class="box gm-card gm-feature-card">
                 {feature.badge && <span class="gm-tag mb-3">{feature.badge}</span>}
                 <h3 class="title is-4">{feature.title}</h3>

@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import Footer from '../components/Footer.astro';
+import Motion from '../components/Motion.astro';
 import NavBar from '../components/NavBar.astro';
 import ReleaseBanner from '../components/ReleaseBanner.astro';
 import { site } from '../data/site';
@@ -123,5 +124,6 @@ const fontUrl =
       <slot />
     </main>
     <Footer />
+    <Motion />
   </body>
 </html>

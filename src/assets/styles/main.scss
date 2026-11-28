@@ -207,6 +207,13 @@ body {
 
 main {
   flex: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+#main-content {
+  width: 100%;
+  min-width: 0;
 }
 
 /* ------------------------------- Navbar ------------------------------- */
@@ -937,6 +944,30 @@ html:has(dialog.gm-firmware-dialog[open]) {
   ol:last-child {
     margin-bottom: 0;
   }
+
+  table {
+    width: 100%;
+    margin: 1rem 0 1.5rem;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  th,
+  td {
+    padding: 0.55rem 0.65rem;
+    border-bottom: 1px solid var(--gm-border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    color: var(--gm-text);
+    font-weight: 700;
+  }
+
+  td {
+    color: var(--gm-text);
+  }
 }
 
 .gm-firmware-dialog-actions {
@@ -1579,7 +1610,7 @@ html:has(dialog.gm-firmware-dialog[open]) {
   }
 
   td {
-    color: var(--gm-muted);
+    color: var(--gm-text);
   }
 }
 
@@ -1831,6 +1862,15 @@ html:has(dialog.gm-firmware-dialog[open]) {
 
 /* ------------------------- View transitions + motion ---------------------- */
 
+:root {
+  --gm-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --gm-ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+  --gm-duration-fast: 220ms;
+  --gm-duration-med: 520ms;
+  --gm-duration-slow: 760ms;
+  --gm-reveal-distance: 1.5rem;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -1861,6 +1901,108 @@ html {
   }
 }
 
+// Scroll-reveal primitives. Content remains visible when JS is absent or when
+// reduced motion is requested. JS adds .gm-reveal-ready before observing.
+.gm-reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, var(--gm-reveal-distance), 0);
+  transition:
+    opacity var(--gm-duration-med) var(--gm-ease-out),
+    transform var(--gm-duration-med) var(--gm-ease-out);
+  transition-delay: var(--gm-reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.gm-reveal-ready [data-reveal='fade'] {
+  transform: none;
+}
+
+.gm-reveal-ready [data-reveal='scale'] {
+  transform: scale(0.97);
+}
+
+.gm-reveal-ready [data-reveal='left'] {
+  transform: translate3d(calc(var(--gm-reveal-distance) * -1), 0, 0);
+}
+
+.gm-reveal-ready [data-reveal='right'] {
+  transform: translate3d(var(--gm-reveal-distance), 0, 0);
+}
+
+.gm-reveal-ready [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+// Hero/load entrance. Applied only when JS marks the page ready, so content is
+// visible without JS and in reduced-motion mode.
+.gm-hero-ready [data-hero-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 1.25rem, 0);
+  animation: gm-hero-enter var(--gm-duration-slow) var(--gm-ease-emphasis) both;
+  animation-delay: var(--gm-hero-delay, 0ms);
+}
+
+.gm-hero-ready [data-hero-reveal='media'] {
+  transform: translate3d(0, 1rem) scale(0.985);
+}
+
+@keyframes gm-hero-enter {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.gm-hero-media {
+  will-change: transform;
+}
+
+.gm-hero-ready .gm-hero-media img {
+  animation: gm-float 8s ease-in-out infinite;
+}
+
+@keyframes gm-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.gm-hero::after {
+  content: '';
+  position: absolute;
+  inset: -20% -10% auto auto;
+  width: min(42rem, 70vw);
+  height: min(42rem, 70vw);
+  background:
+    radial-gradient(circle, rgba(255, 107, 53, 0.16) 0, rgba(255, 107, 53, 0) 68%);
+  opacity: 0.7;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+}
+
+.gm-hero-ready .gm-hero::after {
+  animation: gm-glow-drift 14s ease-in-out infinite alternate;
+}
+
+@keyframes gm-glow-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-2rem, 1.5rem, 0) scale(1.05);
+  }
+}
+
+.gm-stat-number,
+.gm-changelog-count-number {
+  font-variant-numeric: tabular-nums;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1881,6 +2023,14 @@ html {
 
   .gm-router-card:hover .gm-router-media img {
     transform: none;
+  }
+
+  .gm-reveal-ready [data-reveal],
+  .gm-reveal-ready [data-reveal].is-revealed,
+  .gm-hero-ready [data-hero-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
   }
 }
 
